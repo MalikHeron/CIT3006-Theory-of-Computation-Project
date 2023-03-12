@@ -1,7 +1,9 @@
 package driver;
 
+import models.turing.Transition;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!, ugh");
+        new Transition("ɑγɑβFKN$");
     }
 }
