@@ -2,16 +2,13 @@ package models.turing
 
 import util.DoublyLinkedList
 import util.Node
-import kotlin.system.exitProcess
 
 class Transition(private var input: String) {
 
     private var read: Any? = null
-    private var blankSymbol = '#'
-    private var currentState = ""
-    private var alphabet = arrayOf('F', 'K', 'N', 'S')
     private var current: Node? = null
     private var inputList: DoublyLinkedList = DoublyLinkedList()
+    private var machine = Machine()
 
     init {
         //Get individual symbols from string
@@ -32,20 +29,20 @@ class Transition(private var input: String) {
     private fun doTransitions() {
         //Get the head of the LinkedList
         current = inputList.getCurrent()
-        var output = 0
         //Loop while not at the end of the LinkedList
         while (read != '$') {
+            //read data at head
             read = current?.data!!
             println("Read: $read")
             when (read) {
                 'ɑ' -> {
                     //Check combinations for 'ɑ'
-                    alphaTransitions(current?.next)
+                    alphaTransitions(current)
                 }
 
                 'β' -> {
                     //Check combinations for 'β'
-                    output = betaTransitions(current)
+                    betaTransitions(current)
                 }
 
                 'γ' -> {
@@ -60,120 +57,139 @@ class Transition(private var input: String) {
 
                 else -> {
                     //Check if only alphabet symbols remain
-                    if (alphabet.contains(read)) {
+                    if (machine.language.contains(read)) {
                         println("Insufficient funds")
+                        //End transition
+                        return
+                    } else if (!machine.alphabet.contains(read)) {
+                        println("Invalid input detected")
                         //End transition
                         return
                     }
                 }
             }
+            //Move to next position on tape
             current = current?.next
         }
     }
 
     private fun alphaTransitions(currentSymbol: Node?) {
-        var found = true
-        var currSymbol = currentSymbol
-        goToFront(inputList.getCurrent())
-        val next = inputList.getCurrent()
-        read = currentSymbol?.data
+        var found: Boolean
+        //For storing the value at the front of the tape
+        val tapeFront: Node?
+        var nextSymbol: Node?
+        var currSymbol: Node?
+
+        //Check if already at the tape's front
+        if (currentSymbol?.prev != null) {
+            goToFront(inputList.getCurrent())
+            //Set tape front
+            tapeFront = inputList.getCurrent()
+            //Set current node
+            currSymbol = tapeFront
+            //Get the next node
+            nextSymbol = tapeFront?.next
+        } else {
+            currSymbol = currentSymbol?.next
+            nextSymbol = currSymbol?.next
+        }
+
+        println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
         while (currSymbol?.data != '$') {
             //Get the next node
-            var nextSymbol = next?.next
+            nextSymbol = currSymbol?.next
             //Store current node symbol
             val prevSymbol = currSymbol?.data
             println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
-            read = currSymbol?.data
-            when (read) {
-                'ɑ' -> {
-                    //Set current node symbol to blankSymbol aka '#'
-                    currSymbol?.data = blankSymbol
-                    println(inputList.showData())
+            if (currSymbol != currentSymbol) {
+                found = true
+                //Read value under head
+                read = currSymbol?.data
+                when (read) {
+                    'ɑ' -> {
+                        //Set current node symbol to blankSymbol aka '#'
+                        currSymbol?.data = machine.blankSymbol
+                        println(inputList.showData())
 
-                    //Check if Napkin is a requested item
-                    while (nextSymbol?.data != 'N') {
-                        //Check if end of linkedList is reached
-                        if (nextSymbol?.data == '$') {
-                            found = false
-                            break
+                        //Check if Napkin is a requested item
+                        while (nextSymbol?.data != 'N') {
+                            //Check if end of linkedList is reached
+                            if (nextSymbol?.data == '$') {
+                                found = false
+                                break
+                            }
+                            val current = nextSymbol
+                            nextSymbol = nextSymbol?.next
+                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                         }
-                        val current = nextSymbol
-                        nextSymbol = nextSymbol?.next
-                        println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                    }
 
-                    if (found) {
-                        giveItem(nextSymbol, currSymbol?.prev)
-                        return
-                    } else {
-                        replaceSymbol(nextSymbol, prevSymbol, currSymbol)
-                        alphaTransitions(currSymbol?.next)
-                    }
-                }
-
-                'β' -> {
-                    //Set current node symbol to blankSymbol aka '#'
-                    currSymbol?.data = blankSymbol
-                    println(inputList.showData())
-
-                    //Check if Fork is a requested item
-                    while (nextSymbol?.data != 'F') {
-                        //Check if end of linkedList is reached
-                        if (nextSymbol?.data == '$') {
-                            found = false
-                            break
+                        if (found) {
+                            //Give the item and check it off
+                            giveItem(nextSymbol, currentSymbol)
+                            return
+                        } else {
+                            //Write back the symbols
+                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
                         }
-                        val current = nextSymbol
-                        nextSymbol = nextSymbol?.next
-                        println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                     }
 
-                    if (found) {
-                        giveItem(nextSymbol, currentSymbol?.prev)
-                        return
-                    } else {
-                        replaceSymbol(nextSymbol, prevSymbol, currSymbol)
-                        alphaTransitions(currSymbol?.next)
-                    }
-                }
+                    'β' -> {
+                        //Set current node symbol to blankSymbol aka '#'
+                        currSymbol?.data = machine.blankSymbol
+                        println(inputList.showData())
 
-                'γ' -> {
-                    //Set current node symbol to blankSymbol aka '#'
-                    currSymbol?.data = blankSymbol
-                    println(inputList.showData())
-
-                    //Check if Knife is a requested item
-                    while (nextSymbol?.data != 'K') {
-                        //Check if end of linkedList is reached
-                        if (nextSymbol?.data == '$') {
-                            found = false
-                            break
+                        //Check if Fork is a requested item
+                        while (nextSymbol?.data != 'F') {
+                            //Check if end of linkedList is reached
+                            if (nextSymbol?.data == '$') {
+                                found = false
+                                break
+                            }
+                            val current = nextSymbol
+                            nextSymbol = nextSymbol?.next
+                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                         }
-                        val current = nextSymbol
-                        nextSymbol = nextSymbol?.next
-                        println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
+
+                        if (found) {
+                            giveItem(nextSymbol, currentSymbol)
+                            return
+                        } else {
+                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                        }
                     }
 
-                    if (found) {
-                        giveItem(nextSymbol, currSymbol?.prev)
-                        return
-                    } else {
-                        replaceSymbol(nextSymbol, prevSymbol, currSymbol)
-                        alphaTransitions(currentSymbol?.next)
+                    'γ' -> {
+                        //Set current node symbol to blankSymbol aka '#'
+                        currSymbol?.data = machine.blankSymbol
+                        println(inputList.showData())
+
+                        //Check if Knife is a requested item
+                        while (nextSymbol?.data != 'K') {
+                            //Check if end of linkedList is reached
+                            if (nextSymbol?.data == '$') {
+                                found = false
+                                break
+                            }
+                            val current = nextSymbol
+                            nextSymbol = nextSymbol?.next
+                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
+                        }
+
+                        if (found) {
+                            giveItem(nextSymbol, currentSymbol)
+                            return
+                        } else {
+                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                        }
                     }
-                }
 
-                '$' -> {
-                    replaceSymbol(nextSymbol, prevSymbol, currSymbol)
-                    return
-                }
-
-                else -> {
-                    //Check if only alphabet symbols remain
-                    if (alphabet.contains(read)) {
-                        return
+                    else -> {
+                        //Check if only alphabet symbols remain
+                        if (machine.language.contains(read)) {
+                            return
+                        }
                     }
                 }
             }
@@ -181,15 +197,23 @@ class Transition(private var input: String) {
         }
     }
 
-    private fun betaTransitions(currentSymbol: Node?): Int {
+    private fun betaTransitions(currentSymbol: Node?) {
         var found = true
-
+        var tapeFront = inputList.getCurrent()
         //Get the next node
         var nextSymbol = currentSymbol?.next
+
+        if (currentSymbol?.prev != null) {
+            goToFront(inputList.getCurrent())
+            tapeFront = inputList.getCurrent()
+            //Get the next node
+            nextSymbol = tapeFront?.next
+        }
+
         println("Current: ${currentSymbol?.data}, Next: ${nextSymbol?.data}")
         var prevSymbol = currentSymbol?.data
         //Set to blankSymbol aka '#'
-        currentSymbol?.data = blankSymbol
+        currentSymbol?.data = machine.blankSymbol
         println(inputList.showData())
 
         //Check if Napkin is a requested item
@@ -208,8 +232,7 @@ class Transition(private var input: String) {
             giveItem(nextSymbol, null)
         } else {
             replaceSymbol(nextSymbol, prevSymbol, currentSymbol)
-            found = true
-            var currSymbol = currentSymbol?.next
+            var currSymbol = tapeFront
 
             while (currSymbol?.data != '$') {
                 //Get the next node
@@ -218,116 +241,118 @@ class Transition(private var input: String) {
                 prevSymbol = currSymbol?.data
                 println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
-                read = currSymbol?.data
-                when (read) {
-                    'ɑ' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = blankSymbol
-                        println(inputList.showData())
+                if (currSymbol != currentSymbol) {
+                    found = true
+                    read = currSymbol?.data
+                    when (read) {
+                        'ɑ' -> {
+                            //Set current node symbol to blankSymbol aka '#'
+                            currSymbol?.data = machine.blankSymbol
+                            println(inputList.showData())
 
-                        while (nextSymbol?.data != 'F') {
-                            if (nextSymbol?.data == '$') {
-                                found = false
-                                break
+                            while (nextSymbol?.data != 'F') {
+                                if (nextSymbol?.data == '$') {
+                                    found = false
+                                    break
+                                }
+                                val current = nextSymbol
+                                nextSymbol = nextSymbol?.next
+                                println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                             }
-                            val current = nextSymbol
-                            nextSymbol = nextSymbol?.next
-                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                        }
 
-                        if (found) {
-                            giveItem(nextSymbol, currSymbol?.prev)
-                            return 1
-                        } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
-                            betaTransitions(currSymbol?.next)
-                        }
-                    }
-
-                    'β' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = blankSymbol
-                        println(inputList.showData())
-
-                        while (nextSymbol?.data != 'S') {
-                            if (nextSymbol?.data == '$') {
-                                found = false
-                                break
+                            if (found) {
+                                giveItem(nextSymbol, currentSymbol)
+                                return
+                            } else {
+                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
                             }
-                            val current = nextSymbol
-                            nextSymbol = nextSymbol?.next
-                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                         }
 
-                        if (found) {
-                            giveItem(nextSymbol, currSymbol?.prev)
-                            return 1
-                        } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
-                            betaTransitions(currSymbol?.next)
-                        }
-                    }
+                        'β' -> {
+                            //Set current node symbol to blankSymbol aka '#'
+                            currSymbol?.data = machine.blankSymbol
+                            println(inputList.showData())
 
-                    'γ' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = blankSymbol
-                        println(inputList.showData())
-
-                        var count = 0
-                        val symbolArray = ArrayList<Node>()
-
-                        while (count != 2) {
-                            if (nextSymbol?.data == '$') {
-                                found = false
-                                break
+                            while (nextSymbol?.data != 'S') {
+                                if (nextSymbol?.data == '$') {
+                                    found = false
+                                    break
+                                }
+                                val current = nextSymbol
+                                nextSymbol = nextSymbol?.next
+                                println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                             }
-                            if (nextSymbol?.data == 'F') {
-                                symbolArray.add(nextSymbol)
-                                count++
+
+                            if (found) {
+                                giveItem(nextSymbol, currentSymbol)
+                                return
+                            } else {
+                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
                             }
-                            val current = nextSymbol
-                            nextSymbol = nextSymbol?.next
-                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                         }
 
-                        if (found) {
-                            symbolArray.forEach {
-                                giveItem(it, currSymbol?.prev)
+                        'γ' -> {
+                            //Set current node symbol to blankSymbol aka '#'
+                            currSymbol?.data = machine.blankSymbol
+                            println(inputList.showData())
+
+                            var count = 0
+                            val symbolArray = ArrayList<Node>()
+
+                            while (count != 2) {
+                                if (nextSymbol?.data == '$') {
+                                    found = false
+                                    break
+                                }
+                                if (nextSymbol?.data == 'F') {
+                                    symbolArray.add(nextSymbol)
+                                    count++
+                                }
+                                val current = nextSymbol
+                                nextSymbol = nextSymbol?.next
+                                println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                             }
-                            return 1
-                        } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
-                            betaTransitions(currSymbol?.next)
+
+                            if (found) {
+                                symbolArray.forEach {
+                                    giveItem(it, currentSymbol)
+                                }
+                                return
+                            } else {
+                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                            }
                         }
-                    }
 
-                    '$' -> {
-                        replaceSymbol(nextSymbol, prevSymbol, currentSymbol)
-                        return 1
-                    }
-
-                    else -> {
-                        //Check if only alphabet symbols remain
-                        if (alphabet.contains(read)) {
-                            return 0
+                        else -> {
+                            //Check if only alphabet symbols remain
+                            if (machine.language.contains(read)) {
+                                return
+                            }
                         }
                     }
                 }
                 currSymbol = currSymbol?.next
             }
         }
-        return 0
     }
 
     private fun gammaTransitions(currentSymbol: Node?) {
         var found = true
-
+        var tapeFront = inputList.getCurrent()
         //Get the next node
         var nextSymbol = currentSymbol?.next
+
+        if (currentSymbol?.prev != null) {
+            goToFront(inputList.getCurrent())
+            tapeFront = inputList.getCurrent()
+            //Get the next node
+            nextSymbol = tapeFront?.next
+        }
+
         println("Current: ${currentSymbol?.data}, Next: ${nextSymbol?.data}")
         var prevSymbol = currentSymbol?.data
         //Set to blankSymbol aka '#'
-        currentSymbol?.data = blankSymbol
+        currentSymbol?.data = machine.blankSymbol
         println(inputList.showData())
 
         //Check if Napkin is a requested item
@@ -346,8 +371,7 @@ class Transition(private var input: String) {
             giveItem(nextSymbol, null)
         } else {
             replaceSymbol(nextSymbol, prevSymbol, currentSymbol)
-            found = true
-            var currSymbol = currentSymbol?.next
+            var currSymbol = tapeFront
 
             while (currSymbol?.data != '$') {
                 //Get the next node
@@ -356,88 +380,94 @@ class Transition(private var input: String) {
                 prevSymbol = currSymbol?.data
                 println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
-                read = currSymbol?.data
-                when (read) {
-                    'ɑ' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = blankSymbol
-                        println(inputList.showData())
+                if (currSymbol != currentSymbol) {
+                    found = true
+                    read = currSymbol?.data
+                    when (read) {
+                        'ɑ' -> {
+                            //Set current node symbol to blankSymbol aka '#'
+                            currSymbol?.data = machine.blankSymbol
+                            println(inputList.showData())
 
-                        while (nextSymbol?.data != 'K') {
-                            if (nextSymbol?.data == '$') {
-                                found = false
-                                break
+                            while (nextSymbol?.data != 'K') {
+                                if (nextSymbol?.data == '$') {
+                                    found = false
+                                    break
+                                }
+                                val current = nextSymbol
+                                nextSymbol = nextSymbol?.next
+                                println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                             }
-                            val current = nextSymbol
-                            nextSymbol = nextSymbol?.next
-                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                        }
 
-                        if (found) {
-                            giveItem(nextSymbol, currSymbol?.prev)
-                        } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol?.prev)
-                        }
-                    }
-
-                    'β' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = blankSymbol
-                        println(inputList.showData())
-
-                        var count = 0
-                        val symbolArray = ArrayList<Node>()
-
-                        while (count != 2) {
-                            if (nextSymbol?.data == '$') {
-                                found = false
-                                break
+                            if (found) {
+                                giveItem(nextSymbol, currentSymbol)
+                                return
+                            } else {
+                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
                             }
-                            if (nextSymbol?.data == 'F') {
-                                symbolArray.add(nextSymbol)
-                                count++
+                        }
+
+                        'β' -> {
+                            //Set current node symbol to blankSymbol aka '#'
+                            currSymbol?.data = machine.blankSymbol
+                            println(inputList.showData())
+
+                            var count = 0
+                            val symbolArray = ArrayList<Node>()
+
+                            while (count != 2) {
+                                if (nextSymbol?.data == '$') {
+                                    found = false
+                                    break
+                                }
+                                if (nextSymbol?.data == 'F') {
+                                    symbolArray.add(nextSymbol)
+                                    count++
+                                }
+                                val current = nextSymbol
+                                nextSymbol = nextSymbol?.next
+                                println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                             }
-                            val current = nextSymbol
-                            nextSymbol = nextSymbol?.next
-                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                        }
 
-                        if (found) {
-                            symbolArray.forEach {
-                                println("Element: $it")
-                                giveItem(it, currSymbol?.prev)
+                            if (found) {
+                                symbolArray.forEach {
+                                    println("Element: $it")
+                                    giveItem(it, currSymbol)
+                                }
+                                return
+                            } else {
+                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
                             }
-                        } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol?.prev)
                         }
-                    }
 
-                    'γ' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = blankSymbol
-                        println(inputList.showData())
+                        'γ' -> {
+                            //Set current node symbol to blankSymbol aka '#'
+                            currSymbol?.data = machine.blankSymbol
+                            println(inputList.showData())
 
-                        while (nextSymbol?.data != 'F') {
-                            if (nextSymbol?.data == '$') {
-                                found = false
-                                break
+                            while (nextSymbol?.data != 'F') {
+                                if (nextSymbol?.data == '$') {
+                                    found = false
+                                    break
+                                }
+                                val current = nextSymbol
+                                nextSymbol = nextSymbol?.next
+                                println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
                             }
-                            val current = nextSymbol
-                            nextSymbol = nextSymbol?.next
-                            println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
+
+                            if (found) {
+                                giveItem(nextSymbol, currSymbol)
+                                return
+                            } else {
+                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                            }
                         }
 
-                        if (found) {
-                            giveItem(nextSymbol, currSymbol?.prev)
-                        } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol?.prev)
-                        }
-                    }
-
-                    else -> {
-                        //Check if only alphabet symbols remain
-                        if (alphabet.contains(read)) {
-                            return
+                        else -> {
+                            //Check if only alphabet symbols remain
+                            if (machine.language.contains(read)) {
+                                return
+                            }
                         }
                     }
                 }
@@ -448,7 +478,9 @@ class Transition(private var input: String) {
 
     private fun giveItem(currentSymbol: Node?, targetSymbol: Node?) {
         var found = true
-        currentSymbol?.data = 'x'
+        println("Write: ${machine.checkSymbol} on '${currentSymbol?.data}'")
+        //Check off item
+        currentSymbol?.data = machine.checkSymbol
         println(inputList.showData())
 
         if (targetSymbol != null) {
@@ -466,7 +498,8 @@ class Transition(private var input: String) {
             }
 
             if (found) {
-                previousSymbol?.data = '#'
+                println("Write: ${machine.blankSymbol} on '${targetSymbol.data}'")
+                previousSymbol?.data = machine.blankSymbol
             }
         }
         println(inputList.showData())
@@ -501,6 +534,7 @@ class Transition(private var input: String) {
             previousSymbol = previousSymbol.prev
             println("Current: ${current.data}, Previous: ${previousSymbol?.data}")
         }
+        println("Front of tape reached")
         println(inputList.showData())
     }
 }
