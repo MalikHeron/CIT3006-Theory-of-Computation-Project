@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Register {
 
-    private ArrayList arrayList;
+    /*private ArrayList arrayList;
 
     public void increment () {
         structure.increment();
@@ -20,5 +20,5 @@ public class Register {
         } else {
 
         }
-    }
+    }8/*/
 }

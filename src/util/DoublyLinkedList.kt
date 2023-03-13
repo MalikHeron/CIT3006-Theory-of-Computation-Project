@@ -32,14 +32,14 @@ class DoublyLinkedList {
     }
 
     //Create showData() method for displaying data of doubly linked list
-    fun showData() {
+    fun showData() : String {
         //Initialize a new node current that will point to head
         var current = head
         //Check whether the doubly linked list is empty or not
         if (head == null) {
             //Print a statement and pass the control flow into the main() method
             println("List is empty")
-            return
+            return ""
         }
         //Print a statement
         print("Nodes of doubly linked list: ")
@@ -49,14 +49,7 @@ class DoublyLinkedList {
             print(current.data)
             current = current.next
         }
-    }
-
-    fun getNext(): Node? {
-        return head?.next
-    }
-
-    fun getPrevious(): Node? {
-        return head?.prev
+        return ""
     }
 
     fun getCurrent(): Node? {
