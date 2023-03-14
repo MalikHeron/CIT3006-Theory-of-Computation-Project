@@ -12,14 +12,11 @@ class Transition(input: String) {
     private var machine = Machine()
 
     init {
-        //Get individual symbols from string
-        val valid = getSymbols(input)
-        if (valid)
-        //Begin the transition
-            doTransitions()
+        //Verify symbols from input
+        verifySymbols(input)
     }
 
-    private fun getSymbols(input: String): Boolean {
+    private fun verifySymbols(input: String) {
         //Iterate through the characters of the string
         input.forEach {
             //Invalid input
@@ -28,13 +25,14 @@ class Transition(input: String) {
                 refund()
                 //End transition/Halt
                 println("Halt")
-                return false
+                return
             }
             //Add the characters as symbols to the tape
             tape.addNewNode(it)
         }
-        println(tape.showData())
-        return true
+        println("Tape: ${tape.getData()}")
+        //Begin the transition
+        doTransitions()
     }
 
     private fun doTransitions() {
@@ -65,6 +63,7 @@ class Transition(input: String) {
                     refund()
                     //End transition/Halt
                     println("Halt")
+                    println("Tape: ${tape.getData()}")
                     return
                 }
 
@@ -75,6 +74,7 @@ class Transition(input: String) {
                         refund()
                         //End transition/Halt
                         println("Halt")
+                        println("Tape: ${tape.getData()}")
                         return
                     }
                 }
@@ -86,7 +86,7 @@ class Transition(input: String) {
 
     private fun refund() {
         var total: Int = 0
-        tape.getData()?.forEach {
+        tape.getData().forEach {
             if (it == 'ɑ')
                 total += 5
             if (it == 'β')
@@ -138,7 +138,7 @@ class Transition(input: String) {
                     'ɑ' -> {
                         //Write 'x' on current head position
                         currSymbol?.data = machine.crossSymbol
-                        println(tape.showData())
+                        println("Tape: ${tape.getData()}")
 
                         //Check if Napkin is a requested item
                         while (nextSymbol?.data != 'N') {
@@ -165,7 +165,7 @@ class Transition(input: String) {
                     'β' -> {
                         //Write 'x' on current head position
                         currSymbol?.data = machine.crossSymbol
-                        println(tape.showData())
+                        println("Tape: ${tape.getData()}")
 
                         //Check if Fork is a requested item
                         while (nextSymbol?.data != 'F') {
@@ -190,7 +190,7 @@ class Transition(input: String) {
                     'γ' -> {
                         //Write x on current head position
                         currSymbol?.data = machine.crossSymbol
-                        println(tape.showData())
+                        println("Tape: ${tape.getData()}")
 
                         //Check if Knife is a requested item
                         while (nextSymbol?.data != 'K') {
@@ -241,7 +241,7 @@ class Transition(input: String) {
         var prevSymbol = currentSymbol?.data
         //Set to blankSymbol aka '⊔'
         currentSymbol?.data = machine.crossSymbol
-        println(tape.showData())
+        println("Tape: ${tape.getData()}")
 
         //Check if Napkin is a requested item
         while (nextSymbol?.data != 'N') {
@@ -275,7 +275,7 @@ class Transition(input: String) {
                         'ɑ' -> {
                             //Write 'x' on current head position
                             currSymbol?.data = machine.crossSymbol
-                            println(tape.showData())
+                            println("Tape: ${tape.getData()}")
 
                             while (nextSymbol?.data != 'F') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
@@ -298,7 +298,7 @@ class Transition(input: String) {
                         'β' -> {
                             //Write 'x' on current head position
                             currSymbol?.data = machine.crossSymbol
-                            println(tape.showData())
+                            println("Tape: ${tape.getData()}")
 
                             while (nextSymbol?.data != 'S') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
@@ -321,7 +321,7 @@ class Transition(input: String) {
                         'γ' -> {
                             //Write 'x' on current head position
                             currSymbol?.data = machine.crossSymbol
-                            println(tape.showData())
+                            println("Tape: ${tape.getData()}")
 
                             var count = 0
                             val symbolArray = ArrayList<Node>()
@@ -378,7 +378,7 @@ class Transition(input: String) {
 
         println("Current: ${currentSymbol?.data}, Next: ${nextSymbol?.data}")
         var prevSymbol = currentSymbol?.data
-        println(tape.showData())
+        println("Tape: ${tape.getData()}")
 
         //Check if Napkin is a requested item
         while (nextSymbol?.data != 'S') {
@@ -430,7 +430,7 @@ class Transition(input: String) {
                         'ɑ' -> {
                             //Write 'x' on current head position
                             currSymbol?.data = machine.crossSymbol
-                            println(tape.showData())
+                            println("Tape: ${tape.getData()}")
 
                             while (nextSymbol?.data != 'K') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
@@ -453,7 +453,7 @@ class Transition(input: String) {
                         'β' -> {
                             //Write 'x' on current head position
                             currSymbol?.data = machine.crossSymbol
-                            println(tape.showData())
+                            println("Tape: ${tape.getData()}")
 
                             var count = 0
                             val symbolArray = ArrayList<Node>()
@@ -486,7 +486,7 @@ class Transition(input: String) {
                         'γ' -> {
                             //Write 'x' on current head position
                             currSymbol?.data = machine.crossSymbol
-                            println(tape.showData())
+                            println("Tape: ${tape.getData()}")
 
                             while (nextSymbol?.data != 'F') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
@@ -524,7 +524,7 @@ class Transition(input: String) {
         println("Write: ${machine.crossSymbol} on '${currentSymbol?.data}'")
         //Check off item
         currentSymbol?.data = machine.crossSymbol
-        println(tape.showData())
+        println("Tape: ${tape.getData()}")
 
         if (targetSymbol != null) {
             var previousSymbol = currentSymbol?.prev
@@ -545,7 +545,7 @@ class Transition(input: String) {
                 previousSymbol?.data = machine.crossSymbol
             }
         }
-        println(tape.showData())
+        println("Tape: ${tape.getData()}")
     }
 
     private fun replaceSymbol(currentSymbol: Node?, substituteSymbol: Char?, targetNode: Node?) {
@@ -565,7 +565,7 @@ class Transition(input: String) {
         if (found) {
             targetNode?.data = substituteSymbol!!
         }
-        println(tape.showData())
+        println("Tape: ${tape.getData()}")
     }
 
     private fun goToFront(currentSymbol: Node?) {
@@ -578,6 +578,6 @@ class Transition(input: String) {
             println("Current: ${current.data}, Previous: ${previousSymbol?.data}")
         }
         println("Front of tape reached")
-        println(tape.showData())
+        println("Tape: ${tape.getData()}")
     }
 }
