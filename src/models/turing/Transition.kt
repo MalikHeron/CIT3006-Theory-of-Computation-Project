@@ -1,5 +1,6 @@
 package models.turing
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import util.DoublyLinkedList
 import util.Node
 
@@ -12,18 +13,28 @@ class Transition(input: String) {
 
     init {
         //Get individual symbols from string
-        getSymbols(input)
+        val valid = getSymbols(input)
+        if (valid)
         //Begin the transition
-        doTransitions()
+            doTransitions()
     }
 
-    private fun getSymbols(input: String) {
+    private fun getSymbols(input: String): Boolean {
         //Iterate through the characters of the string
         input.forEach {
+            //Invalid input
+            if (!machine.tapeAlphabet.contains(it)) {
+                println("Invalid input detected")
+                refund()
+                //End transition/Halt
+                println("Halt")
+                return false
+            }
             //Add the characters as symbols to the tape
             tape.addNewNode(it)
         }
         println(tape.showData())
+        return true
     }
 
     private fun doTransitions() {
@@ -51,6 +62,7 @@ class Transition(input: String) {
                 }
 
                 machine.blankSymbol -> {
+                    refund()
                     //End transition/Halt
                     println("Halt")
                     return
@@ -60,11 +72,9 @@ class Transition(input: String) {
                     //Check if only alphabet symbols remain
                     if (machine.inputAlphabet.contains(read)) {
                         println("Insufficient funds")
+                        refund()
                         //End transition/Halt
-                        return
-                    } else if (!machine.tapeAlphabet.contains(read)) {
-                        println("Invalid input detected")
-                        //End transition/Halt
+                        println("Halt")
                         return
                     }
                 }
@@ -72,6 +82,20 @@ class Transition(input: String) {
             //Move to next position on tape
             current = current?.next
         }
+    }
+
+    private fun refund() {
+        var total: Int = 0
+        tape.getData()?.forEach {
+            if (it == 'ɑ')
+                total += 5
+            if (it == 'β')
+                total += 10
+            if (it == 'γ')
+                total += 20
+        }
+        if (total != 0)
+            println("Refund: $$total")
     }
 
     private fun alphaTransitions(currentSymbol: Node?) {

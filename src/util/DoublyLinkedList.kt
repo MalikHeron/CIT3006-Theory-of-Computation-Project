@@ -32,7 +32,7 @@ class DoublyLinkedList {
     }
 
     //Create showData() method for displaying data of doubly linked list
-    fun showData() : String {
+    fun showData(): String {
         //Initialize a new node current that will point to head
         var current = head
         //Check whether the doubly linked list is empty or not
@@ -52,24 +52,24 @@ class DoublyLinkedList {
         return ""
     }
 
-    fun getCurrent(): Node? {
-        return head
+    fun getData(): String? {
+        //Initialize a new node current that will point to head
+        var current = head
+        //Store output
+        var data: String? = null
+        //Check whether the doubly linked list is empty or not
+        if (head == null) {
+            return ""
+        }
+        //Iterate the doubly linked list using while
+        while (current != null) {
+            data += current.data
+            current = current.next
+        }
+        return data
     }
 
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val obj = DoublyLinkedList()
-
-            /*Add nodes into the doubly linked list
-            obj.addNewNode("New York")
-            obj.addNewNode("Los Angeles")
-            obj.addNewNode("Chicago")
-            obj.addNewNode("Houston")
-            obj.addNewNode("Houston")*/
-
-            //Call showData() method for displaying doubly linked list data
-            obj.showData()
-        }
+    fun getCurrent(): Node? {
+        return head
     }
 }
