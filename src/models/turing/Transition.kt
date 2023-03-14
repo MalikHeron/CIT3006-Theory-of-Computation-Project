@@ -3,11 +3,11 @@ package models.turing
 import util.DoublyLinkedList
 import util.Node
 
-class Transition(private var input: String) {
+class Transition(input: String) {
 
     private var read: Any? = null
     private var current: Node? = null
-    private var inputList: DoublyLinkedList = DoublyLinkedList()
+    private var tape: DoublyLinkedList = DoublyLinkedList()
     private var machine = Machine()
 
     init {
@@ -20,18 +20,18 @@ class Transition(private var input: String) {
     private fun getSymbols(input: String) {
         //Iterate through the characters of the string
         input.forEach {
-            //Add the characters as Nodes to the LinkedList
-            inputList.addNewNode(it)
+            //Add the characters as symbols to the tape
+            tape.addNewNode(it)
         }
-        println(inputList.showData())
+        println(tape.showData())
     }
 
     private fun doTransitions() {
-        //Get the head of the LinkedList
-        current = inputList.getCurrent()
-        //Loop while not at the end of the LinkedList
-        while (read != '$') {
-            //read data at head
+        //Get the head of the tape
+        current = tape.getCurrent()
+        //Loop while not at the end of the tape
+        while (read != machine.blankSymbol) {
+            //read symbol at head
             read = current?.data!!
             println("Read: $read")
             when (read) {
@@ -50,20 +50,21 @@ class Transition(private var input: String) {
                     gammaTransitions(current)
                 }
 
-                '$' -> {
-                    //End transition
+                machine.blankSymbol -> {
+                    //End transition/Halt
+                    println("Halt")
                     return
                 }
 
                 else -> {
                     //Check if only alphabet symbols remain
-                    if (machine.language.contains(read)) {
+                    if (machine.inputAlphabet.contains(read)) {
                         println("Insufficient funds")
-                        //End transition
+                        //End transition/Halt
                         return
-                    } else if (!machine.alphabet.contains(read)) {
+                    } else if (!machine.tapeAlphabet.contains(read)) {
                         println("Invalid input detected")
-                        //End transition
+                        //End transition/Halt
                         return
                     }
                 }
@@ -82,24 +83,26 @@ class Transition(private var input: String) {
 
         //Check if already at the tape's front
         if (currentSymbol?.prev != null) {
-            goToFront(inputList.getCurrent())
+            goToFront(tape.getCurrent())
             //Set tape front
-            tapeFront = inputList.getCurrent()
+            tapeFront = tape.getCurrent()
             //Set current node
             currSymbol = tapeFront
             //Get the next node
             nextSymbol = tapeFront?.next
         } else {
+            //Set current node
             currSymbol = currentSymbol?.next
+            //Get the next node
             nextSymbol = currSymbol?.next
         }
 
         println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
-        while (currSymbol?.data != '$') {
+        while (currSymbol?.data != machine.blankSymbol) {
             //Get the next node
             nextSymbol = currSymbol?.next
-            //Store current node symbol
+            //Store current symbol
             val prevSymbol = currSymbol?.data
             println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
@@ -109,14 +112,14 @@ class Transition(private var input: String) {
                 read = currSymbol?.data
                 when (read) {
                     'ɑ' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = machine.blankSymbol
-                        println(inputList.showData())
+                        //Write 'x' on current head position
+                        currSymbol?.data = machine.crossSymbol
+                        println(tape.showData())
 
                         //Check if Napkin is a requested item
                         while (nextSymbol?.data != 'N') {
-                            //Check if end of linkedList is reached
-                            if (nextSymbol?.data == '$') {
+                            //Check if end of tape is reached
+                            if (nextSymbol?.data == machine.blankSymbol) {
                                 found = false
                                 break
                             }
@@ -136,14 +139,14 @@ class Transition(private var input: String) {
                     }
 
                     'β' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = machine.blankSymbol
-                        println(inputList.showData())
+                        //Write 'x' on current head position
+                        currSymbol?.data = machine.crossSymbol
+                        println(tape.showData())
 
                         //Check if Fork is a requested item
                         while (nextSymbol?.data != 'F') {
-                            //Check if end of linkedList is reached
-                            if (nextSymbol?.data == '$') {
+                            //Check if end of tape is reached
+                            if (nextSymbol?.data == machine.blankSymbol) {
                                 found = false
                                 break
                             }
@@ -161,14 +164,14 @@ class Transition(private var input: String) {
                     }
 
                     'γ' -> {
-                        //Set current node symbol to blankSymbol aka '#'
-                        currSymbol?.data = machine.blankSymbol
-                        println(inputList.showData())
+                        //Write x on current head position
+                        currSymbol?.data = machine.crossSymbol
+                        println(tape.showData())
 
                         //Check if Knife is a requested item
                         while (nextSymbol?.data != 'K') {
-                            //Check if end of linkedList is reached
-                            if (nextSymbol?.data == '$') {
+                            //Check if end of tape is reached
+                            if (nextSymbol?.data == machine.blankSymbol) {
                                 found = false
                                 break
                             }
@@ -187,7 +190,7 @@ class Transition(private var input: String) {
 
                     else -> {
                         //Check if only alphabet symbols remain
-                        if (machine.language.contains(read)) {
+                        if (machine.inputAlphabet.contains(read)) {
                             return
                         }
                     }
@@ -199,27 +202,27 @@ class Transition(private var input: String) {
 
     private fun betaTransitions(currentSymbol: Node?) {
         var found = true
-        var tapeFront = inputList.getCurrent()
+        var tapeFront = tape.getCurrent()
         //Get the next node
         var nextSymbol = currentSymbol?.next
 
         if (currentSymbol?.prev != null) {
-            goToFront(inputList.getCurrent())
-            tapeFront = inputList.getCurrent()
+            goToFront(tape.getCurrent())
+            tapeFront = tape.getCurrent()
             //Get the next node
             nextSymbol = tapeFront?.next
         }
 
         println("Current: ${currentSymbol?.data}, Next: ${nextSymbol?.data}")
         var prevSymbol = currentSymbol?.data
-        //Set to blankSymbol aka '#'
-        currentSymbol?.data = machine.blankSymbol
-        println(inputList.showData())
+        //Set to blankSymbol aka '⊔'
+        currentSymbol?.data = machine.crossSymbol
+        println(tape.showData())
 
         //Check if Napkin is a requested item
         while (nextSymbol?.data != 'N') {
-            //Check if end of linkedList is reached
-            if (nextSymbol?.data == '$') {
+            //Check if end of tape is reached
+            if (nextSymbol?.data == machine.blankSymbol) {
                 found = false
                 break
             }
@@ -234,7 +237,7 @@ class Transition(private var input: String) {
             replaceSymbol(nextSymbol, prevSymbol, currentSymbol)
             var currSymbol = tapeFront
 
-            while (currSymbol?.data != '$') {
+            while (currSymbol?.data != machine.blankSymbol) {
                 //Get the next node
                 nextSymbol = currSymbol?.next
                 //Store current node symbol
@@ -246,12 +249,12 @@ class Transition(private var input: String) {
                     read = currSymbol?.data
                     when (read) {
                         'ɑ' -> {
-                            //Set current node symbol to blankSymbol aka '#'
-                            currSymbol?.data = machine.blankSymbol
-                            println(inputList.showData())
+                            //Write 'x' on current head position
+                            currSymbol?.data = machine.crossSymbol
+                            println(tape.showData())
 
                             while (nextSymbol?.data != 'F') {
-                                if (nextSymbol?.data == '$') {
+                                if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
@@ -269,12 +272,12 @@ class Transition(private var input: String) {
                         }
 
                         'β' -> {
-                            //Set current node symbol to blankSymbol aka '#'
-                            currSymbol?.data = machine.blankSymbol
-                            println(inputList.showData())
+                            //Write 'x' on current head position
+                            currSymbol?.data = machine.crossSymbol
+                            println(tape.showData())
 
                             while (nextSymbol?.data != 'S') {
-                                if (nextSymbol?.data == '$') {
+                                if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
@@ -292,15 +295,15 @@ class Transition(private var input: String) {
                         }
 
                         'γ' -> {
-                            //Set current node symbol to blankSymbol aka '#'
-                            currSymbol?.data = machine.blankSymbol
-                            println(inputList.showData())
+                            //Write 'x' on current head position
+                            currSymbol?.data = machine.crossSymbol
+                            println(tape.showData())
 
                             var count = 0
                             val symbolArray = ArrayList<Node>()
 
                             while (count != 2) {
-                                if (nextSymbol?.data == '$') {
+                                if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
@@ -325,7 +328,7 @@ class Transition(private var input: String) {
 
                         else -> {
                             //Check if only alphabet symbols remain
-                            if (machine.language.contains(read)) {
+                            if (machine.inputAlphabet.contains(read)) {
                                 return
                             }
                         }
@@ -338,34 +341,50 @@ class Transition(private var input: String) {
 
     private fun gammaTransitions(currentSymbol: Node?) {
         var found = true
-        var tapeFront = inputList.getCurrent()
+        var tapeFront = tape.getCurrent()
         //Get the next node
         var nextSymbol = currentSymbol?.next
 
         if (currentSymbol?.prev != null) {
-            goToFront(inputList.getCurrent())
-            tapeFront = inputList.getCurrent()
+            goToFront(tape.getCurrent())
+            tapeFront = tape.getCurrent()
             //Get the next node
             nextSymbol = tapeFront?.next
         }
 
         println("Current: ${currentSymbol?.data}, Next: ${nextSymbol?.data}")
         var prevSymbol = currentSymbol?.data
-        //Set to blankSymbol aka '#'
-        currentSymbol?.data = machine.blankSymbol
-        println(inputList.showData())
+        println(tape.showData())
 
         //Check if Napkin is a requested item
         while (nextSymbol?.data != 'S') {
-            //Check if end of linkedList is reached
-            if (nextSymbol?.data == '$') {
+            //Check if end of tape is reached
+            if (nextSymbol?.data == machine.blankSymbol) {
                 found = false
                 break
+            }
+            if (nextSymbol?.data == 'F') {
+                println("Write: 'ɑ' on '${currentSymbol?.data}'")
+                currentSymbol?.data = 'ɑ'
+                giveItem(nextSymbol, null)
+                alphaTransitions(currentSymbol)
+                return
+            }
+            if (nextSymbol?.data == 'N') {
+                println("Write: 'β' on '${currentSymbol?.data}'")
+                //Set to blankSymbol aka '⊔'
+                currentSymbol?.data = 'β'
+                giveItem(nextSymbol, null)
+                betaTransitions(currentSymbol)
+                return
             }
             val current = nextSymbol
             nextSymbol = nextSymbol?.next
             println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
         }
+
+        //Set to blankSymbol aka '⊔'
+        currentSymbol?.data = machine.crossSymbol
 
         if (found) {
             giveItem(nextSymbol, null)
@@ -373,7 +392,7 @@ class Transition(private var input: String) {
             replaceSymbol(nextSymbol, prevSymbol, currentSymbol)
             var currSymbol = tapeFront
 
-            while (currSymbol?.data != '$') {
+            while (currSymbol?.data != machine.blankSymbol) {
                 //Get the next node
                 nextSymbol = currSymbol?.next
                 //Store current node symbol
@@ -385,12 +404,12 @@ class Transition(private var input: String) {
                     read = currSymbol?.data
                     when (read) {
                         'ɑ' -> {
-                            //Set current node symbol to blankSymbol aka '#'
-                            currSymbol?.data = machine.blankSymbol
-                            println(inputList.showData())
+                            //Write 'x' on current head position
+                            currSymbol?.data = machine.crossSymbol
+                            println(tape.showData())
 
                             while (nextSymbol?.data != 'K') {
-                                if (nextSymbol?.data == '$') {
+                                if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
@@ -408,15 +427,15 @@ class Transition(private var input: String) {
                         }
 
                         'β' -> {
-                            //Set current node symbol to blankSymbol aka '#'
-                            currSymbol?.data = machine.blankSymbol
-                            println(inputList.showData())
+                            //Write 'x' on current head position
+                            currSymbol?.data = machine.crossSymbol
+                            println(tape.showData())
 
                             var count = 0
                             val symbolArray = ArrayList<Node>()
 
                             while (count != 2) {
-                                if (nextSymbol?.data == '$') {
+                                if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
@@ -432,7 +451,7 @@ class Transition(private var input: String) {
                             if (found) {
                                 symbolArray.forEach {
                                     println("Element: $it")
-                                    giveItem(it, currSymbol)
+                                    giveItem(it, currentSymbol)
                                 }
                                 return
                             } else {
@@ -441,12 +460,12 @@ class Transition(private var input: String) {
                         }
 
                         'γ' -> {
-                            //Set current node symbol to blankSymbol aka '#'
-                            currSymbol?.data = machine.blankSymbol
-                            println(inputList.showData())
+                            //Write 'x' on current head position
+                            currSymbol?.data = machine.crossSymbol
+                            println(tape.showData())
 
                             while (nextSymbol?.data != 'F') {
-                                if (nextSymbol?.data == '$') {
+                                if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
@@ -456,7 +475,7 @@ class Transition(private var input: String) {
                             }
 
                             if (found) {
-                                giveItem(nextSymbol, currSymbol)
+                                giveItem(nextSymbol, currentSymbol)
                                 return
                             } else {
                                 replaceSymbol(nextSymbol, prevSymbol, currSymbol)
@@ -465,7 +484,7 @@ class Transition(private var input: String) {
 
                         else -> {
                             //Check if only alphabet symbols remain
-                            if (machine.language.contains(read)) {
+                            if (machine.inputAlphabet.contains(read)) {
                                 return
                             }
                         }
@@ -478,10 +497,10 @@ class Transition(private var input: String) {
 
     private fun giveItem(currentSymbol: Node?, targetSymbol: Node?) {
         var found = true
-        println("Write: ${machine.checkSymbol} on '${currentSymbol?.data}'")
+        println("Write: ${machine.crossSymbol} on '${currentSymbol?.data}'")
         //Check off item
-        currentSymbol?.data = machine.checkSymbol
-        println(inputList.showData())
+        currentSymbol?.data = machine.crossSymbol
+        println(tape.showData())
 
         if (targetSymbol != null) {
             var previousSymbol = currentSymbol?.prev
@@ -498,11 +517,11 @@ class Transition(private var input: String) {
             }
 
             if (found) {
-                println("Write: ${machine.blankSymbol} on '${targetSymbol.data}'")
-                previousSymbol?.data = machine.blankSymbol
+                println("Write: ${machine.crossSymbol} on '${targetSymbol.data}'")
+                previousSymbol?.data = machine.crossSymbol
             }
         }
-        println(inputList.showData())
+        println(tape.showData())
     }
 
     private fun replaceSymbol(currentSymbol: Node?, substituteSymbol: Char?, targetNode: Node?) {
@@ -522,7 +541,7 @@ class Transition(private var input: String) {
         if (found) {
             targetNode?.data = substituteSymbol!!
         }
-        println(inputList.showData())
+        println(tape.showData())
     }
 
     private fun goToFront(currentSymbol: Node?) {
@@ -535,6 +554,6 @@ class Transition(private var input: String) {
             println("Current: ${current.data}, Previous: ${previousSymbol?.data}")
         }
         println("Front of tape reached")
-        println(inputList.showData())
+        println(tape.showData())
     }
 }
