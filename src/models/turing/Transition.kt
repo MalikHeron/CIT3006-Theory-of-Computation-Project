@@ -17,9 +17,9 @@ class Transition(input: String) {
     }
 
     private fun verifySymbols(input: String) {
-        //Iterate through the characters of the string
+        //Iterate through the symbols in the input
         input.forEach {
-            //Invalid input
+            //Check for invalid input
             if (!machine.tapeAlphabet.contains(it)) {
                 println("Invalid input detected")
                 refund()
@@ -85,7 +85,7 @@ class Transition(input: String) {
     }
 
     private fun refund() {
-        var total: Int = 0
+        var total = 0
         tape.getData().forEach {
             if (it == 'ɑ')
                 total += 5
