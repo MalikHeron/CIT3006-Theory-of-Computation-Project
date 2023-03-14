@@ -10,7 +10,7 @@ public class Inventory {
 
     public Inventory(String filename) {
         try {
-            setFile(new RandomAccessFile(filename, "rw"));
+            setFile(new RandomAccessFile(filename, "rw")); //NTS: revisit for specifying paths based on project strucutre
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
