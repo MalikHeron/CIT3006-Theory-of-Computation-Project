@@ -31,13 +31,13 @@ public class InputDialog extends JDialog implements ActionListener {
             UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
             UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 30));
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (UnsupportedLookAndFeelException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         Border buttonBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
 
