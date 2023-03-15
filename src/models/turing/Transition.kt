@@ -66,9 +66,9 @@ class Transition(input: String) {
                     println("q14: $read -> $write, $right")
                     current?.data = machine.delta
                     //Check combinations for 'γ'
-                    val node = gammaTransitions(current) as Node?
-                    if (node != null) {
-                        current = node
+                    val head = gammaTransitions(current) as Node?
+                    if (head != null) {
+                        current = head
                     }
                 }
 
@@ -237,12 +237,12 @@ class Transition(input: String) {
     private fun betaTransitions(currentSymbol: Node?) {
         var found = true
         var tapeFront = goToFront(currentSymbol)
-        //Get the next node
+        //Get the next head
         var nextSymbol = currentSymbol?.next
         var currSymbol = currentSymbol
 
         if (currentSymbol?.prev != null) {
-            //Get the next node
+            //Get the next head
             tapeFront = goToFront(currentSymbol)?.next
             nextSymbol = tapeFront?.next
         }
@@ -267,7 +267,7 @@ class Transition(input: String) {
             currSymbol = tapeFront
 
             while (currSymbol?.data != machine.blankSymbol) {
-                //Get the next node
+                //Get the next head
                 nextSymbol = currSymbol?.next
 
                 if (currSymbol != currentSymbol) {
@@ -376,12 +376,12 @@ class Transition(input: String) {
     private fun gammaTransitions(currentSymbol: Node?): Any? {
         var found = true
         var tapeFront = goToFront(currentSymbol)
-        //Get the next node
+        //Get the next head
         var nextSymbol = currentSymbol?.next
         var currSymbol = currentSymbol
 
         if (currentSymbol?.prev != null) {
-            //Get the next node
+            //Get the next head
             tapeFront = goToFront(currentSymbol)?.next
             nextSymbol = tapeFront?.next
         }
@@ -420,7 +420,7 @@ class Transition(input: String) {
             currSymbol = tapeFront
 
             while (currSymbol?.data != machine.blankSymbol) {
-                //Get the next node
+                //Get the next head
                 nextSymbol = currSymbol?.next
 
                 if (currSymbol != currentSymbol) {

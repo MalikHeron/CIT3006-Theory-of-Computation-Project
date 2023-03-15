@@ -1,10 +1,6 @@
 package models.turing
 
 data class Machine(
-    var currentState: Int = 0,
-    var nextState: Int = 0,
-    var finalState: Int = 0,
-    var initialState: Int = 0,
     val inputAlphabet: Array<Char> = arrayOf('F', 'K', 'N', 'S', 'ɑ', 'β', 'γ'),
     val tapeAlphabet: Array<Char> = arrayOf('F', 'K', 'N', 'S', 'ɑ', 'β', 'γ', 'A', 'B', 'Δ', 'θ', 'μ', 'Ω', '⊔', 'x'),
     var alpha: Char = tapeAlphabet[7],
