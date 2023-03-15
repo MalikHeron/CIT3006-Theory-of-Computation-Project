@@ -1,18 +1,18 @@
-package driver;
+package driver
 
-import models.turing.Transition;
-import models.turing.Turing;
+import models.turing.Turing
 
-public class Main {
-    public static void main(String[] args) {
-        //new Turing("ɑɑβββγβɑFKFS⊔"); //Correct result = xxxxxxxxxxx⊔
-        //new Turing("ɑɑββγβɑFKF⊔"); //Correct result = xxxxxβxxxx⊔
-        //new Turing("ɑɑβγFKF⊔"); //Correct result = xxxxxxF⊔
-        new Turing("ɑβɑγFNF⊔"); //Correct result = xxxxxxx⊔
-        //new Turing("γβɑSK⊔"); //Correct result = xβɑxK⊔
-        //new Turing("δNKF⊔"); //Correct result = invalid
-        //new Turing("βδNKF⊔"); //Correct result = refund $10
-        //new Turing("γN⊔"); //Correct result = βx⊔
-        //new Turing("ɑɑɑɑS⊔"); //Correct result = xxxxx⊔
+object Main {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        Turing("ɑɑβββγβɑFKFS⊔"); //Correct result = xxxxxxxxxxx⊔
+        //Turing("ɑɑββγβɑFKF⊔"); //Correct result = xxxxxβxxxx⊔
+        //Turing("ɑɑβγFKF⊔"); //Correct result = xxxxxxF⊔
+        //Turing("ɑβɑγFNF⊔") //Correct result = xxxxxxx⊔
+        //Turing("γβɑSK⊔"); //Correct result = xβɑxK⊔
+        //Turing("δNKF⊔"); //Correct result = invalid
+        //Turing("βδNKF⊔"); //Correct result = refund $10
+        //Turing("γN⊔"); //Correct result = βx⊔
+        //Turing("ɑɑɑɑS⊔"); //Correct result = xxxxx⊔
     }
 }
