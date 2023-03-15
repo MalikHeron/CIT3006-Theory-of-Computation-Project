@@ -3,15 +3,18 @@ package models.turing
 data class Machine(
     var currentState: Int = 0,
     var nextState: Int = 0,
-    // To halt the machine when reached, must not contain
-    // any transitions
     var finalState: Int = 0,
     var initialState: Int = 0,
     val inputAlphabet: Array<Char> = arrayOf('F', 'K', 'N', 'S', 'ɑ', 'β', 'γ'),
-    val tapeAlphabet: Array<Char> = arrayOf('K', 'F', 'S', 'N', 'ɑ', 'β', 'γ', '⊔', 'x'),
-    // Blank symbol defined for the machine in the input file
-    var blankSymbol: Char = tapeAlphabet[7],
-    var crossSymbol: Char = tapeAlphabet[8]
+    val tapeAlphabet: Array<Char> = arrayOf('F', 'K', 'N', 'S', 'ɑ', 'β', 'γ', 'A', 'B', 'Δ', 'θ', 'μ', 'Ω', '⊔', 'x'),
+    var alpha: Char = tapeAlphabet[7],
+    var beta: Char = tapeAlphabet[8],
+    var delta: Char = tapeAlphabet[9],
+    var theta: Char = tapeAlphabet[10],
+    var mu: Char = tapeAlphabet[11],
+    var omega: Char = tapeAlphabet[12],
+    var blankSymbol: Char = tapeAlphabet[13],
+    var crossSymbol: Char = tapeAlphabet[14]
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

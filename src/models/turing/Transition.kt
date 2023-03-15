@@ -44,22 +44,32 @@ class Transition(input: String) {
         while (read != machine.blankSymbol) {
             //read symbol at head
             read = current?.data!!
-            write = current?.data
-            println("$read -> $write, $right")
             when (read) {
                 'ɑ' -> {
+                    write = machine.alpha
+                    println("q2: $read -> $write, $right")
+                    current?.data = machine.alpha
                     //Check combinations for 'ɑ'
                     alphaTransitions(current)
                 }
 
                 'β' -> {
+                    write = machine.beta
+                    println("q9: $read -> $write, $right")
+                    current?.data = machine.beta
                     //Check combinations for 'β'
                     betaTransitions(current)
                 }
 
                 'γ' -> {
+                    write = machine.delta
+                    println("q14: $read -> $write, $right")
+                    current?.data = machine.delta
                     //Check combinations for 'γ'
-                    gammaTransitions(current)
+                    val node = gammaTransitions(current) as Node?
+                    if (node != null) {
+                        current = node
+                    }
                 }
 
                 machine.blankSymbol -> {
@@ -80,9 +90,10 @@ class Transition(input: String) {
     private fun checkInput() {
         tape.getData().forEach {
             if (machine.inputAlphabet.contains(it)) {
-                if (it == 'F' || it == 'K' || it == 'N' || it == 'S')
+                if (it == 'F' || it == 'K' || it == 'N' || it == 'S') {
                     println("Insufficient funds")
                     return
+                }
             }
         }
     }
@@ -108,24 +119,17 @@ class Transition(input: String) {
 
         //Check if already at the tape's front
         currSymbol = if (currentSymbol?.prev != null) {
-            //Move to the leftmost position on the tap
-            //goToFront(tape.getCurrent())
-            //Get current symbol under head
-            tape.getCurrent()
+            //Move to the leftmost position on the tape
+            goToFront(currentSymbol)
         } else {
             //Move one position to the right
             currentSymbol?.next
         }
 
-        //println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
-
         //While not end of input
         while (currSymbol?.data != machine.blankSymbol) {
             //Get symbol to the right of head
             nextSymbol = currSymbol?.next
-            //Store current symbol
-            val prevSymbol = currSymbol?.data
-            //println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
             if (currSymbol != currentSymbol) {
                 found = true
@@ -133,11 +137,10 @@ class Transition(input: String) {
                 read = currSymbol?.data
                 when (read) {
                     'ɑ' -> {
-                        write = machine.crossSymbol
-                        println("$read -> $write, $right")
+                        write = machine.theta
+                        println("q3: $read -> $write, $right")
                         //Write 'x' on current head position
-                        currSymbol?.data = machine.crossSymbol
-                        //println("Tape: ${tape.getData()}\n")
+                        currSymbol?.data = machine.theta
 
                         //Check if Napkin is a requested item
                         while (nextSymbol?.data != 'N') {
@@ -146,31 +149,28 @@ class Transition(input: String) {
                                 found = false
                                 break
                             }
-                            val current = nextSymbol
                             //Move one position to the right
                             nextSymbol = nextSymbol?.next
-                            //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                            read = current?.data
-                            write = current?.data
-                            println("$read -> $write, $right")
+                            read = "F, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                            write = "F, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                            println("q4: $read -> $right")
                         }
 
                         if (found) {
                             //Give the item and check it off
-                            giveItem(nextSymbol, currentSymbol)
+                            giveItem(nextSymbol)
                             return
                         } else {
                             //Write back the symbols
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                            revertComboSymbol(nextSymbol)
                         }
                     }
 
                     'β' -> {
-                        write = machine.crossSymbol
-                        println("$read -> $write, $right")
+                        write = machine.mu
+                        println("q5: $read -> $write, $right")
                         //Write 'x' on current head position
-                        currSymbol?.data = machine.crossSymbol
-                        //println("Tape: ${tape.getData()}\n")
+                        currSymbol?.data = machine.mu
 
                         //Check if Fork is a requested item
                         while (nextSymbol?.data != 'F') {
@@ -179,29 +179,26 @@ class Transition(input: String) {
                                 found = false
                                 break
                             }
-                            val current = nextSymbol
                             //Move one position to the right
                             nextSymbol = nextSymbol?.next
-                            //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                            read = current?.data
-                            write = current?.data
-                            println("$read -> $write, $right")
+                            read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                            write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                            println("q6: $read -> $right")
                         }
 
                         if (found) {
-                            giveItem(nextSymbol, currentSymbol)
+                            giveItem(nextSymbol)
                             return
                         } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                            revertComboSymbol(nextSymbol)
                         }
                     }
 
                     'γ' -> {
-                        write = machine.crossSymbol
-                        println("$read -> $write, $right")
+                        write = machine.omega
+                        println("q7: $read -> $write, $right")
                         //Write x on current head position
-                        currSymbol?.data = machine.crossSymbol
-                        //println("Tape: ${tape.getData()}\n")
+                        currSymbol?.data = machine.omega
 
                         //Check if Knife is a requested item
                         while (nextSymbol?.data != 'K') {
@@ -210,25 +207,24 @@ class Transition(input: String) {
                                 found = false
                                 break
                             }
-                            val current = nextSymbol
                             nextSymbol = nextSymbol?.next
-                            //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                            read = current?.data
-                            write = current?.data
-                            println("$read -> $write, $right")
+                            read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                            write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                            println("q8: $read -> $right")
                         }
 
                         if (found) {
-                            giveItem(nextSymbol, currentSymbol)
+                            giveItem(nextSymbol)
                             return
                         } else {
-                            replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                            revertComboSymbol(nextSymbol)
                         }
                     }
 
                     else -> {
                         //Check if only alphabet symbols remain
                         if (machine.inputAlphabet.contains(read)) {
+                            revertSymbol(currSymbol)
                             return
                         }
                     }
@@ -240,22 +236,16 @@ class Transition(input: String) {
 
     private fun betaTransitions(currentSymbol: Node?) {
         var found = true
-        var tapeFront = tape.getCurrent()
+        var tapeFront = goToFront(currentSymbol)
         //Get the next node
         var nextSymbol = currentSymbol?.next
+        var currSymbol = currentSymbol
 
         if (currentSymbol?.prev != null) {
-            //goToFront(tape.getCurrent())
-            tapeFront = tape.getCurrent()
             //Get the next node
+            tapeFront = goToFront(currentSymbol)?.next
             nextSymbol = tapeFront?.next
         }
-
-        //println("Current: ${currentSymbol?.data}, Next: ${nextSymbol?.data}")
-        var prevSymbol = currentSymbol?.data
-        //Write crossSymbol aka 'x'
-        currentSymbol?.data = machine.crossSymbol
-        println("Tape: ${tape.getData()}\n")
 
         //Check if Napkin is a requested item
         while (nextSymbol?.data != 'N') {
@@ -264,93 +254,81 @@ class Transition(input: String) {
                 found = false
                 break
             }
-            val current = nextSymbol
             nextSymbol = nextSymbol?.next
-            //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-            read = current?.data
-            write = current?.data
-            println("$read -> $write, $right")
+            read = "F, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+            write = "F, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+            println("q4: $read -> $right")
         }
 
         if (found) {
-            giveItem(nextSymbol, null)
+            giveItem(nextSymbol)
         } else {
-            replaceSymbol(nextSymbol, prevSymbol, currentSymbol)
-            var currSymbol = tapeFront
+            revertComboSymbol(nextSymbol)
+            currSymbol = tapeFront
 
             while (currSymbol?.data != machine.blankSymbol) {
                 //Get the next node
                 nextSymbol = currSymbol?.next
-                //Store current node symbol
-                prevSymbol = currSymbol?.data
-                //println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
                 if (currSymbol != currentSymbol) {
                     found = true
                     read = currSymbol?.data
                     when (read) {
                         'ɑ' -> {
-                            write = machine.crossSymbol
-                            println("$read -> $write, $right")
+                            write = machine.theta
+                            println("q10: $read -> $write, $right")
                             //Write 'x' on current head position
-                            currSymbol?.data = machine.crossSymbol
-                            //println("Tape: ${tape.getData()}\n")
+                            currSymbol?.data = machine.theta
 
                             while (nextSymbol?.data != 'F') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
-                                val current = nextSymbol
                                 nextSymbol = nextSymbol?.next
-                                //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                                read = current?.data
-                                write = current?.data
-                                println("$read -> $write, $right")
+                                read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                println("q6: $read -> $right")
                             }
 
                             if (found) {
-                                giveItem(nextSymbol, currentSymbol)
+                                giveItem(nextSymbol)
                                 return
                             } else {
-                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                                revertComboSymbol(nextSymbol)
                             }
                         }
 
                         'β' -> {
-                            write = machine.crossSymbol
-                            println("$read -> $write, $right")
+                            write = machine.mu
+                            println("p11: $read -> $write, $right")
                             //Write 'x' on current head position
-                            currSymbol?.data = machine.crossSymbol
-                            //println("Tape: ${tape.getData()}\n")
+                            currSymbol?.data = machine.mu
 
                             while (nextSymbol?.data != 'S') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
-                                val current = nextSymbol
                                 nextSymbol = nextSymbol?.next
-                                //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                                read = current?.data
-                                write = current?.data
-                                println("$read -> $write, $right")
+                                read = "F, K, N, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                write = "F, K, N, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                println("q12: $read -> $right")
                             }
 
                             if (found) {
-                                giveItem(nextSymbol, currentSymbol)
+                                giveItem(nextSymbol)
                                 return
                             } else {
-                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                                revertComboSymbol(nextSymbol)
                             }
                         }
 
                         'γ' -> {
-                            write = machine.crossSymbol
-                            println("$read -> $write, $right")
+                            write = machine.omega
+                            println("q13: $read -> $write, $right")
                             //Write 'x' on current head position
-                            currSymbol?.data = machine.crossSymbol
-                            //println("Tape: ${tape.getData()}\n")
+                            currSymbol?.data = machine.omega
 
                             var count = 0
                             val symbolArray = ArrayList<Node>()
@@ -364,27 +342,26 @@ class Transition(input: String) {
                                     symbolArray.add(nextSymbol)
                                     count++
                                 }
-                                val current = nextSymbol
                                 nextSymbol = nextSymbol?.next
-                                //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                                read = current?.data
-                                write = current?.data
-                                println("$read -> $write, $right")
+                                read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                println("q6: $read -> $right")
                             }
 
                             if (found) {
                                 symbolArray.forEach {
-                                    giveItem(it, currentSymbol)
+                                    giveItem(it)
                                 }
                                 return
                             } else {
-                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                                revertComboSymbol(nextSymbol)
                             }
                         }
 
                         else -> {
                             //Check if only alphabet symbols remain
                             if (machine.inputAlphabet.contains(read)) {
+                                revertSymbol(currSymbol)
                                 return
                             }
                         }
@@ -393,24 +370,21 @@ class Transition(input: String) {
                 currSymbol = currSymbol?.next
             }
         }
+        revertSymbol(currSymbol)
     }
 
-    private fun gammaTransitions(currentSymbol: Node?) {
+    private fun gammaTransitions(currentSymbol: Node?): Any? {
         var found = true
-        var tapeFront = tape.getCurrent()
+        var tapeFront = goToFront(currentSymbol)
         //Get the next node
         var nextSymbol = currentSymbol?.next
+        var currSymbol = currentSymbol
 
         if (currentSymbol?.prev != null) {
-            //goToFront(tape.getCurrent())
-            tapeFront = tape.getCurrent()
             //Get the next node
+            tapeFront = goToFront(currentSymbol)?.next
             nextSymbol = tapeFront?.next
         }
-
-        //println("Current: ${currentSymbol?.data}, Next: ${nextSymbol?.data}")
-        var prevSymbol = currentSymbol?.data
-        //println("Tape: ${tape.getData()}\n")
 
         //Check if Napkin is a requested item
         while (nextSymbol?.data != 'S') {
@@ -420,95 +394,69 @@ class Transition(input: String) {
                 break
             }
             if (nextSymbol?.data == 'F') {
-                //println("Write: 'ɑ' on '${currentSymbol?.data}'")
                 read = currentSymbol?.data
                 write = 'ɑ'
-                println("$read -> $write, $right")
-                //Write crossSymbol aka 'x'
+                println("q16: $read -> $write, $right")
                 currentSymbol?.data = 'ɑ'
-                giveItem(nextSymbol, null)
-                read = currentSymbol?.data
-                write = 'x'
-                println("$read -> $write, $right")
-                alphaTransitions(currentSymbol)
-                return
+                return giveItem(nextSymbol)
             }
             if (nextSymbol?.data == 'N') {
-                //println("Write: 'β' on '${currentSymbol?.data}'")
                 read = currentSymbol?.data
                 write = 'β'
-                println("$read -> $write, $right")
-                //Write crossSymbol aka 'x'
+                println("q18: $read -> $write, $right")
                 currentSymbol?.data = 'β'
-                giveItem(nextSymbol, null)
-                read = currentSymbol?.data
-                write = 'x'
-                println("$read -> $write, $right")
-                betaTransitions(currentSymbol)
-                return
+                return giveItem(nextSymbol)
             }
-            val current = nextSymbol
             nextSymbol = nextSymbol?.next
-            //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-            read = current?.data
-            write = current?.data
-            println("$read -> $write, $right")
+            read = "K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+            write = "K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+            println("q15: $read -> $right")
         }
 
-        //Write crossSymbol aka 'x'
-        currentSymbol?.data = machine.crossSymbol
-
         if (found) {
-            giveItem(nextSymbol, null)
+            giveItem(nextSymbol)
         } else {
-            replaceSymbol(nextSymbol, prevSymbol, currentSymbol)
-            var currSymbol = tapeFront
+            revertComboSymbol(nextSymbol)
+            currSymbol = tapeFront
 
             while (currSymbol?.data != machine.blankSymbol) {
                 //Get the next node
                 nextSymbol = currSymbol?.next
-                //Store current node symbol
-                prevSymbol = currSymbol?.data
-                //println("Current: ${currSymbol?.data}, Next: ${nextSymbol?.data}")
 
                 if (currSymbol != currentSymbol) {
                     found = true
                     read = currSymbol?.data
                     when (read) {
                         'ɑ' -> {
-                            write = machine.crossSymbol
-                            println("$read -> $write, $right")
+                            write = machine.theta
+                            println("q20: $read -> $write, $right")
                             //Write 'x' on current head position
-                            currSymbol?.data = machine.crossSymbol
-                            //println("Tape: ${tape.getData()}\n")
+                            currSymbol?.data = machine.theta
 
                             while (nextSymbol?.data != 'K') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
-                                val current = nextSymbol
                                 nextSymbol = nextSymbol?.next
-                                //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                                read = current?.data
-                                write = current?.data
-                                println("$read -> $write, $right")
+                                read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                println("q8: $read -> $right")
                             }
 
                             if (found) {
-                                giveItem(nextSymbol, currentSymbol)
-                                return
+                                giveItem(nextSymbol)
+                                return null
                             } else {
-                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                                revertComboSymbol(nextSymbol)
                             }
                         }
 
                         'β' -> {
-                            write = machine.crossSymbol
-                            println("$read -> $write, $right")
+                            write = machine.mu
+                            println("q21: $read -> $write, $right")
                             //Write 'x' on current head position
-                            currSymbol?.data = machine.crossSymbol
-                            //println("Tape: ${tape.getData()}\n")
+                            currSymbol?.data = machine.mu
 
                             var count = 0
                             val symbolArray = ArrayList<Node>()
@@ -522,57 +470,54 @@ class Transition(input: String) {
                                     symbolArray.add(nextSymbol)
                                     count++
                                 }
-                                val current = nextSymbol
                                 nextSymbol = nextSymbol?.next
-                                //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                                read = current?.data
-                                write = current?.data
-                                println("$read -> $write, $right")
+                                nextSymbol = nextSymbol?.next
+                                read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                println("q6: $read -> $right")
                             }
 
                             if (found) {
                                 symbolArray.forEach {
-                                    println("Element: $it")
-                                    giveItem(it, currentSymbol)
+                                    giveItem(it)
                                 }
-                                return
+                                return null
                             } else {
-                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                                revertComboSymbol(nextSymbol)
                             }
                         }
 
                         'γ' -> {
-                            write = machine.crossSymbol
-                            println("$read -> $write, $right")
+                            write = machine.omega
+                            println("q22: $read -> $write, $right")
                             //Write 'x' on current head position
-                            currSymbol?.data = machine.crossSymbol
-                            //println("Tape: ${tape.getData()}\n")
+                            currSymbol?.data = machine.omega
 
                             while (nextSymbol?.data != 'F') {
                                 if (nextSymbol?.data == machine.blankSymbol) {
                                     found = false
                                     break
                                 }
-                                val current = nextSymbol
+                                //Move one position to the right
                                 nextSymbol = nextSymbol?.next
-                                //println("Current: ${current?.data}, Next: ${nextSymbol?.data}")
-                                read = current?.data
-                                write = current?.data
-                                println("$read -> $write, $right")
+                                read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                                println("q6: $read -> $right")
                             }
 
                             if (found) {
-                                giveItem(nextSymbol, currentSymbol)
-                                return
+                                giveItem(nextSymbol)
+                                return null
                             } else {
-                                replaceSymbol(nextSymbol, prevSymbol, currSymbol)
+                                revertComboSymbol(nextSymbol)
                             }
                         }
 
                         else -> {
                             //Check if only alphabet symbols remain
                             if (machine.inputAlphabet.contains(read)) {
-                                return
+                                revertSymbol(currSymbol)
+                                return null
                             }
                         }
                     }
@@ -580,86 +525,123 @@ class Transition(input: String) {
                 currSymbol = currSymbol?.next
             }
         }
+        revertSymbol(currSymbol)
+        return null
     }
 
-    private fun giveItem(currentSymbol: Node?, targetSymbol: Node?) {
-        var found = true
-        //println("Write: ${machine.crossSymbol} on '${currentSymbol?.data}'")
+    private fun giveItem(currentSymbol: Node?): Node? {
+        var previousSymbol = currentSymbol
+        val symbolList = arrayOf(machine.alpha, machine.beta, machine.delta, machine.theta, machine.mu, machine.omega)
+        var tapeFront: Node? = null
+
         read = currentSymbol?.data
         write = machine.crossSymbol
-        println("$read -> $write, $left")
-
-        if (targetSymbol != null) {
-            var previousSymbol = currentSymbol?.prev
-            //println("Current: ${currentSymbol?.data}, Previous: ${previousSymbol?.data}, Target: ${targetSymbol.data}")
-
-            while (previousSymbol != targetSymbol) {
-                if (previousSymbol == null) {
-                    found = false
-                    break
-                }
-                val current = previousSymbol
-                previousSymbol = previousSymbol.prev
-                //println("Current: ${current.data}, Previous: ${previousSymbol?.data}")
-                read = current.data
-                write = current.data
-                println("$read -> $write, $left")
-            }
-
-            if (found) {
-                //println("Write: ${machine.crossSymbol} on '${targetSymbol.data}'")
-                read = targetSymbol.data
-                write = machine.crossSymbol
-                println("$read -> $write, $left")
-                previousSymbol?.data = machine.crossSymbol
-            }
-        }
+        println("q23: $read -> $write, $left")
         println("Dispense '${currentSymbol?.data}'")
         //Check off item
         currentSymbol?.data = machine.crossSymbol
-        println("Tape: ${tape.getData()}\n")
-    }
 
-    private fun replaceSymbol(currentSymbol: Node?, substituteSymbol: Char?, targetNode: Node?) {
-        var found = true
-        var previousSymbol = currentSymbol?.prev
-        //println("Current: ${currentSymbol?.data}, Substitute: $substituteSymbol, Target Node: ${targetNode?.data}\n")
-
-        while (previousSymbol != targetNode) {
-            if (previousSymbol == null) {
-                found = false
-                break
-            }
-            val current = previousSymbol
-            previousSymbol = previousSymbol.prev
-            //println("Current: ${current.data}, Previous: ${previousSymbol?.data}")
-            read = current.data
-            write = current.data
-            println("$read -> $write, $left")
-        }
-        if (found) {
-            read = targetNode?.data
-            write = substituteSymbol
-            println("$read -> $write, $right")
-            targetNode?.data = substituteSymbol!!
-        }
-        println("Tape: ${tape.getData()}\n")
-    }
-
-    private fun goToFront(currentSymbol: Node?) {
-        var previousSymbol = currentSymbol?.prev
-        //println("Current: ${currentSymbol?.data}, Previous: ${previousSymbol?.data}")
-
-        println("Moving to tape front")
         while (previousSymbol != null) {
-            val current = previousSymbol
+            val current = previousSymbol.data
+            if (symbolList.contains(current)) {
+                read = current
+                write = machine.crossSymbol
+                println("q25: $read -> $write, $left")
+                previousSymbol.data = machine.crossSymbol
+            }
+            if (previousSymbol.prev == null) {
+                tapeFront = previousSymbol
+            }
             previousSymbol = previousSymbol.prev
-            //println("Current: ${current.data}, Previous: ${previousSymbol?.data}")
-            read = current.data
-            write = current.data
-            println("$read -> $write, $left")
+            read = "F, K, N, S, ɑ, β, γ, x"
+            write = "F, K, N, S, ɑ, β, γ, x"
+            println("q24: $read -> $left")
         }
-        println("Front of tape reached")
+
         println("Tape: ${tape.getData()}\n")
+        return tapeFront
+    }
+
+    private fun revertComboSymbol(currentSymbol: Node?) {
+        var previousSymbol = currentSymbol?.prev
+        val symbolList = arrayOf(machine.theta, machine.mu, machine.omega)
+        val replaceList = arrayOf('ɑ', 'β', 'γ')
+
+        while (previousSymbol != null) {
+            val current = previousSymbol.data
+            if (symbolList.contains(current)) {
+                read = current
+                if (read == machine.theta) {
+                    write = replaceList[0]
+                    println("q27: $read -> $write, $left")
+                    previousSymbol.data = replaceList[0]
+                }
+                if (read == machine.mu) {
+                    write = replaceList[1]
+                    println("q28: $read -> $write, $left")
+                    previousSymbol.data = replaceList[1]
+                }
+                if (read == machine.omega) {
+                    write = replaceList[2]
+                    println("q29: $read -> $write, $left")
+                    previousSymbol.data = replaceList[2]
+                }
+            }
+            previousSymbol = previousSymbol.prev
+            read = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
+            write = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
+            println("q26: $read -> $left")
+        }
+
+        println("Tape: ${tape.getData()}\n")
+    }
+
+    private fun revertSymbol(currentSymbol: Node?) {
+        var previousSymbol = currentSymbol?.prev
+        val symbolList = arrayOf(machine.alpha, machine.beta, machine.delta)
+        val replaceList = arrayOf('ɑ', 'β', 'γ')
+
+        while (previousSymbol != null) {
+            val current = previousSymbol.data
+            if (symbolList.contains(current)) {
+                read = current
+                if (read == machine.alpha) {
+                    write = replaceList[0]
+                    println("q31: $read -> $write, $left")
+                    previousSymbol.data = replaceList[0]
+                }
+                if (read == machine.beta) {
+                    write = replaceList[1]
+                    println("q32: $read -> $write, $left")
+                    previousSymbol.data = replaceList[1]
+                }
+                if (read == machine.delta) {
+                    write = replaceList[2]
+                    println("q33: $read -> $write, $left")
+                    previousSymbol.data = replaceList[2]
+                }
+            }
+            previousSymbol = previousSymbol.prev
+            read = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
+            write = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
+            println("q30: $read -> $left")
+        }
+
+        println("Tape: ${tape.getData()}\n")
+    }
+
+    private fun goToFront(currentSymbol: Node?): Node? {
+        var previousSymbol = currentSymbol?.prev
+
+        if (previousSymbol != null) {
+            while (previousSymbol?.prev != null) {
+                previousSymbol = previousSymbol.prev
+                read = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                write = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                println("q34: $read -> $left")
+            }
+            println("Tape: ${tape.getData()}\n")
+        }
+        return previousSymbol
     }
 }
