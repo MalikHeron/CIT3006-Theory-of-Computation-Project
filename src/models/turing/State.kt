@@ -128,13 +128,13 @@ class State {
                             getNextState(currentSymbol?.data, currentSymbol)
                             //nextState = 6
                             //getNextState()
-                            TODO("transition for N and F and custom give item function")
+                            TODO("missing transition for F and custom give item function")
                         } else if (nextSymbol?.data == 'N') {
                             nextState = 18
                             getNextState(currentSymbol?.data, currentSymbol)
                             //nextState = 6
                             //getNextState()
-                            TODO("transition for N and F and custom give item function")
+                            TODO("missing transition for N and custom give item function")
                         }
                         read = "S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                         write = "S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
