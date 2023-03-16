@@ -7,13 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PaymentProcessor {//NTS: You need to tie function together
-    private int refund = 0;
-    private String itemsNotSold = "";
-    private String itemsSold = "";
-    private int totalSpent = 0;
-    private String input = "";
-    private Inventory inventory;
-
     private static final Map<Character, Integer> ITEM_PRICES = new HashMap<Character, Integer>() {{
         put('N', 10);
         put('K', 25);
@@ -39,6 +32,13 @@ public class PaymentProcessor {//NTS: You need to tie function together
         put('β', 10);
         put('γ', 20);
     }};
+    private int refund = 0;
+    private String itemsNotSold = "";
+    private String itemsSold = "";
+    private int totalSpent = 0;
+    private String input = "";
+    private Inventory inventory;
+
 
 
     //NTS: Input validation is being done in "receipt" dialog. it must be taken into account
@@ -122,7 +122,7 @@ public class PaymentProcessor {//NTS: You need to tie function together
         return SOLD;
     }
 
-    //This method check if inventory contains enough items for sales.
+    //This method check if inventory contains enough items for sales. It should only be called after input validation
     //NTS: Determine where to implement this check
     public boolean checkStock() {
         char inputChar;
@@ -149,6 +149,8 @@ public class PaymentProcessor {//NTS: You need to tie function together
         }
         return true;
     }
+
+
 
 }
 
