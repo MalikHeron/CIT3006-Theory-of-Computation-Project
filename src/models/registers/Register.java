@@ -7,7 +7,7 @@ public class Register {
     private ArrayList arrayList;
 
     public void increment () {
-        structure.increment();
+//        structure.increment();
     }
 
     public void decrement () {
@@ -15,10 +15,11 @@ public class Register {
     }
 
     public boolean isEmpty () {
-        if (structure.isEmpty()) {
-
-        } else {
-
-        }
+//        if (structure.isEmpty()) {
+//
+//        } else {
+//
+//        }
+        return true;
     }
 }

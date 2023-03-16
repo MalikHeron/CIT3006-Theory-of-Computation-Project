@@ -1,7 +1,9 @@
 package driver;
 
+import view.screens.MainScreen;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!, ugh");
+        new MainScreen();
     }
 }
