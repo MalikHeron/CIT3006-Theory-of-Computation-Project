@@ -16,18 +16,18 @@ class Turing(input: String) {
     private var machine = Machine()
 
     init {
-        //Verify symbols from input
-        if (Helper.verifySymbols(input))
-            run()
+        //Build tape from input
+        Helper.buildTape(input)
+        run()
     }
 
     private fun run() {
         //Start turing machine
-        State.currentState = 1
+        State.currentState = 0
         State.getState(null, null)
 
         //Loop while not at the end of the tape
-        while (State.currentState != State.finalState) {
+        while (State.currentState != State.acceptState && State.currentState != State.rejectState) {
             val currentSymbol = head
             //read symbol at head
             read = head?.data!!
@@ -49,15 +49,13 @@ class Turing(input: String) {
             }
             if (head?.data == machine.blankSymbol) {
                 //Check if only alphabet symbols remain
-                Helper.checkInput()
-                Helper.refund()
-                println("Tape: ${tape.getData()}\n")
-                State.currentState = 36
+                State.currentState = 35
                 State.getState(null, null)
-                return
+                break
             }
             //Move one position to the right
             head = head?.next
         }
+        return
     }
 }

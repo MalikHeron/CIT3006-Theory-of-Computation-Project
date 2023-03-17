@@ -1,12 +1,15 @@
 package models.turing
 
+import models.registers.Register
 import models.turing.Turing.Companion.head
+import util.Helper
 import util.Node
 
 class State {
     companion object {
-        private var initialState: Int = 1
-        var finalState: Int = 36
+        private var initialState: Int = 0
+        var acceptState: Int = 45
+        var rejectState: Int = 44
         var currentState: Int = 0
         private var nextState: Int = 0
         private var result: Node? = null
@@ -25,6 +28,26 @@ class State {
             when (currentState) {
                 initialState -> {
                     println("q${currentState}: Turing Machine started...")
+                    nextState = 1
+                    getNextState()
+                }
+
+                1 -> {
+                    while (head?.data != machine.blankSymbol) {
+                        //Check for invalid input
+                        if (!machine.tapeAlphabet.contains(head?.data)) {
+                            println("Invalid input detected!")
+                            nextState = rejectState
+                            getNextState()
+                            return null
+                        }
+                        read = "F, N, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "F, N, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${head?.data}]")
+                        head = head?.next
+                    }
+                    nextState = 42
+                    getNextState()
                 }
 
                 2 -> {
@@ -617,8 +640,8 @@ class State {
                         if (current.prev == null) {
                             head = current
                         }
-                        read = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
-                        write = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
+                        read = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
+                        write = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
                         println("q$currentState: $read -> $left [${current.data}]")
                         //Move one position to the left
                         current = current.prev
@@ -647,6 +670,168 @@ class State {
                 }
 
                 35 -> {
+                    nextState = 41
+                    getNextState()
+                    currentState = 35
+
+                    var alphaCounter = 0
+                    var betaCounter = 0
+
+                    while (head?.data != machine.blankSymbol) {
+                        when (head?.data) {
+                            'ɑ' -> {
+                                alphaCounter++
+                                nextState = 36
+                                getNextState()
+                            }
+
+                            'β' -> {
+                                betaCounter++
+                                nextState = 37
+                                getNextState()
+                            }
+                        }
+                        //Check for symbols
+                        if (Helper.checkCount(alphaCounter, betaCounter) != null) {
+                            betaCounter = 0
+                            alphaCounter = 0
+                        }
+                        //Move one position to the right
+                        head = head!!.next
+                        read = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${head?.data}]")
+                    }
+                    println("Tape: ${Turing.tape.getData()}\n")
+
+                    nextState = 43
+                    getNextState()
+                }
+
+                36 -> {
+                    read = currentSymbol
+                    write = machine.alpha
+                    println("q$currentState: $read -> $write, $right")
+                    //Write 'A' on head position
+                    currentSymbol?.data = machine.alpha
+                }
+
+                37 -> {
+                    read = currentSymbol
+                    write = machine.beta
+                    println("q$currentState: $read -> $write, $right")
+                    //Write 'B' on head position
+                    currentSymbol?.data = machine.beta
+                }
+
+                38 -> {
+                    var found = true
+                    var nextSymbol = currentSymbol?.next
+                    //Check if Fork is a requested item
+                    while (nextSymbol?.data != 'K') {
+                        //Check if end of tape is reached
+                        if (nextSymbol?.data == machine.blankSymbol) {
+                            found = false
+                            break
+                        }
+                        read = "F, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "F, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${nextSymbol?.data}]")
+                        //Move one position to the right
+                        nextSymbol = nextSymbol?.next
+                    }
+
+                    result = if (found) {
+                        //Give the item and check it off
+                        Transitions.giveItem(nextSymbol)
+                        head
+                    } else {
+                        null
+                    }
+                }
+
+                39 -> {
+                    var found = true
+                    var nextSymbol = currentSymbol?.next
+                    //Check if Fork is a requested item
+                    while (nextSymbol?.data != 'S') {
+                        //Check if end of tape is reached
+                        if (nextSymbol?.data == machine.blankSymbol) {
+                            found = false
+                            break
+                        }
+                        read = "F, K, N, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "F, K, N, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${nextSymbol?.data}]")
+                        //Move one position to the right
+                        nextSymbol = nextSymbol?.next
+                    }
+
+                    result = if (found) {
+                        //Give the item and check it off
+                        Transitions.giveItem(nextSymbol)
+                        head
+                    } else {
+                        null
+                    }
+                }
+
+                40 -> {
+                    var found = true
+                    var nextSymbol = currentSymbol?.next
+                    //Check if Fork is a requested item
+                    while (nextSymbol?.data != 'F') {
+                        //Check if end of tape is reached
+                        if (nextSymbol?.data == machine.blankSymbol) {
+                            found = false
+                            break
+                        }
+                        read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${nextSymbol?.data}]")
+                        //Move one position to the right
+                        nextSymbol = nextSymbol?.next
+                    }
+
+                    result = if (found) {
+                        //Give the item and check it off
+                        Transitions.giveItem(nextSymbol)
+                        head
+                    } else {
+                        null
+                    }
+                }
+
+                41 -> {
+                    var current = currentSymbol
+
+                    while (current != null) {
+                        val data = current.data
+                        if (uppercaseSymbolList.contains(data)) {
+                            read = data
+                            if (read == machine.alpha) {
+                                nextState = 32
+                                getNextState(current.data, current)
+                                currentState = 41
+                            }
+                            if (read == machine.beta) {
+                                nextState = 33
+                                getNextState(current.data, current)
+                                currentState = 41
+                            }
+                        }
+                        if (current.prev == null) {
+                            head = current
+                        }
+                        read = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
+                        write = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $left [${current.data}]")
+                        //Move one position to the left
+                        current = current.prev
+                    }
+                }
+
+                42 -> {
                     head = head?.prev
 
                     if (head != null) {
@@ -661,22 +846,58 @@ class State {
                     }
                 }
 
-                finalState -> {
+                43 -> {
+                    nextState = 42
+                    getNextState()
+                    currentState = 43
+
+                    while (head?.data != machine.blankSymbol) {
+                        if (head?.data == 'F' || head?.data == 'K' || head?.data == 'N' || head?.data == 'S') {
+                            println("\nInsufficient funds")
+                            nextState = rejectState
+                            getNextState()
+                            return null
+                        }
+                        if (head?.data == 'A' || head?.data == 'B' || head?.data == 'Δ') {
+                            nextState = rejectState
+                            getNextState()
+                            return null
+                        }
+                        read = "ɑ, β, γ, θ, μ, Ω, x"
+                        write = "ɑ, β, γ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${head?.data}]")
+                        head = head?.next
+                    }
+                    nextState = acceptState
+                    getNextState()
+                }
+
+                rejectState -> {
+                    Helper.refund()
                     //Stop machine
-                    println("Halt")
+                    currentState = rejectState
+                    println("q$currentState: Reject and Halt")
+                }
+
+                acceptState -> {
+                    Helper.refund()
+                    //Stop machine
+                    currentState = acceptState
+                    println("\nq${currentState}: Accept and Halt")
                 }
             }
             return result
         }
 
-        private fun getNextState() {
+        private fun getNextState(): Node? {
             currentState = nextState
-            getState(null, head)
+            return getState(null, head)
         }
 
         private fun getNextState(read: Char?, currentSymbol: Node?) {
             currentState = nextState
             getState(read, currentSymbol)
         }
+
     }
 }

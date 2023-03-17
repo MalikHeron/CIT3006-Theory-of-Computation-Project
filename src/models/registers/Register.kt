@@ -1,24 +1,21 @@
-package models.registers;
+package models.registers
 
-import java.util.ArrayList;
+class Register {
+    private val arrayList: ArrayList<*>? = null
 
-public class Register {
-
-    /*private ArrayList arrayList;
-
-    public void increment () {
-        structure.increment();
-    }
-
-    public void decrement () {
+    fun increment() {
 
     }
 
-    public boolean isEmpty () {
-        if (structure.isEmpty()) {
+    fun decrement() {
 
-        } else {
+    }
 
-        }
-    }8/*/
+    fun checkIfZero(): Boolean {
+        return false
+    }
+
+    inner class Instructions() {
+
+    }
 }

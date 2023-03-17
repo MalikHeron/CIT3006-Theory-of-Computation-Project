@@ -198,9 +198,8 @@ class Transitions {
         }
 
         fun goToFront() {
-            State.currentState = 35
+            State.currentState = 42
             State.getState(null, null)
-            println("Tape: ${tape.getData()}\n")
         }
     }
 }
