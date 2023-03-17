@@ -494,6 +494,7 @@ class State {
                         read = "F, K, N, S, ɑ, β, γ, x"
                         write = "F, K, N, S, ɑ, β, γ, x"
                         println("q$currentState: $read -> $left [${current.data}]")
+                        //Move one position to the left
                         current = current.prev
                     }
                 }
@@ -535,6 +536,7 @@ class State {
                         read = "F, K, N, S, ɑ, β, γ, x"
                         write = "F, K, N, S, ɑ, β, γ, x"
                         println("q$currentState: $read -> $left [${current.data}]")
+                        //Move one position to the left
                         current = current.prev
                     }
                 }
@@ -581,6 +583,7 @@ class State {
                         read = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
                         write = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
                         println("q$currentState: $read -> $left [${current.data}]")
+                        //Move one position to the left
                         current = current.prev
                     }
                 }
@@ -617,6 +620,7 @@ class State {
                         read = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
                         write = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
                         println("q$currentState: $read -> $left [${current.data}]")
+                        //Move one position to the left
                         current = current.prev
                     }
                 }
@@ -647,6 +651,7 @@ class State {
 
                     if (head != null) {
                         while (head?.prev != null) {
+                            //Move one position to the left
                             head = head!!.prev
                             read = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                             write = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
@@ -657,7 +662,7 @@ class State {
                 }
 
                 finalState -> {
-                    //End transition/Halt
+                    //Stop machine
                     println("Halt")
                 }
             }
