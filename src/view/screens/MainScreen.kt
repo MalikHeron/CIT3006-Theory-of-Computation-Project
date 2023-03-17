@@ -3,17 +3,16 @@ package view.screens
 import java.awt.Dimension
 import javax.swing.JFrame
 
-class MainScreen: JFrame {
+class MainScreen : JFrame() {
 
-    constructor(){
+    init {
         setupWindow()
     }
 
-    fun setupWindow(){
-        this.title = "Turing Vending Machine"
+    private fun setupWindow(){
+        this.title = "Vending Machine"
         this.defaultCloseOperation = EXIT_ON_CLOSE
         this.size = Dimension(800, 600)
         this.isVisible = true
     }
-
 }
