@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Register {
 
-    private ArrayList arrayList;
+    /*private ArrayList arrayList;
 
     public void increment () {
-//        structure.increment();
+        structure.increment();
     }
 
     public void decrement () {
@@ -15,11 +15,10 @@ public class Register {
     }
 
     public boolean isEmpty () {
-//        if (structure.isEmpty()) {
-//
-//        } else {
-//
-//        }
-        return true;
-    }
+        if (structure.isEmpty()) {
+
+        } else {
+
+        }
+    }8/*/
 }
