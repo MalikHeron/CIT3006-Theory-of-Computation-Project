@@ -40,11 +40,11 @@ class Helper {
         fun refund() {
             var total = 0
             tape.getData().forEach {
-                if (it == 'ɑ')
+                if (it == 'ɑ' || it == 'A')
                     total += 5
-                if (it == 'β')
+                if (it == 'β' || it == 'B')
                     total += 10
-                if (it == 'γ')
+                if (it == 'γ' || it == 'Δ')
                     total += 20
             }
             if (total != 0)

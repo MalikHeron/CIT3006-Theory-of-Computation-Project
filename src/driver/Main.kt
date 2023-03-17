@@ -9,7 +9,8 @@ object Main {
         //Turing("ɑɑββγβɑFKF⊔"); //Correct result = xxxxxβxxxx⊔
         //Turing("ɑɑβγFKF⊔"); //Correct result = xxxxxxF⊔
         //Turing("ɑβɑγFNF⊔") //Correct result = xxxxxxx⊔
-        //Turing("γβɑSK⊔"); //Correct result = xβɑxK⊔
+        //Turing("γβɑSK⊔"); //Correct result = xBAxK⊔
+        //Turing("βγɑSK⊔"); //Correct result = BxAxK⊔
         //Turing("δNKF⊔"); //Correct result = invalid
         //Turing("βδNKF⊔"); //Correct result = refund $10
         //Turing("γN⊔"); //Correct result = βx⊔

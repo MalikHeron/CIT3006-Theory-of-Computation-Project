@@ -22,6 +22,10 @@ class Turing(input: String) {
     }
 
     private fun run() {
+        //Start turing machine
+        State.currentState = 1
+        State.getState(null, null)
+
         //Loop while not at the end of the tape
         while (State.currentState != State.finalState) {
             val currentSymbol = head
@@ -34,12 +38,12 @@ class Turing(input: String) {
                 }
 
                 'β' -> {
-                    State.currentState = 9
+                    State.currentState = 11
                     State.getState(read as Char, currentSymbol)
                 }
 
                 'γ' -> {
-                    State.currentState = 15
+                    State.currentState = 17
                     State.getState(read as Char, currentSymbol)
                 }
             }
@@ -48,7 +52,7 @@ class Turing(input: String) {
                 Helper.checkInput()
                 Helper.refund()
                 println("Tape: ${tape.getData()}\n")
-                State.currentState = 31
+                State.currentState = 36
                 State.getState(null, null)
                 return
             }

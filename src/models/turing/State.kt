@@ -5,12 +5,17 @@ import util.Node
 
 class State {
     companion object {
-        var initialState: Int = 1
-        var finalState: Int = 31
+        private var initialState: Int = 1
+        var finalState: Int = 36
         var currentState: Int = 0
         private var nextState: Int = 0
         private var result: Node? = null
         private var machine = Machine()
+        private val lowercaseSymbolList =
+            arrayOf(machine.theta, machine.mu, machine.omega)
+        private val uppercaseSymbolList =
+            arrayOf(machine.alpha, machine.beta, machine.delta)
+        private val replaceList = arrayOf('ɑ', 'β', 'γ')
         private var read: Any? = null
         private var write: Any? = null
         private var right = 'R'
@@ -18,10 +23,15 @@ class State {
 
         fun getState(input: Char?, currentSymbol: Node?): Node? {
             when (currentState) {
+                initialState -> {
+                    println("q${currentState}: Turing Machine started...")
+                }
+
                 2 -> {
                     read = input
                     write = machine.alpha
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'A' on head position
                     currentSymbol?.data = machine.alpha
                     head = currentSymbol
                     //Check combinations for 'ɑ'
@@ -32,7 +42,7 @@ class State {
                     read = input
                     write = machine.theta
                     println("q$currentState: $read -> $write, $right")
-                    //Write 'x' on current head position
+                    //Write 'θ' on head position
                     currentSymbol?.data = machine.theta
                     head = currentSymbol
                     nextState = 4
@@ -61,7 +71,7 @@ class State {
                         Transitions.giveItem(nextSymbol)
                         head
                     } else {
-                        //Write back the symbols
+                        //Revert symbols
                         Transitions.revertComboSymbol(nextSymbol)
                         null
                     }
@@ -71,6 +81,7 @@ class State {
                     read = input
                     write = machine.mu
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'μ' on head position
                     currentSymbol?.data = machine.mu
                     head = currentSymbol
                     nextState = 6
@@ -95,9 +106,11 @@ class State {
                     }
 
                     result = if (found) {
+                        //Give the item and check it off
                         Transitions.giveItem(nextSymbol)
                         head
                     } else {
+                        //Revert symbols
                         Transitions.revertComboSymbol(nextSymbol)
                         null
                     }
@@ -107,6 +120,7 @@ class State {
                     read = input
                     write = machine.omega
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'Ω' on head position
                     currentSymbol?.data = machine.omega
                     head = currentSymbol
                     nextState = 8
@@ -115,6 +129,7 @@ class State {
 
                 8 -> {
                     var found = true
+                    var alternate = false
                     var nextSymbol = currentSymbol?.next
                     //Check if Knife is a requested item
                     while (nextSymbol?.data != 'K') {
@@ -124,17 +139,21 @@ class State {
                             break
                         }
                         if (nextSymbol?.data == 'F') {
-                            nextState = 17
+                            //Give the item and check it off
+                            nextState = 19
                             getNextState(currentSymbol?.data, currentSymbol)
-                            //nextState = 6
-                            //getNextState()
-                            TODO("missing transition for F and custom give item function")
+                            nextState = 9
+                            getNextState()
+                            alternate = true
+                            break
                         } else if (nextSymbol?.data == 'N') {
-                            nextState = 18
+                            //Give the item and check it off
+                            nextState = 20
                             getNextState(currentSymbol?.data, currentSymbol)
-                            //nextState = 6
-                            //getNextState()
-                            TODO("missing transition for N and custom give item function")
+                            nextState = 10
+                            getNextState()
+                            alternate = true
+                            break
                         }
                         read = "S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                         write = "S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
@@ -143,46 +162,111 @@ class State {
                         nextSymbol = nextSymbol?.next
                     }
 
-                    result = if (found) {
+                    result = if (alternate) {
+                        // Go to tape front
+                        Transitions.goToFront()
+                        null
+                    } else if (found) {
+                        //Give the item and check it off
                         Transitions.giveItem(nextSymbol)
                         head
                     } else {
+                        //Revert symbols
                         Transitions.revertComboSymbol(nextSymbol)
                         null
                     }
                 }
 
                 9 -> {
+                    var found = true
+                    var nextSymbol = currentSymbol?.next
+                    //Check if Fork is a requested item
+                    while (nextSymbol?.data != 'F') {
+                        //Check if end of tape is reached
+                        if (nextSymbol?.data == machine.blankSymbol) {
+                            found = false
+                            break
+                        }
+                        read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${nextSymbol?.data}]")
+                        //Move one position to the right
+                        nextSymbol = nextSymbol?.next
+                    }
+
+                    result = if (found) {
+                        //Give the item and check it off
+                        Transitions.giveItemAlone(nextSymbol)
+                        head
+                    } else {
+                        //Revert symbols
+                        Transitions.revertComboSymbol(nextSymbol)
+                        null
+                    }
+                }
+
+                10 -> {
+                    var found = true
+                    var nextSymbol = currentSymbol?.next
+                    //Check if Napkin is a requested item
+                    while (nextSymbol?.data != 'N') {
+                        //Check if end of input is reached
+                        if (nextSymbol?.data == machine.blankSymbol) {
+                            found = false
+                            break
+                        }
+                        read = "F, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "F, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${nextSymbol?.data}]")
+                        //Move one position to the right
+                        nextSymbol = nextSymbol?.next
+                    }
+
+                    result = if (found) {
+                        //Give the item and check it off
+                        Transitions.giveItemAlone(nextSymbol)
+                        head
+                    } else {
+                        //Revert symbols
+                        Transitions.revertComboSymbol(nextSymbol)
+                        null
+                    }
+                }
+
+                11 -> {
                     read = input
                     write = machine.beta
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'B' on head position
                     currentSymbol?.data = machine.beta
                     head = currentSymbol
                     //Check combinations for 'β'
                     Transitions.betaTransitions()
                 }
 
-                10 -> {
+                12 -> {
                     read = input
                     write = machine.theta
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'θ' on head position
                     currentSymbol?.data = machine.theta
                     head = currentSymbol
                     nextState = 6
                     getNextState()
                 }
 
-                11 -> {
+                13 -> {
                     read = input
                     write = machine.mu
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'μ' on head position
                     currentSymbol?.data = machine.mu
                     head = currentSymbol
-                    nextState = 12
+                    nextState = 14
                     getNextState()
                 }
 
-                12 -> {
+                14 -> {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     while (nextSymbol?.data != 'S') {
@@ -198,52 +282,11 @@ class State {
                     }
 
                     result = if (found) {
+                        //Give the item and check it off
                         Transitions.giveItem(nextSymbol)
                         head
                     } else {
-                        Transitions.revertComboSymbol(nextSymbol)
-                        null
-                    }
-                }
-
-                13 -> {
-                    read = input
-                    write = machine.omega
-                    println("q$currentState: $read -> $write, $right")
-                    currentSymbol?.data = machine.omega
-                    head = currentSymbol
-                    nextState = 14
-                    getNextState()
-                }
-
-                14 -> {
-                    var found = true
-                    var nextSymbol = currentSymbol?.next
-                    var count = 0
-                    val symbolArray = ArrayList<Node>()
-
-                    while (count != 2) {
-                        if (nextSymbol?.data == machine.blankSymbol) {
-                            found = false
-                            break
-                        }
-                        if (nextSymbol?.data == 'F') {
-                            symbolArray.add(nextSymbol)
-                            count++
-                        }
-                        read = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
-                        write = "K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
-                        println("q$currentState: $read -> $right [${nextSymbol?.data}]")
-                        //Move one position to the right
-                        nextSymbol = nextSymbol?.next
-                    }
-
-                    result = if (found) {
-                        symbolArray.forEach {
-                            Transitions.giveItem(it)
-                        }
-                        head
-                    } else {
+                        //Revert symbols
                         Transitions.revertComboSymbol(nextSymbol)
                         null
                     }
@@ -251,16 +294,78 @@ class State {
 
                 15 -> {
                     read = input
+                    write = machine.omega
+                    println("q$currentState: $read -> $write, $right")
+                    //Write 'Ω' on head position
+                    currentSymbol?.data = machine.omega
+                    head = currentSymbol
+                    nextState = 16
+                    getNextState()
+                }
+
+                16 -> {
+                    var found = true
+                    var nextSymbol = currentSymbol?.next
+                    var alternate = false
+
+                    while (nextSymbol?.data != 'S') {
+                        if (nextSymbol?.data == machine.blankSymbol) {
+                            found = false
+                            break
+                        }
+                        if (nextSymbol?.data == 'F') {
+                            //Give the item and check it off
+                            nextState = 19
+                            getNextState(currentSymbol?.data, currentSymbol)
+                            nextState = 9
+                            getNextState()
+                            alternate = true
+                            break
+                        } else if (nextSymbol?.data == 'N') {
+                            //Give the item and check it off
+                            nextState = 20
+                            getNextState(currentSymbol?.data, currentSymbol)
+                            nextState = 10
+                            getNextState()
+                            alternate = true
+                            break
+                        }
+                        read = "K, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        write = "K, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $right [${nextSymbol?.data}]")
+                        //Move one position to the right
+                        nextSymbol = nextSymbol?.next
+                    }
+
+                    result = if (alternate) {
+                        // Go to tape front
+                        Transitions.goToFront()
+                        null
+                    } else if (found) {
+                        //Give the item and check it off
+                        Transitions.giveItemAlt(nextSymbol)
+                        null
+                    } else {
+                        //Revert symbols
+                        Transitions.revertComboSymbol(nextSymbol)
+                        null
+                    }
+                }
+
+                17 -> {
+                    read = input
                     write = machine.delta
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'Δ' on head position
                     currentSymbol?.data = machine.delta
                     head = currentSymbol
                     //Check combinations for 'γ'
                     Transitions.gammaTransitions()
                 }
 
-                16 -> {
+                18 -> {
                     var found = true
+                    var alternate = false
                     var nextSymbol = currentSymbol?.next
                     //Check if Napkin is a requested item
                     while (nextSymbol?.data != 'S') {
@@ -270,14 +375,22 @@ class State {
                             break
                         }
                         if (nextSymbol?.data == 'F') {
-                            nextState = 17
+                            //Give the item and check it off
+                            nextState = 19
                             getNextState(currentSymbol?.data, currentSymbol)
-                            Transitions.giveItem(nextSymbol)
+                            nextState = 9
+                            getNextState()
+                            alternate = true
+                            break
                         }
                         if (nextSymbol?.data == 'N') {
-                            nextState = 18
+                            //Give the item and check it off
+                            nextState = 20
                             getNextState(currentSymbol?.data, currentSymbol)
-                            Transitions.giveItem(nextSymbol)
+                            nextState = 10
+                            getNextState()
+                            alternate = true
+                            break
                         }
                         read = "K, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                         write = "K, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
@@ -286,7 +399,11 @@ class State {
                         nextSymbol = nextSymbol?.next
                     }
 
-                    result = if (found) {
+                    result = if (alternate) {
+                        // Go to tape front
+                        Transitions.goToFront()
+                        null
+                    } else if (found) {
                         //Give the item and check it off
                         Transitions.giveItem(nextSymbol)
                         head
@@ -297,74 +414,79 @@ class State {
                     }
                 }
 
-                17 -> {
+                19 -> {
                     read = input
                     write = 'ɑ'
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'ɑ' on head position
                     currentSymbol?.data = 'ɑ'
                     head = currentSymbol
                 }
 
-                18 -> {
+                20 -> {
                     read = input
                     write = 'β'
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'β' on head position
                     currentSymbol?.data = 'β'
                     head = currentSymbol
                 }
 
-                19 -> {
+                21 -> {
                     read = input
                     write = machine.theta
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'θ' on head position
                     currentSymbol?.data = machine.theta
                     head = currentSymbol
                     nextState = 8
                     getNextState()
                 }
 
-                20 -> {
+                22 -> {
                     read = input
                     write = machine.mu
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'μ' on head position
                     currentSymbol?.data = machine.mu
                     head = currentSymbol
-                    nextState = 14
+                    nextState = 16
                     getNextState()
                 }
 
-                21 -> {
+                23 -> {
                     read = input
                     write = machine.omega
                     println("q$currentState: $read -> $write, $right")
+                    //Write 'Ω' on head position
                     currentSymbol?.data = machine.omega
                     head = currentSymbol
                     nextState = 6
                     getNextState()
                 }
 
-                22 -> {
+                24 -> {
                     read = input
                     write = machine.crossSymbol
                     println("q$currentState: $read -> $write, $left")
                     println("Dispense '$read'")
+                    //Write 'x' on head position
                     currentSymbol?.data = machine.crossSymbol
                     head = currentSymbol
-                    nextState = 23
+                    nextState = 25
                     getNextState()
                 }
 
-                23 -> {
-                    val symbolList =
-                        arrayOf(machine.alpha, machine.beta, machine.delta, machine.theta, machine.mu, machine.omega)
+                25 -> {
                     var current: Node?
                     current = currentSymbol?.prev
 
                     while (current != null) {
                         val data = current.data
-                        if (symbolList.contains(data)) {
-                            nextState = 24
+                        if (lowercaseSymbolList.contains(data) || uppercaseSymbolList.contains(data)) {
+                            nextState = 26
                             getNextState(data, current)
+                            currentState = 25
                         }
                         if (current.prev == null) {
                             head = current
@@ -376,35 +498,78 @@ class State {
                     }
                 }
 
-                24 -> {
+                26 -> {
                     read = input
                     write = machine.crossSymbol
                     println("q$currentState: $read -> $write, $left")
+                    //Write 'x' on head position
                     currentSymbol?.data = machine.crossSymbol
                 }
 
-                25 -> {
-                    val symbolList = arrayOf(machine.theta, machine.mu, machine.omega)
+                27 -> {
+                    read = input
+                    write = machine.crossSymbol
+                    println("q$currentState: $read -> $write, $left")
+                    println("Dispense '$read'")
+                    //Write 'x' on head position
+                    currentSymbol?.data = machine.crossSymbol
+                    head = currentSymbol
+                    nextState = 28
+                    getNextState()
+                }
+
+                28 -> {
+                    var current: Node?
+                    current = currentSymbol?.prev
+
+                    while (current != null) {
+                        val data = current.data
+                        if (lowercaseSymbolList.contains(data)) {
+                            nextState = 26
+                            getNextState(data, current)
+                            currentState = 28
+                        }
+                        if (current.prev == null) {
+                            head = current
+                        }
+                        read = "F, K, N, S, ɑ, β, γ, x"
+                        write = "F, K, N, S, ɑ, β, γ, x"
+                        println("q$currentState: $read -> $left [${current.data}]")
+                        current = current.prev
+                    }
+                }
+
+                29 -> {
+                    read = input
+                    write = machine.crossSymbol
+                    println("q$currentState: $read -> $write, $left")
+                    println("Dispense '$read'")
+                    //Write 'x' on head position
+                    currentSymbol?.data = machine.crossSymbol
+                    head = currentSymbol
+                }
+
+                30 -> {
                     var current = currentSymbol
 
                     while (current != null) {
                         val data = current.data
-                        if (symbolList.contains(data)) {
+                        if (lowercaseSymbolList.contains(data)) {
                             read = data
                             if (read == machine.theta) {
-                                nextState = 27
+                                nextState = 32
                                 getNextState(current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.mu) {
-                                nextState = 28
+                                nextState = 33
                                 getNextState(current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.omega) {
-                                nextState = 29
+                                nextState = 34
                                 getNextState(current.data, current)
                                 head = current
                                 return null
@@ -420,28 +585,27 @@ class State {
                     }
                 }
 
-                26 -> {
-                    val symbolList = arrayOf(machine.alpha, machine.beta, machine.delta)
+                31 -> {
                     var current = currentSymbol
 
                     while (current != null) {
                         val data = current.data
-                        if (symbolList.contains(data)) {
+                        if (uppercaseSymbolList.contains(data)) {
                             read = data
                             if (read == machine.alpha) {
-                                nextState = 27
+                                nextState = 32
                                 getNextState(current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.beta) {
-                                nextState = 28
+                                nextState = 33
                                 getNextState(current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.delta) {
-                                nextState = 29
+                                nextState = 34
                                 getNextState(current.data, current)
                                 head = current
                                 return null
@@ -457,28 +621,28 @@ class State {
                     }
                 }
 
-                27 -> {
-                    val replaceList = arrayOf('ɑ', 'β', 'γ')
+                32 -> {
                     write = replaceList[0]
-                    println("q$currentState: $read -> $write, $left")
+                    println("q$currentState: $read -> $write, $right")
+                    //Write 'ɑ' on head position
                     currentSymbol?.data = replaceList[0]
                 }
 
-                28 -> {
-                    val replaceList = arrayOf('ɑ', 'β', 'γ')
+                33 -> {
                     write = replaceList[1]
-                    println("q$currentState: $read -> $write, $left")
+                    println("q$currentState: $read -> $write, $right")
+                    //Write 'β' on head position
                     currentSymbol?.data = replaceList[1]
                 }
 
-                29 -> {
-                    val replaceList = arrayOf('ɑ', 'β', 'γ')
+                34 -> {
                     write = replaceList[2]
-                    println("q$currentState: $read -> $write, $left")
+                    println("q$currentState: $read -> $write, $right")
+                    //Write 'γ' on head position
                     currentSymbol?.data = replaceList[2]
                 }
 
-                30 -> {
+                35 -> {
                     head = head?.prev
 
                     if (head != null) {
@@ -492,7 +656,7 @@ class State {
                     }
                 }
 
-                31 -> {
+                finalState -> {
                     //End transition/Halt
                     println("Halt")
                 }
