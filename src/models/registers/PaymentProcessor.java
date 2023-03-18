@@ -3,6 +3,7 @@ package models.registers;
 import models.filing.Inventory;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class PaymentProcessor {//NTS: You need to tie function together
     private String itemsNotSold = "";
     private String itemsSold = "";
     private int totalSpent = 0;
-    private String input = "";
+    private String input = ""; //where input is the user input string
     private Inventory inventory;
 
 
@@ -81,7 +82,7 @@ public class PaymentProcessor {//NTS: You need to tie function together
     }
 
     //NTS: Inputs must be validated before using this method. No validation is done in this method.
-    //This method calculateS the refund amount and items sold based on the input given to the machine and the
+    //This method calculates the refund amount and items sold based on the input given to the machine and the
     //output string produced when processing is complete.
     public void turingCalculation(String output) { //NTS: You need to tie stock checking into this method
             for (int i = 0; i < output.length(); i++) {
@@ -122,9 +123,9 @@ public class PaymentProcessor {//NTS: You need to tie function together
         return SOLD;
     }
 
-    //This method check if inventory contains enough items for sales. It should only be called after input validation
-    //NTS: Determine where to implement this check
-    public boolean checkStock() {
+    //This method check if inventory contains enough items for sales.
+    // It should only be called after input validation no validation is done inside
+    public boolean checkAvailableStock() {
         char inputChar;
         for (int i = 0; i < input.length(); i++) {//first find which items are being attempted to purchase
             inputChar = input.charAt(i);

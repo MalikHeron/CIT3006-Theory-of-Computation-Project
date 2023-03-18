@@ -39,7 +39,7 @@ public class Inventory {
     }
 
     //Method Used to update quantity
-    public void updateQuantity(String name, int quantity) throws IOException {
+    public void updateQuantity(Item item) throws IOException {
         // Seek to the beginning of the file
         getFile().seek(0);
         // Searching file for item specified
@@ -47,62 +47,54 @@ public class Inventory {
             String itemName = getFile().readUTF();
             double price = getFile().readDouble();
             int currentQuantity = getFile().readInt();
-            if (itemName.equals(name)) {
+            if (itemName.equals(item.getName())) {
                 // Found the item, update the quantity and write it back to the file
                 getFile().seek(getFile().getFilePointer() - 4); // Move back to the quantity field
-                getFile().writeInt(currentQuantity - 1); //decrementing by 1 may need to change for restocking
+                getFile().writeInt(item.getQuantity()); //decrementing by 1 may need to change for restocking
                 getFile().close();
                 return;
             }
         }
         getFile().close();
         // If item was not found, throw an exception
-        String errorMessage = name + " is not an item in the inventory";
+        String errorMessage = item.getName() + " is not an item in the inventory";
         JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         throw new IllegalArgumentException(errorMessage);
     }
 
     //Method Used for restocking a single item NTS: could do a restockAll() instead. Find out if full stock is same
     // quantity for all items
-    public void restockAll(String name, int quantity) throws IOException {
+    public void restockAll() throws IOException {
         getFile().seek(0);
         // Searching file for item specified
         while (getFile().getFilePointer() < getFile().length()) {
             String itemName = getFile().readUTF();
             double price = getFile().readDouble();
             int currentQuantity = getFile().readInt();
-            if (itemName.equals(name)) {
-                // Found the item, update the quantity and write it back to the file
-                getFile().seek(getFile().getFilePointer() - 4); // Move back to the quantity field
-                getFile().writeInt(quantity); //update to full quantity
-                getFile().close();
-                return;
-            }
+            // Found the item, update the quantity and write it back to the file
+            getFile().seek(getFile().getFilePointer() - 4); // Move back to the quantity field
+            getFile().writeInt(20); //update to full quantity
         }
         getFile().close();
-        // If item was not found, throw an exception
-        String errorMessage = name + " is not an item in the inventory";
-        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-        throw new IllegalArgumentException(errorMessage);
     }
 
 
     //Method used to retrieve quantity of remaining items
-    public int getQuantity(String name) throws IOException {
+    public int getQuantity(Item item) throws IOException {
         getFile().seek(0);
         // Searching file for item specified
         while (getFile().getFilePointer() < getFile().length()) {
             String itemName = getFile().readUTF();
             double price = getFile().readDouble();
             int quantity = getFile().readInt();
-            if (itemName.equals(name)) {
+            if (itemName.equals(item.getName())) {
                 getFile().close();
                 return quantity;
             }
         }
         getFile().close();
         // If item was not found, throw exception
-        String errorMessage = name + " is not an item in the inventory";
+        String errorMessage = item.getName() + " is not an item in the inventory";
         JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         throw new IllegalArgumentException(errorMessage);
     }
@@ -122,4 +114,5 @@ public class Inventory {
         getFile().close();
         return inventory.toString();
     }
+
 }
