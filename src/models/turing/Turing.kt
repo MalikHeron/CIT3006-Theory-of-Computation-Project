@@ -48,7 +48,6 @@ class Turing(input: String) {
                 }
             }
             if (head?.data == machine.blankSymbol) {
-                //Check if only alphabet symbols remain
                 State.currentState = 35
                 State.getState(null, null)
                 break

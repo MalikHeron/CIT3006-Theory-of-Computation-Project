@@ -8,8 +8,8 @@ import util.Node
 class State {
     companion object {
         private var initialState: Int = 0
-        var acceptState: Int = 45
-        var rejectState: Int = 44
+        var acceptState: Int = 46
+        var rejectState: Int = 45
         var currentState: Int = 0
         private var nextState: Int = 0
         private var result: Node? = null
@@ -19,6 +19,7 @@ class State {
         private val uppercaseSymbolList =
             arrayOf(machine.alpha, machine.beta, machine.delta)
         private val replaceList = arrayOf('ɑ', 'β', 'γ')
+        private val restockString = arrayOf('N', 'K', 'S', 'F', 'F', 'S', 'K', 'S')
         private var read: Any? = null
         private var write: Any? = null
         private var right = 'R'
@@ -46,7 +47,7 @@ class State {
                         println("q$currentState: $read -> $right [${head?.data}]")
                         head = head?.next
                     }
-                    nextState = 42
+                    nextState = 44
                     getNextState()
                 }
 
@@ -709,7 +710,7 @@ class State {
                 }
 
                 36 -> {
-                    read = currentSymbol
+                    read = currentSymbol?.data
                     write = machine.alpha
                     println("q$currentState: $read -> $write, $right")
                     //Write 'A' on head position
@@ -717,7 +718,7 @@ class State {
                 }
 
                 37 -> {
-                    read = currentSymbol
+                    read = currentSymbol?.data
                     write = machine.beta
                     println("q$currentState: $read -> $write, $right")
                     //Write 'B' on head position
@@ -832,9 +833,9 @@ class State {
                 }
 
                 42 -> {
-                    head = head?.prev
-
-                    if (head != null) {
+                    val current = head?.prev
+                    if (current != null) {
+                        head = head?.prev
                         while (head?.prev != null) {
                             //Move one position to the left
                             head = head!!.prev
@@ -867,6 +868,26 @@ class State {
                         write = "ɑ, β, γ, θ, μ, Ω, x"
                         println("q$currentState: $read -> $right [${head?.data}]")
                         head = head?.next
+                    }
+                    nextState = acceptState
+                    getNextState()
+                }
+
+                44 -> {
+                    nextState = 42
+                    getNextState()
+
+                    restockString.forEach {
+                        if (it == head?.data) {
+                            head = head?.next
+                            read = "F, K, N, S"
+                            write = "F, K, N, S"
+                            println("q$currentState: $read -> $write, $right [${head?.data}]")
+                        } else {
+                            nextState = 42
+                            getNextState()
+                            return null
+                        }
                     }
                     nextState = acceptState
                     getNextState()
