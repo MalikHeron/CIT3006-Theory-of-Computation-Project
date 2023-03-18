@@ -11,7 +11,6 @@ class State {
         var acceptState: Int = 46
         var rejectState: Int = 45
         var currentState: Int = 0
-        private var nextState: Int = 0
         private var result: Node? = null
         private var machine = Machine()
         private val lowercaseSymbolList =
@@ -25,12 +24,11 @@ class State {
         private var right = 'R'
         private var left = 'L'
 
-        fun getState(input: Char?, currentSymbol: Node?): Node? {
+        fun getState(currentState: Int, input: Char?, currentSymbol: Node?): Node? {
             when (currentState) {
                 initialState -> {
                     println("q${currentState}: Turing Machine started...")
-                    nextState = 1
-                    getNextState()
+                    getNextState(1)
                 }
 
                 1 -> {
@@ -38,8 +36,7 @@ class State {
                         //Check for invalid input
                         if (!machine.tapeAlphabet.contains(head?.data)) {
                             println("Invalid input detected!")
-                            nextState = rejectState
-                            getNextState()
+                            getNextState(rejectState)
                             return null
                         }
                         read = "F, N, K, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
@@ -47,8 +44,7 @@ class State {
                         println("q$currentState: $read -> $right [${head?.data}]")
                         head = head?.next
                     }
-                    nextState = 44
-                    getNextState()
+                    getNextState(44)
                 }
 
                 2 -> {
@@ -69,8 +65,7 @@ class State {
                     //Write 'θ' on head position
                     currentSymbol?.data = machine.theta
                     head = currentSymbol
-                    nextState = 4
-                    getNextState()
+                    getNextState(4)
                 }
 
                 4 -> {
@@ -108,8 +103,7 @@ class State {
                     //Write 'μ' on head position
                     currentSymbol?.data = machine.mu
                     head = currentSymbol
-                    nextState = 6
-                    getNextState()
+                    getNextState(6)
                 }
 
                 6 -> {
@@ -147,8 +141,7 @@ class State {
                     //Write 'Ω' on head position
                     currentSymbol?.data = machine.omega
                     head = currentSymbol
-                    nextState = 8
-                    getNextState()
+                    getNextState(8)
                 }
 
                 8 -> {
@@ -164,18 +157,14 @@ class State {
                         }
                         if (nextSymbol?.data == 'F') {
                             //Give the item and check it off
-                            nextState = 19
-                            getNextState(currentSymbol?.data, currentSymbol)
-                            nextState = 9
-                            getNextState()
+                            getNextState(19, currentSymbol?.data, currentSymbol)
+                            getNextState(9)
                             alternate = true
                             break
                         } else if (nextSymbol?.data == 'N') {
                             //Give the item and check it off
-                            nextState = 20
-                            getNextState(currentSymbol?.data, currentSymbol)
-                            nextState = 10
-                            getNextState()
+                            getNextState(20, currentSymbol?.data, currentSymbol)
+                            getNextState(10)
                             alternate = true
                             break
                         }
@@ -275,8 +264,7 @@ class State {
                     //Write 'θ' on head position
                     currentSymbol?.data = machine.theta
                     head = currentSymbol
-                    nextState = 6
-                    getNextState()
+                    getNextState(6)
                 }
 
                 13 -> {
@@ -286,8 +274,7 @@ class State {
                     //Write 'μ' on head position
                     currentSymbol?.data = machine.mu
                     head = currentSymbol
-                    nextState = 14
-                    getNextState()
+                    getNextState(14)
                 }
 
                 14 -> {
@@ -323,8 +310,7 @@ class State {
                     //Write 'Ω' on head position
                     currentSymbol?.data = machine.omega
                     head = currentSymbol
-                    nextState = 16
-                    getNextState()
+                    getNextState(16)
                 }
 
                 16 -> {
@@ -339,18 +325,14 @@ class State {
                         }
                         if (nextSymbol?.data == 'F') {
                             //Give the item and check it off
-                            nextState = 19
-                            getNextState(currentSymbol?.data, currentSymbol)
-                            nextState = 9
-                            getNextState()
+                            getNextState(19, currentSymbol?.data, currentSymbol)
+                            getNextState(9)
                             alternate = true
                             break
                         } else if (nextSymbol?.data == 'N') {
                             //Give the item and check it off
-                            nextState = 20
-                            getNextState(currentSymbol?.data, currentSymbol)
-                            nextState = 10
-                            getNextState()
+                            getNextState(20, currentSymbol?.data, currentSymbol)
+                            getNextState(10)
                             alternate = true
                             break
                         }
@@ -400,19 +382,15 @@ class State {
                         }
                         if (nextSymbol?.data == 'F') {
                             //Give the item and check it off
-                            nextState = 19
-                            getNextState(currentSymbol?.data, currentSymbol)
-                            nextState = 9
-                            getNextState()
+                            getNextState(19, currentSymbol?.data, currentSymbol)
+                            getNextState(9)
                             alternate = true
                             break
                         }
                         if (nextSymbol?.data == 'N') {
                             //Give the item and check it off
-                            nextState = 20
-                            getNextState(currentSymbol?.data, currentSymbol)
-                            nextState = 10
-                            getNextState()
+                            getNextState(20, currentSymbol?.data, currentSymbol)
+                            getNextState(10)
                             alternate = true
                             break
                         }
@@ -463,8 +441,7 @@ class State {
                     //Write 'θ' on head position
                     currentSymbol?.data = machine.theta
                     head = currentSymbol
-                    nextState = 8
-                    getNextState()
+                    getNextState(8)
                 }
 
                 22 -> {
@@ -474,8 +451,7 @@ class State {
                     //Write 'μ' on head position
                     currentSymbol?.data = machine.mu
                     head = currentSymbol
-                    nextState = 16
-                    getNextState()
+                    getNextState(16)
                 }
 
                 23 -> {
@@ -485,8 +461,7 @@ class State {
                     //Write 'Ω' on head position
                     currentSymbol?.data = machine.omega
                     head = currentSymbol
-                    nextState = 6
-                    getNextState()
+                    getNextState(6)
                 }
 
                 24 -> {
@@ -497,8 +472,7 @@ class State {
                     //Write 'x' on head position
                     currentSymbol?.data = machine.crossSymbol
                     head = currentSymbol
-                    nextState = 25
-                    getNextState()
+                    getNextState(25)
                 }
 
                 25 -> {
@@ -508,9 +482,8 @@ class State {
                     while (current != null) {
                         val data = current.data
                         if (lowercaseSymbolList.contains(data) || uppercaseSymbolList.contains(data)) {
-                            nextState = 26
-                            getNextState(data, current)
-                            currentState = 25
+                            getNextState(26, data, current)
+                            this.currentState = 25
                         }
                         if (current.prev == null) {
                             head = current
@@ -539,8 +512,7 @@ class State {
                     //Write 'x' on head position
                     currentSymbol?.data = machine.crossSymbol
                     head = currentSymbol
-                    nextState = 28
-                    getNextState()
+                    getNextState(28)
                 }
 
                 28 -> {
@@ -550,9 +522,8 @@ class State {
                     while (current != null) {
                         val data = current.data
                         if (lowercaseSymbolList.contains(data)) {
-                            nextState = 26
-                            getNextState(data, current)
-                            currentState = 28
+                            getNextState(26, data, current)
+                            this.currentState = 28
                         }
                         if (current.prev == null) {
                             head = current
@@ -583,20 +554,17 @@ class State {
                         if (lowercaseSymbolList.contains(data)) {
                             read = data
                             if (read == machine.theta) {
-                                nextState = 32
-                                getNextState(current.data, current)
+                                getNextState(32, current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.mu) {
-                                nextState = 33
-                                getNextState(current.data, current)
+                                getNextState(33, current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.omega) {
-                                nextState = 34
-                                getNextState(current.data, current)
+                                getNextState(34, current.data, current)
                                 head = current
                                 return null
                             }
@@ -620,20 +588,17 @@ class State {
                         if (uppercaseSymbolList.contains(data)) {
                             read = data
                             if (read == machine.alpha) {
-                                nextState = 32
-                                getNextState(current.data, current)
+                                getNextState(32, current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.beta) {
-                                nextState = 33
-                                getNextState(current.data, current)
+                                getNextState(33, current.data, current)
                                 head = current
                                 return null
                             }
                             if (read == machine.delta) {
-                                nextState = 34
-                                getNextState(current.data, current)
+                                getNextState(34, current.data, current)
                                 head = current
                                 return null
                             }
@@ -671,9 +636,8 @@ class State {
                 }
 
                 35 -> {
-                    nextState = 41
-                    getNextState()
-                    currentState = 35
+                    getNextState(41)
+                    this.currentState = 35
 
                     var alphaCounter = 0
                     var betaCounter = 0
@@ -682,14 +646,12 @@ class State {
                         when (head?.data) {
                             'ɑ' -> {
                                 alphaCounter++
-                                nextState = 36
-                                getNextState()
+                                getNextState(36)
                             }
 
                             'β' -> {
                                 betaCounter++
-                                nextState = 37
-                                getNextState()
+                                getNextState(37)
                             }
                         }
                         //Check for symbols
@@ -704,9 +666,7 @@ class State {
                         println("q$currentState: $read -> $right [${head?.data}]")
                     }
                     println("Tape: ${Turing.tape.getData()}\n")
-
-                    nextState = 43
-                    getNextState()
+                    getNextState(43)
                 }
 
                 36 -> {
@@ -811,14 +771,12 @@ class State {
                         if (uppercaseSymbolList.contains(data)) {
                             read = data
                             if (read == machine.alpha) {
-                                nextState = 32
-                                getNextState(current.data, current)
-                                currentState = 41
+                                getNextState(32, current.data, current)
+                                this.currentState = 41
                             }
                             if (read == machine.beta) {
-                                nextState = 33
-                                getNextState(current.data, current)
-                                currentState = 41
+                                getNextState(33, current.data, current)
+                                this.currentState = 41
                             }
                         }
                         if (current.prev == null) {
@@ -848,20 +806,17 @@ class State {
                 }
 
                 43 -> {
-                    nextState = 42
-                    getNextState()
-                    currentState = 43
+                    getNextState(42)
+                    this.currentState = 43
 
                     while (head?.data != machine.blankSymbol) {
                         if (head?.data == 'F' || head?.data == 'K' || head?.data == 'N' || head?.data == 'S') {
                             println("\nInsufficient funds")
-                            nextState = rejectState
-                            getNextState()
+                            getNextState(rejectState)
                             return null
                         }
                         if (head?.data == 'A' || head?.data == 'B' || head?.data == 'Δ') {
-                            nextState = rejectState
-                            getNextState()
+                            getNextState(rejectState)
                             return null
                         }
                         read = "ɑ, β, γ, θ, μ, Ω, x"
@@ -869,13 +824,11 @@ class State {
                         println("q$currentState: $read -> $right [${head?.data}]")
                         head = head?.next
                     }
-                    nextState = acceptState
-                    getNextState()
+                    getNextState(acceptState)
                 }
 
                 44 -> {
-                    nextState = 42
-                    getNextState()
+                    getNextState(42)
 
                     restockString.forEach {
                         if (it == head?.data) {
@@ -884,41 +837,36 @@ class State {
                             write = "F, K, N, S"
                             println("q$currentState: $read -> $write, $right [${head?.data}]")
                         } else {
-                            nextState = 42
-                            getNextState()
+                            getNextState(42)
                             return null
                         }
                     }
-                    nextState = acceptState
-                    getNextState()
+                    getNextState(acceptState)
                 }
 
                 rejectState -> {
                     Helper.refund()
                     //Stop machine
-                    currentState = rejectState
+                    this.currentState = rejectState
                     println("q$currentState: Reject and Halt")
                 }
 
                 acceptState -> {
                     Helper.refund()
                     //Stop machine
-                    currentState = acceptState
+                    this.currentState = acceptState
                     println("\nq${currentState}: Accept and Halt")
                 }
             }
             return result
         }
 
-        private fun getNextState(): Node? {
-            currentState = nextState
-            return getState(null, head)
+        private fun getNextState(nextState: Int): Node? {
+            return getState(nextState, null, head)
         }
 
-        private fun getNextState(read: Char?, currentSymbol: Node?) {
-            currentState = nextState
-            getState(read, currentSymbol)
+        private fun getNextState(nextState: Int, read: Char?, currentSymbol: Node?) {
+            getState(nextState, read, currentSymbol)
         }
-
     }
 }

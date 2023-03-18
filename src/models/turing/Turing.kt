@@ -23,8 +23,7 @@ class Turing(input: String) {
 
     private fun run() {
         //Start turing machine
-        State.currentState = 0
-        State.getState(null, null)
+        State.getState(0, null, null)
 
         //Loop while not at the end of the tape
         while (State.currentState != State.acceptState && State.currentState != State.rejectState) {
@@ -33,23 +32,19 @@ class Turing(input: String) {
             read = head?.data!!
             when (read) {
                 'ɑ' -> {
-                    State.currentState = 2
-                    State.getState(read as Char, currentSymbol)
+                    State.getState(2, read as Char, currentSymbol)
                 }
 
                 'β' -> {
-                    State.currentState = 11
-                    State.getState(read as Char, currentSymbol)
+                    State.getState(11, read as Char, currentSymbol)
                 }
 
                 'γ' -> {
-                    State.currentState = 17
-                    State.getState(read as Char, currentSymbol)
+                    State.getState(17, read as Char, currentSymbol)
                 }
             }
             if (head?.data == machine.blankSymbol) {
-                State.currentState = 35
-                State.getState(null, null)
+                State.getState(35, null, null)
                 break
             }
             //Move one position to the right

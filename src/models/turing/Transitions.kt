@@ -29,20 +29,17 @@ class Transitions {
                     read = currentSymbol?.data
                     when (read) {
                         'ɑ' -> {
-                            State.currentState = 3
-                            if (State.getState(read as Char, currentSymbol) != null)
+                            if (State.getState(3, read as Char, currentSymbol) != null)
                                 return
                         }
 
                         'β' -> {
-                            State.currentState = 5
-                            if (State.getState(read as Char, currentSymbol) != null)
+                            if (State.getState(5, read as Char, currentSymbol) != null)
                                 return
                         }
 
                         'γ' -> {
-                            State.currentState = 7
-                            if (State.getState(read as Char, currentSymbol) != null)
+                            if (State.getState(7, read as Char, currentSymbol) != null)
                                 return
                         }
 
@@ -73,8 +70,7 @@ class Transitions {
                 head
             }
 
-            State.currentState = 4
-            if (State.getState(null, currentSymbol) == null) {
+            if (State.getState(4, null, currentSymbol) == null) {
                 currentSymbol = head
                 while (head?.data != machine.blankSymbol) {
                     if (currentSymbol != previousSymbol) {
@@ -82,20 +78,17 @@ class Transitions {
                         read = currentSymbol?.data
                         when (read) {
                             'ɑ' -> {
-                                State.currentState = 12
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                if (State.getState(12, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'β' -> {
-                                State.currentState = 13
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                if (State.getState(13, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'γ' -> {
-                                State.currentState = 15
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                if (State.getState(15, read as Char, currentSymbol) != null)
                                     return
                             }
 
@@ -127,8 +120,7 @@ class Transitions {
                 head
             }
 
-            State.currentState = 18
-            if (State.getState(null, currentSymbol) == null) {
+            if (State.getState(18, null, currentSymbol) == null) {
                 currentSymbol = head
                 while (head?.data != machine.blankSymbol) {
                     if (currentSymbol != previousSymbol) {
@@ -137,19 +129,17 @@ class Transitions {
                         when (read) {
                             'ɑ' -> {
                                 State.currentState = 21
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                if (State.getState(21, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'β' -> {
-                                State.currentState = 22
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                if (State.getState(22, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'γ' -> {
-                                State.currentState = 23
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                if (State.getState(23, read as Char, currentSymbol) != null)
                                     return
                             }
 
@@ -171,35 +161,29 @@ class Transitions {
         }
 
         fun giveItem(currentSymbol: Node?) {
-            State.currentState = 24
-            State.getState(currentSymbol?.data, currentSymbol)
+            State.getState(24, currentSymbol?.data, currentSymbol)
         }
 
         fun giveItemAlt(currentSymbol: Node?) {
-            State.currentState = 27
-            State.getState(currentSymbol?.data, currentSymbol)
+            State.getState(27, currentSymbol?.data, currentSymbol)
         }
 
         fun giveItemAlone(currentSymbol: Node?) {
-            State.currentState = 29
-            State.getState(currentSymbol?.data, currentSymbol)
+            State.getState(29, currentSymbol?.data, currentSymbol)
         }
 
         fun revertComboSymbol(currentSymbol: Node?) {
-            State.currentState = 30
-            State.getState(currentSymbol?.data, currentSymbol)
+            State.getState(30, currentSymbol?.data, currentSymbol)
             println("Tape: ${tape.getData()}\n")
         }
 
         private fun revertSymbol(currentSymbol: Node?) {
-            State.currentState = 31
-            State.getState(currentSymbol?.data, currentSymbol)
+            State.getState(31, currentSymbol?.data, currentSymbol)
             println("Tape: ${tape.getData()}\n")
         }
 
         fun goToFront() {
-            State.currentState = 42
-            State.getState(null, null)
+            State.getState(42, null, null)
         }
     }
 }
