@@ -76,7 +76,14 @@ class Helper {
 
         private var file: RandomAccessFile? = null
 
-        fun getFile(): RandomAccessFile {
+        private val ITEM_PRICES = mapOf(
+                'N' to 10,
+                'K' to 25,
+                'F' to 15,
+                'S' to 20
+        )
+
+        private fun getFile(): RandomAccessFile {
             if (file == null) {
                 throw IllegalStateException("File not properly initialized")
             }
@@ -84,7 +91,7 @@ class Helper {
         }
 
         @Throws(IOException::class)
-        fun getQuantity(name: String): Int {
+        fun getItemStock(name: String): Int {//Parameter less, how??
             getFile().seek(0)
             // Searching file for item specified
             while (getFile().filePointer < getFile().length()) {
@@ -140,6 +147,27 @@ class Helper {
             }
             getFile().close()
         }
+
+        @Throws(IOException::class)
+        fun getFunds(): Double {
+            var totalFunds = 0.0
+            // Seek to the beginning of the file
+            getFile().seek(0)
+            // Searching file for item specified
+            while (getFile().filePointer < getFile().length()) {
+                val itemName = getFile().readUTF()
+                val price = getFile().readDouble()
+                val currentQuantity = getFile().readInt()
+                if (ITEM_PRICES.containsKey(itemName[0])) {
+                    totalFunds += ITEM_PRICES[itemName[0]]!! * (20 - currentQuantity)
+                }
+            }
+            getFile().close()
+            return totalFunds
+        }
+
+        fun setFunds(funds: Double) {}
+
 
     }
 }
