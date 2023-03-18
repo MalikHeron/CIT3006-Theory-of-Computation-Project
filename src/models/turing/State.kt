@@ -848,14 +848,14 @@ class State {
                     Helper.refund()
                     //Stop machine
                     this.currentState = rejectState
-                    println("q$currentState: Reject and Halt")
+                    println("qr: Halt")
                 }
 
                 acceptState -> {
                     Helper.refund()
                     //Stop machine
                     this.currentState = acceptState
-                    println("\nq${currentState}: Accept and Halt")
+                    println("\nqa: Halt")
                 }
             }
             return result
