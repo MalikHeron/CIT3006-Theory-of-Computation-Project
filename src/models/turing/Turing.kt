@@ -31,17 +31,11 @@ class Turing(input: String) {
             //read symbol at head
             read = head?.data!!
             when (read) {
-                'ɑ' -> {
-                    State.getState(2, read as Char, currentSymbol)
-                }
+                'ɑ' -> State.getState(2, read as Char, currentSymbol)
 
-                'β' -> {
-                    State.getState(11, read as Char, currentSymbol)
-                }
+                'β' -> State.getState(11, read as Char, currentSymbol)
 
-                'γ' -> {
-                    State.getState(17, read as Char, currentSymbol)
-                }
+                'γ' -> State.getState(17, read as Char, currentSymbol)
             }
             if (head?.data == machine.blankSymbol) {
                 State.getState(35, null, null)

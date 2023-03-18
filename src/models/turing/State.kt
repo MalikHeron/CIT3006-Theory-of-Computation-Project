@@ -806,7 +806,7 @@ class State {
                 }
 
                 43 -> {
-                    getNextState(42)
+                    Transitions.goToFront()
                     this.currentState = 43
 
                     while (head?.data != machine.blankSymbol) {
@@ -828,7 +828,7 @@ class State {
                 }
 
                 44 -> {
-                    getNextState(42)
+                    Transitions.goToFront()
 
                     restockString.forEach {
                         if (it == head?.data) {
@@ -837,7 +837,7 @@ class State {
                             write = "F, K, N, S"
                             println("q$currentState: $read -> $write, $right [${head?.data}]")
                         } else {
-                            getNextState(42)
+                            Transitions.goToFront()
                             return null
                         }
                     }

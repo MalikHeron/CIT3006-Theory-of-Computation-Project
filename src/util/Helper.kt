@@ -39,13 +39,9 @@ class Helper {
                     }
                 }
 
-                4 -> {
-                    return State.getState(39, null, head)
-                }
+                4 -> return State.getState(39, null, head)
 
-                5 -> {
-                    return State.getState(38, null, head)
-                }
+                5 -> return State.getState(38, null, head)
             }
             return null
         }
