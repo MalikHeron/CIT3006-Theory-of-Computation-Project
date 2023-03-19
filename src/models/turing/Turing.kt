@@ -12,7 +12,6 @@ class Turing(input: String) {
         var head = tape.getCurrent()
     }
 
-    private var read: Any? = null
     private var machine = Machine()
 
     init {
@@ -27,18 +26,9 @@ class Turing(input: String) {
 
         //Loop while not at the end of the tape
         while (State.currentState != State.acceptState && State.currentState != State.rejectState) {
-            val currentSymbol = head
-            //read symbol at head
-            read = head?.data!!
-            when (read) {
-                'ɑ' -> State.getState(2, read as Char, currentSymbol)
-
-                'β' -> State.getState(11, read as Char, currentSymbol)
-
-                'γ' -> State.getState(17, read as Char, currentSymbol)
-            }
+            State.getState(2, head?.data, head)
             if (head?.data == machine.blankSymbol) {
-                State.getState(35, null, null)
+                State.getState(20, null, null)
                 break
             }
             //Move one position to the right
