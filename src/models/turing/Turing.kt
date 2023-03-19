@@ -28,7 +28,7 @@ class Turing(input: String) {
         while (State.currentState != State.acceptState && State.currentState != State.rejectState) {
             State.getState(2, head?.data, head)
             if (head?.data == machine.blankSymbol) {
-                State.getState(20, null, null)
+                State.getState(17, null, null)
                 break
             }
             //Move one position to the right

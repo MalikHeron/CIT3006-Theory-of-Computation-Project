@@ -21,27 +21,27 @@ class Helper {
             when (alphaCounter) {
                 1 -> {
                     if (betaCounter == 2) {
-                        return State.getState(22, null, head)
+                        return State.getState(19, null, head)
                     }
                 }
 
                 2 -> {
                     if (betaCounter == 1) {
-                        return State.getState(23, null, head)
+                        return State.getState(20, null, head)
                     }
                 }
 
                 3 -> {
                     if (betaCounter == 1) {
-                        return State.getState(22, null, head)
+                        return State.getState(19, null, head)
                     } else if (betaCounter == 0) {
-                        return State.getState(24, null, head)
+                        return State.getState(21, null, head)
                     }
                 }
 
-                4 -> return State.getState(23, null, head)
+                4 -> return State.getState(20, null, head)
 
-                5 -> return State.getState(22, null, head)
+                5 -> return State.getState(19, null, head)
             }
             return null
         }
