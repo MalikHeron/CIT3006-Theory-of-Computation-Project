@@ -27,6 +27,7 @@ class State {
             when (currentState) {
                 initialState -> {
                     println("q${currentState}: Turing Machine started...")
+                    head = head?.next
                     while (head?.data != machine.blankSymbol) {
                         //Check for invalid input
                         if (!machine.tapeAlphabet.contains(head?.data)) {
@@ -161,7 +162,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(7,'ɑ', head)
+                            getNextState(7, 'ɑ', head)
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
@@ -172,7 +173,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(9,'β', head)
+                            getNextState(8, 'β', head)
                             alternate = true
                             break
                         }
@@ -211,7 +212,7 @@ class State {
                             break
                         }
                         if (current.prev == null) {
-                            head = current
+                            head = current.next
                         }
                         read = "F, K, N, S, ɑ, β, γ, A, B, θ, μ, Ω, x"
                         write = "F, K, N, ɑ, β, γ, A, B, θ, μ, Ω, x"
@@ -234,7 +235,7 @@ class State {
                             break
                         }
                         if (current.prev == null) {
-                            head = current
+                            head = current.next
                         }
                         read = "F, K, N, S, ɑ, β, γ, A, B, θ, μ, Ω, x"
                         write = "F, K, N, ɑ, β, γ, A, B, θ, μ, Ω, x"
@@ -293,7 +294,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(7,'ɑ', head)
+                            getNextState(7, 'ɑ', head)
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
@@ -304,7 +305,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(9,'β', head)
+                            getNextState(8, 'β', head)
                             alternate = true
                             break
                         }
@@ -354,7 +355,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(7,'ɑ', head)
+                            getNextState(7, 'ɑ', head)
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
@@ -365,7 +366,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(9,'β', head)
+                            getNextState(8, 'β', head)
                             alternate = true
                             break
                         }
@@ -405,7 +406,7 @@ class State {
                             current.data = machine.crossSymbol
                         }
                         if (current.prev == null) {
-                            head = current
+                            head = current.next
                         }
                         read = "F, K, N, S, ɑ, β, γ, x"
                         write = "F, K, N, S, ɑ, β, γ, x"
@@ -429,7 +430,7 @@ class State {
                             current.data = machine.crossSymbol
                         }
                         if (current.prev == null) {
-                            head = current
+                            head = current.next
                         }
                         read = "F, K, N, S, ɑ, β, γ, x"
                         write = "F, K, N, S, ɑ, β, γ, x"
@@ -469,7 +470,7 @@ class State {
                             }
                         }
                         if (current.prev == null) {
-                            head = current
+                            head = current.next
                         }
                         read = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
                         write = "F, K, N, S, ɑ, β, γ, A, B, Δ, x"
@@ -509,7 +510,7 @@ class State {
                             }
                         }
                         if (current.prev == null) {
-                            head = current
+                            head = current.next
                         }
                         read = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
                         write = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
@@ -540,7 +541,7 @@ class State {
                             }
                         }
                         if (current.prev == null) {
-                            head = current
+                            head = current.next
                         }
                         read = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
                         write = "F, K, N, S, ɑ, β, γ, θ, μ, Ω, x"
@@ -680,6 +681,7 @@ class State {
                             write = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                             println("q$currentState: $read -> $left [${head?.data}]")
                         }
+                        head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
                     getNextState(24)
@@ -693,7 +695,8 @@ class State {
                             return null
                         }
                         if (lowercaseSymbolList.contains(head?.data) || uppercaseSymbolList.contains(head?.data)
-                                    || head?.data == 'ɑ' || head?.data == 'β' || head?.data == 'γ') {
+                            || head?.data == 'ɑ' || head?.data == 'β' || head?.data == 'γ'
+                        ) {
                             getNextState(rejectState)
                             return null
                         }
@@ -716,6 +719,7 @@ class State {
                             write = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                             println("q$currentState: $read -> $left [${head?.data}]")
                         }
+                        head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
                     getNextState(26)
@@ -738,7 +742,7 @@ class State {
 
                 27 -> {
                     val current = head?.prev
-                    if (current?.data != null) {
+                    if (current != null) {
                         head = head?.prev
                         while (head?.prev != null) {
                             //Move one position to the left
@@ -747,6 +751,7 @@ class State {
                             write = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                             println("q$currentState: $read -> $left [${head?.data}]")
                         }
+                        head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
                     getNextState(2)
@@ -761,6 +766,7 @@ class State {
                             write = "F, K, N, S, ɑ, β, γ, A, B, Δ, θ, μ, Ω, x"
                             println("q$currentState: $read -> $left [${head?.data}]")
                         }
+                        head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
                 }

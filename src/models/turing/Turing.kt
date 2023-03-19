@@ -22,7 +22,7 @@ class Turing(input: String) {
 
     private fun run() {
         //Start turing machine
-        State.getState(0, null, null)
+        State.getState(1, null, null)
 
         //Loop while not at the end of the tape
         while (State.currentState != State.acceptState && State.currentState != State.rejectState) {
