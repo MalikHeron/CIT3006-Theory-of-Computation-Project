@@ -115,7 +115,7 @@ class Transitions {
                                 //Write 'μ' on head position
                                 currentSymbol?.data = machine.mu
                                 head = currentSymbol
-                                if (State.getState(9, read as Char, currentSymbol) != null)
+                                if (State.getState(10, read as Char, currentSymbol) != null)
                                     return
                             }
 
@@ -125,7 +125,7 @@ class Transitions {
                                 //Write 'Ω' on head position
                                 currentSymbol?.data = machine.omega
                                 head = currentSymbol
-                                if (State.getState(10, read as Char, currentSymbol) != null)
+                                if (State.getState(11, read as Char, currentSymbol) != null)
                                     return
                             }
 
@@ -161,7 +161,7 @@ class Transitions {
                 head
             }
 
-            if (State.getState(12, null, currentSymbol) == null) {
+            if (State.getState(13, null, currentSymbol) == null) {
                 currentSymbol = head
                 while (head?.data != machine.blankSymbol) {
                     if (currentSymbol != previousSymbol) {
@@ -184,7 +184,7 @@ class Transitions {
                                 //Write 'μ' on head position
                                 currentSymbol?.data = machine.mu
                                 head = currentSymbol
-                                if (State.getState(10, read as Char, currentSymbol) != null)
+                                if (State.getState(11, read as Char, currentSymbol) != null)
                                     return
                             }
 
@@ -227,7 +227,7 @@ class Transitions {
             //Write 'x' on head position
             currentSymbol?.data = machine.crossSymbol
             head = currentSymbol
-            State.getState(13, currentSymbol?.data, currentSymbol)
+            State.getState(14, currentSymbol?.data, currentSymbol)
         }
 
         fun giveItemAlt(currentSymbol: Node?, currentState: Int) {
@@ -238,25 +238,21 @@ class Transitions {
             //Write 'x' on head position
             currentSymbol?.data = machine.crossSymbol
             head = currentSymbol
-            State.getState(14, currentSymbol?.data, currentSymbol)
+            State.getState(15, currentSymbol?.data, currentSymbol)
         }
 
         fun revertComboSymbol(currentSymbol: Node?) {
-            State.getState(15, currentSymbol?.data, currentSymbol)
-            println("Tape: ${tape.getData()}\n")
-        }
-
-        private fun revertSymbol(currentSymbol: Node?) {
             State.getState(16, currentSymbol?.data, currentSymbol)
             println("Tape: ${tape.getData()}\n")
         }
 
-        fun replaceSymbol(symbol: Char, currentSymbol: Node?) {
-            State.getState(7, symbol, currentSymbol)
+        private fun revertSymbol(currentSymbol: Node?) {
+            State.getState(17, currentSymbol?.data, currentSymbol)
+            println("Tape: ${tape.getData()}\n")
         }
 
         fun goToFront() {
-            State.getState(27, null, null)
+            State.getState(28, null, null)
         }
     }
 }

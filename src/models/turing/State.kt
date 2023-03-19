@@ -39,7 +39,7 @@ class State {
                         println("q$currentState: $read -> $right [${head?.data}]")
                         head = head?.next
                     }
-                    getNextState(24)
+                    getNextState(25)
                 }
 
                 2 -> {
@@ -60,7 +60,7 @@ class State {
                             //Write 'B' on head position
                             currentSymbol?.data = machine.beta
                             head = currentSymbol
-                            getNextState(8, currentSymbol?.data, currentSymbol)
+                            getNextState(9, currentSymbol?.data, currentSymbol)
                         }
 
                         'γ' -> {
@@ -69,11 +69,14 @@ class State {
                             //Write 'Δ' on head position
                             currentSymbol?.data = machine.delta
                             head = currentSymbol
-                            getNextState(11, currentSymbol?.data, currentSymbol)
+                            getNextState(12, currentSymbol?.data, currentSymbol)
                         }
 
                         machine.blankSymbol -> {
-                            getNextState(17)
+                            //Move one position to the right
+                            write = machine.blankSymbol
+                            println("q$currentState: $read -> $left [${head?.data}]")
+                            getNextState(18)
                         }
                     }
                 }
@@ -158,7 +161,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            Transitions.replaceSymbol('ɑ', head)
+                            getNextState(7,'ɑ', head)
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
@@ -169,7 +172,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            Transitions.replaceSymbol('β', head)
+                            getNextState(9,'β', head)
                             alternate = true
                             break
                         }
@@ -219,11 +222,34 @@ class State {
                 }
 
                 8 -> {
-                    //Check combinations for 'β'
-                    Transitions.betaTransitions(8)
+                    var current = currentSymbol?.prev
+                    while (current != null) {
+                        if (current.data == machine.delta || current.data == machine.omega) {
+                            read = current.data
+                            write = input
+                            println("q$currentState: $read -> $write, $left")
+                            //Write the replacement symbol on head position
+                            current.data = input!!
+                            head = current
+                            break
+                        }
+                        if (current.prev == null) {
+                            head = current
+                        }
+                        read = "F, K, N, S, ɑ, β, γ, A, B, θ, μ, Ω, x"
+                        write = "F, K, N, ɑ, β, γ, A, B, θ, μ, Ω, x"
+                        println("q$currentState: $read -> $left [${current.data}]")
+                        //Move one position to the right
+                        current = current.prev
+                    }
                 }
 
                 9 -> {
+                    //Check combinations for 'β'
+                    Transitions.betaTransitions(9)
+                }
+
+                10 -> {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     while (nextSymbol?.data != 'S') {
@@ -249,7 +275,7 @@ class State {
                     }
                 }
 
-                10 -> {
+                11 -> {
                     var found = true
                     var current = currentSymbol?.next
                     var alternate = false
@@ -267,7 +293,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            Transitions.replaceSymbol('ɑ', head)
+                            getNextState(7,'ɑ', head)
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
@@ -278,7 +304,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            Transitions.replaceSymbol('β', head)
+                            getNextState(9,'β', head)
                             alternate = true
                             break
                         }
@@ -304,12 +330,12 @@ class State {
                     }
                 }
 
-                11 -> {
+                12 -> {
                     //Check combinations for 'γ'
-                    Transitions.gammaTransitions(11)
+                    Transitions.gammaTransitions(12)
                 }
 
-                12 -> {
+                13 -> {
                     var found = true
                     var alternate = false
                     var current = currentSymbol?.next
@@ -328,11 +354,10 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            Transitions.replaceSymbol('ɑ', head)
+                            getNextState(7,'ɑ', head)
                             alternate = true
                             break
-                        }
-                        if (current?.data == 'N') {
+                        } else if (current?.data == 'N') {
                             read = current.data
                             write = machine.crossSymbol
                             println("q$currentState: $read -> $write, $left")
@@ -340,7 +365,7 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            Transitions.replaceSymbol('β', head)
+                            getNextState(9,'β', head)
                             alternate = true
                             break
                         }
@@ -366,7 +391,7 @@ class State {
                     }
                 }
 
-                13 -> {
+                14 -> {
                     var current: Node?
                     current = currentSymbol?.prev
 
@@ -390,7 +415,7 @@ class State {
                     }
                 }
 
-                14 -> {
+                15 -> {
                     var current: Node?
                     current = currentSymbol?.prev
 
@@ -414,7 +439,7 @@ class State {
                     }
                 }
 
-                15 -> {
+                16 -> {
                     var current = currentSymbol
 
                     while (current != null) {
@@ -454,7 +479,7 @@ class State {
                     }
                 }
 
-                16 -> {
+                17 -> {
                     var current = currentSymbol
 
                     while (current != null) {
@@ -494,8 +519,8 @@ class State {
                     }
                 }
 
-                17 -> {
-                    var current = currentSymbol
+                18 -> {
+                    var current = currentSymbol?.prev
 
                     while (current != null) {
                         val data = current.data
@@ -524,10 +549,10 @@ class State {
                         current = current.prev
                     }
 
-                    getNextState(18)
+                    getNextState(19)
                 }
 
-                18 -> {
+                19 -> {
                     var alphaCounter = 0
                     var betaCounter = 0
 
@@ -563,10 +588,10 @@ class State {
                         println("q$currentState: $read -> $right [${head?.data}]")
                     }
                     println("Tape: ${Turing.tape.getData()}\n")
-                    getNextState(22)
+                    getNextState(23)
                 }
 
-                19 -> {
+                20 -> {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     //Check if Fork is a requested item
@@ -592,7 +617,7 @@ class State {
                     }
                 }
 
-                20 -> {
+                21 -> {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     //Check if Fork is a requested item
@@ -618,7 +643,7 @@ class State {
                     }
                 }
 
-                21 -> {
+                22 -> {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     //Check if Fork is a requested item
@@ -644,7 +669,7 @@ class State {
                     }
                 }
 
-                22 -> {
+                23 -> {
                     val current = head?.prev
                     if (current != null) {
                         head = head?.prev
@@ -657,10 +682,10 @@ class State {
                         }
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
-                    getNextState(23)
+                    getNextState(24)
                 }
 
-                23 -> {
+                24 -> {
                     while (head?.data != machine.blankSymbol) {
                         if (head?.data == 'F' || head?.data == 'K' || head?.data == 'N' || head?.data == 'S') {
                             println("\nInsufficient funds")
@@ -680,7 +705,7 @@ class State {
                     getNextState(acceptState)
                 }
 
-                24 -> {
+                25 -> {
                     val current = head?.prev
                     if (current != null) {
                         head = head?.prev
@@ -693,10 +718,10 @@ class State {
                         }
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
-                    getNextState(25)
+                    getNextState(26)
                 }
 
-                25 -> {
+                26 -> {
                     restockString.forEach {
                         if (it == head?.data) {
                             head = head?.next
@@ -704,14 +729,14 @@ class State {
                             write = "F, K, N, S"
                             println("q$currentState: $read -> $write, $right [${head?.data}]")
                         } else {
-                            getNextState(26)
+                            getNextState(27)
                             return null
                         }
                     }
                     getNextState(acceptState)
                 }
 
-                26 -> {
+                27 -> {
                     val current = head?.prev
                     if (current?.data != null) {
                         head = head?.prev
@@ -727,7 +752,7 @@ class State {
                     getNextState(2)
                 }
 
-                27 -> {
+                28 -> {
                     if (head?.prev != null) {
                         while (head?.prev != null) {
                             //Move one position to the left
