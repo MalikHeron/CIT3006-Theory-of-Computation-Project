@@ -3,7 +3,6 @@ package models.registers;
 import models.filing.Inventory;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

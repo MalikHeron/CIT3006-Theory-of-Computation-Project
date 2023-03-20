@@ -73,7 +73,7 @@ class Helper {
         }
 
         @Throws(IOException::class)
-        fun addItem(name: String?, quantity: Int) {
+        fun addItem(name: String?, quantity: Int) {//use this same method to add TotalSales during file creation
             try {
                 // Go to end of the file before adding a new record
                 getFile().seek(getFile().length())
