@@ -129,7 +129,7 @@ class MainScreen() : JFrame(), ActionListener {
     }
 
     private fun setupWindow(){
-        this.title = "Turing Vending Machine"
+        this.title = "Vending Machine"
         this.defaultCloseOperation = EXIT_ON_CLOSE
 //        this.size = Dimension(WINDOW_WIDTH, WINDOW_HEIGHT + 100)
         this.contentPane.preferredSize = Dimension(WINDOW_WIDTH, WINDOW_HEIGHT)
