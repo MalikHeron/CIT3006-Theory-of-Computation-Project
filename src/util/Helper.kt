@@ -24,37 +24,27 @@ class Helper {
             when (alphaCounter) {
                 1 -> {
                     if (betaCounter == 2) {
-                        State.currentState = 38
-                        return State.getState(null, head)
+                        return State.getState(20, null, head)
                     }
                 }
 
                 2 -> {
                     if (betaCounter == 1) {
-                        State.currentState = 39
-                        return State.getState(null, head)
+                        return State.getState(21, null, head)
                     }
                 }
 
                 3 -> {
                     if (betaCounter == 1) {
-                        State.currentState = 38
-                        return State.getState(null, head)
+                        return State.getState(20, null, head)
                     } else if (betaCounter == 0) {
-                        State.currentState = 40
-                        return State.getState(null, head)
+                        return State.getState(22, null, head)
                     }
                 }
 
-                4 -> {
-                    State.currentState = 39
-                    return State.getState(null, head)
-                }
+                4 -> return State.getState(21, null, head)
 
-                5 -> {
-                    State.currentState = 38
-                    return State.getState(null, head)
-                }
+                5 -> return State.getState(20, null, head)
             }
             return null
         }

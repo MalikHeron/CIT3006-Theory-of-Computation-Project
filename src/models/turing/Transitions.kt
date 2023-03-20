@@ -8,8 +8,11 @@ class Transitions {
     companion object {
         private var machine = Machine()
         private var read: Any? = null
+        private var write: Any? = null
+        private var right = 'R'
+        private var left = 'L'
 
-        fun alphaTransitions() {
+        fun alphaTransitions(currentState: Int) {
             var previousSymbol: Node? = null
 
             //Check if already at the tape's front
@@ -29,20 +32,32 @@ class Transitions {
                     read = currentSymbol?.data
                     when (read) {
                         'ɑ' -> {
-                            State.currentState = 3
-                            if (State.getState(read as Char, currentSymbol) != null)
+                            write = machine.theta
+                            println("q$currentState: $read -> $write, $right")
+                            //Write 'θ' on head position
+                            currentSymbol?.data = machine.theta
+                            head = currentSymbol
+                            if (State.getState(4, read as Char, currentSymbol) != null)
                                 return
                         }
 
                         'β' -> {
-                            State.currentState = 5
-                            if (State.getState(read as Char, currentSymbol) != null)
+                            write = machine.mu
+                            println("q$currentState: $read -> $write, $right")
+                            //Write 'μ' on head position
+                            currentSymbol?.data = machine.mu
+                            head = currentSymbol
+                            if (State.getState(5, read as Char, currentSymbol) != null)
                                 return
                         }
 
                         'γ' -> {
-                            State.currentState = 7
-                            if (State.getState(read as Char, currentSymbol) != null)
+                            write = machine.omega
+                            println("q$currentState: $read -> $write, $right")
+                            //Write 'Ω' on head position
+                            currentSymbol?.data = machine.omega
+                            head = currentSymbol
+                            if (State.getState(6, read as Char, currentSymbol) != null)
                                 return
                         }
 
@@ -55,6 +70,10 @@ class Transitions {
                         }
                     }
                 }
+                read = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
+                write = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
+                println("q$currentState: $read -> $right [${head?.data}]")
+
                 previousSymbol = currentSymbol
                 head = head?.next
                 currentSymbol = head
@@ -62,7 +81,7 @@ class Transitions {
             revertSymbol(currentSymbol)
         }
 
-        fun betaTransitions() {
+        fun betaTransitions(currentState: Int) {
             var previousSymbol: Node? = null
             //Check if already at the tape's front
             var currentSymbol = if (head?.prev != null) {
@@ -73,8 +92,7 @@ class Transitions {
                 head
             }
 
-            State.currentState = 4
-            if (State.getState(null, currentSymbol) == null) {
+            if (State.getState(4, null, currentSymbol) == null) {
                 currentSymbol = head
                 while (head?.data != machine.blankSymbol) {
                     if (currentSymbol != previousSymbol) {
@@ -82,20 +100,32 @@ class Transitions {
                         read = currentSymbol?.data
                         when (read) {
                             'ɑ' -> {
-                                State.currentState = 12
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                write = machine.theta
+                                println("q$currentState: $read -> $write, $right")
+                                //Write 'θ' on head position
+                                currentSymbol?.data = machine.theta
+                                head = currentSymbol
+                                if (State.getState(5, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'β' -> {
-                                State.currentState = 13
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                write = machine.mu
+                                println("q$currentState: $read -> $write, $right")
+                                //Write 'μ' on head position
+                                currentSymbol?.data = machine.mu
+                                head = currentSymbol
+                                if (State.getState(10, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'γ' -> {
-                                State.currentState = 15
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                write = machine.omega
+                                println("q$currentState: $read -> $write, $right")
+                                //Write 'Ω' on head position
+                                currentSymbol?.data = machine.omega
+                                head = currentSymbol
+                                if (State.getState(11, read as Char, currentSymbol) != null)
                                     return
                             }
 
@@ -108,6 +138,10 @@ class Transitions {
                             }
                         }
                     }
+                    read = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
+                    write = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
+                    println("q$currentState: $read -> $right [${head?.data}]")
+
                     previousSymbol = currentSymbol
                     head = head?.next
                     currentSymbol = head
@@ -116,7 +150,7 @@ class Transitions {
             }
         }
 
-        fun gammaTransitions() {
+        fun gammaTransitions(currentState: Int) {
             var previousSymbol: Node? = null
             //Check if already at the tape's front
             var currentSymbol = if (head?.prev != null) {
@@ -127,8 +161,7 @@ class Transitions {
                 head
             }
 
-            State.currentState = 18
-            if (State.getState(null, currentSymbol) == null) {
+            if (State.getState(13, null, currentSymbol) == null) {
                 currentSymbol = head
                 while (head?.data != machine.blankSymbol) {
                     if (currentSymbol != previousSymbol) {
@@ -136,20 +169,32 @@ class Transitions {
                         read = currentSymbol?.data
                         when (read) {
                             'ɑ' -> {
-                                State.currentState = 21
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                write = machine.theta
+                                println("q$currentState: $read -> $write, $right")
+                                //Write 'θ' on head position
+                                currentSymbol?.data = machine.theta
+                                head = currentSymbol
+                                if (State.getState(6, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'β' -> {
-                                State.currentState = 22
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                write = machine.mu
+                                println("q$currentState: $read -> $write, $right")
+                                //Write 'μ' on head position
+                                currentSymbol?.data = machine.mu
+                                head = currentSymbol
+                                if (State.getState(11, read as Char, currentSymbol) != null)
                                     return
                             }
 
                             'γ' -> {
-                                State.currentState = 23
-                                if (State.getState(read as Char, currentSymbol) != null)
+                                write = machine.omega
+                                println("q$currentState: $read -> $write, $right")
+                                //Write 'Ω' on head position
+                                currentSymbol?.data = machine.omega
+                                head = currentSymbol
+                                if (State.getState(5, read as Char, currentSymbol) != null)
                                     return
                             }
 
@@ -162,6 +207,10 @@ class Transitions {
                             }
                         }
                     }
+                    read = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
+                    write = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
+                    println("q$currentState: $read -> $right [${head?.data}]")
+
                     previousSymbol = currentSymbol
                     head = head?.next
                     currentSymbol = head
@@ -170,36 +219,40 @@ class Transitions {
             }
         }
 
-        fun giveItem(currentSymbol: Node?) {
-            State.currentState = 24
-            State.getState(currentSymbol?.data, currentSymbol)
+        fun giveItem(currentSymbol: Node?, currentState: Int) {
+            read = currentSymbol?.data
+            write = machine.crossSymbol
+            println("q$currentState: $read -> $write, $left")
+            println("Dispense '$read'")
+            //Write 'x' on head position
+            currentSymbol?.data = machine.crossSymbol
+            head = currentSymbol
+            State.getState(14, currentSymbol?.data, currentSymbol)
         }
 
-        fun giveItemAlt(currentSymbol: Node?) {
-            State.currentState = 27
-            State.getState(currentSymbol?.data, currentSymbol)
-        }
-
-        fun giveItemAlone(currentSymbol: Node?) {
-            State.currentState = 29
-            State.getState(currentSymbol?.data, currentSymbol)
+        fun giveItemAlt(currentSymbol: Node?, currentState: Int) {
+            read = currentSymbol?.data
+            write = machine.crossSymbol
+            println("q$currentState: $read -> $write, $left")
+            println("Dispense '$read'")
+            //Write 'x' on head position
+            currentSymbol?.data = machine.crossSymbol
+            head = currentSymbol
+            State.getState(15, currentSymbol?.data, currentSymbol)
         }
 
         fun revertComboSymbol(currentSymbol: Node?) {
-            State.currentState = 30
-            State.getState(currentSymbol?.data, currentSymbol)
+            State.getState(16, currentSymbol?.data, currentSymbol)
             println("Tape: ${tape.getData()}\n")
         }
 
         private fun revertSymbol(currentSymbol: Node?) {
-            State.currentState = 31
-            State.getState(currentSymbol?.data, currentSymbol)
+            State.getState(17, currentSymbol?.data, currentSymbol)
             println("Tape: ${tape.getData()}\n")
         }
 
         fun goToFront() {
-            State.currentState = 42
-            State.getState(null, null)
+            State.getState(28, null, null)
         }
     }
 }
