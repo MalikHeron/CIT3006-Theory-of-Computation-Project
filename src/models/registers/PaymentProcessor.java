@@ -138,7 +138,7 @@ public class PaymentProcessor {//NTS: You need to tie function together
             inputChar = input.charAt(i);
             if (Requested_ITEMS.containsKey(inputChar)) {
                 try {
-                    if (this.inventory.getQuantity(String.valueOf(inputChar)) < Requested_ITEMS.get(inputChar)) {
+                    if (inventory.getQuantity(String.valueOf(inputChar)) < Requested_ITEMS.get(inputChar)) {
                         JOptionPane.showMessageDialog(null, "Inventory contain less items than requested!", "Error", JOptionPane.WARNING_MESSAGE, null);
                         return false;
                     }

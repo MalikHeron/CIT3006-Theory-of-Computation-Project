@@ -73,6 +73,19 @@ class Helper {
         }
 
         @Throws(IOException::class)
+        fun addItem(name: String?, quantity: Int) {
+            try {
+                // Go to end of the file before adding a new record
+                getFile().seek(getFile().length())
+                getFile().writeUTF(name)
+                getFile().writeInt(quantity)
+                getFile().close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        @Throws(IOException::class)
         fun getItemStock(name: Char): Int {//Parameter less, how??
             getFile().seek(0)
             // Searching file for item specified

@@ -39,7 +39,7 @@ public class Inventory {
     }
 
     //Method Used to update quantity
-    public void updateQuantity(Item item) throws IOException {
+    public void updateQuantity(String name, int quantity) throws IOException {
         // Seek to the beginning of the file
         getFile().seek(0);
         // Searching file for item specified
@@ -47,17 +47,17 @@ public class Inventory {
             String itemName = getFile().readUTF();
             double price = getFile().readDouble();
             int currentQuantity = getFile().readInt();
-            if (itemName.equals(item.getName())) {
+            if (itemName.equals(name)) {
                 // Found the item, update the quantity and write it back to the file
                 getFile().seek(getFile().getFilePointer() - 4); // Move back to the quantity field
-                getFile().writeInt(item.getQuantity()); //decrementing by 1 may need to change for restocking
+                getFile().writeInt(quantity); //decrementing by 1 may need to change for restocking
                 getFile().close();
                 return;
             }
         }
         getFile().close();
         // If item was not found, throw an exception
-        String errorMessage = item.getName() + " is not an item in the inventory";
+        String errorMessage = name + " is not an item in the inventory";
         JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         throw new IllegalArgumentException(errorMessage);
     }
@@ -80,21 +80,21 @@ public class Inventory {
 
 
     //Method used to retrieve quantity of remaining items
-    public int getQuantity(Item item) throws IOException {
+    public int getQuantity(String name) throws IOException {
         getFile().seek(0);
         // Searching file for item specified
         while (getFile().getFilePointer() < getFile().length()) {
             String itemName = getFile().readUTF();
             double price = getFile().readDouble();
             int quantity = getFile().readInt();
-            if (itemName.equals(item.getName())) {
+            if (itemName.equals(name)) {
                 getFile().close();
                 return quantity;
             }
         }
         getFile().close();
         // If item was not found, throw exception
-        String errorMessage = item.getName() + " is not an item in the inventory";
+        String errorMessage = name + " is not an item in the inventory";
         JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
         throw new IllegalArgumentException(errorMessage);
     }
