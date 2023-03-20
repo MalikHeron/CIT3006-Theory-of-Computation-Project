@@ -492,21 +492,18 @@ class State {
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'ɑ' on head position
                                 current.data = replaceList[0]
-                                return null
                             }
                             if (read == machine.beta) {
                                 write = replaceList[1]
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'β' on head position
                                 current.data = replaceList[1]
-                                return null
                             }
                             if (read == machine.delta) {
                                 write = replaceList[2]
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'γ' on head position
                                 current.data = replaceList[2]
-                                return null
                             }
                         }
                         if (current.prev == null) {
@@ -518,6 +515,7 @@ class State {
                         //Move one position to the left
                         current = current.prev
                     }
+                    getNextState(18)
                 }
 
                 18 -> {
@@ -561,7 +559,7 @@ class State {
                         when (head?.data) {
                             'ɑ' -> {
                                 alphaCounter++
-                                read = currentSymbol?.data
+                                read = head?.data
                                 write = machine.alpha
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'A' on head position
@@ -570,7 +568,7 @@ class State {
 
                             'β' -> {
                                 betaCounter++
-                                read = currentSymbol?.data
+                                read = head?.data
                                 write = machine.beta
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'B' on head position

@@ -17,23 +17,22 @@ class Turing(input: String) {
     init {
         //Build tape from input
         Helper.buildTape(input)
-        run()
     }
 
-    private fun run() {
+    fun run(): String {
         //Start turing machine
         State.getState(1, null, null)
 
         //Loop while not at the end of the tape
         while (State.currentState != State.acceptState && State.currentState != State.rejectState) {
             State.getState(2, head?.data, head)
-            if (head?.data == machine.blankSymbol) {
+            /*if (head?.data == machine.blankSymbol) {
                 State.getState(18, null, null)
                 break
-            }
+            }*/
             //Move one position to the right
             head = head?.next
         }
-        return
+        return tape.getData()
     }
 }
