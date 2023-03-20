@@ -1,11 +1,13 @@
 package driver
 
 import models.turing.Turing
+import view.screens.MainScreen
 
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
-        Turing("ɑɑβββγβɑFKFS⊔"); //Correct result = xxxxxxxxxxx⊔
+        MainScreen()
+        Turing("ɑɑβββγβɑFKFS⊔") //Correct result = xxxxxxxxxxx⊔
         //Turing("ɑɑββγβɑFKF⊔"); //Correct result = xxxxxβxxxx⊔
         //Turing("ɑɑβγFKF⊔"); //Correct result = xxxxxxF⊔
         //Turing("ɑβɑγFNF⊔") //Correct result = xxxxxxx⊔
