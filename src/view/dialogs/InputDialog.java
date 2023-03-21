@@ -42,7 +42,7 @@ public class InputDialog extends JDialog implements ActionListener {
         Border buttonBorder = BorderFactory.createLineBorder(Color.BLACK, 1);
 
         //Components Configuration
-        displayLabel =  new JLabel("Invalid input!", SwingConstants.CENTER); //String Accepted! Transaction Complete.
+        displayLabel = new JLabel("Invalid input!", SwingConstants.CENTER); //String Accepted! Transaction Complete.
         displayLabel.setFont(lrgLabelFont); //NTS: MIXING OF FONTS
         displayLabel.setPreferredSize(new Dimension(700, 65));
         displayLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -129,8 +129,8 @@ public class InputDialog extends JDialog implements ActionListener {
         retryButton.setVisible(true);
 
         JTextField[] allFields = {inputField, refundField, qforkField, qknifeField, qspoonField, qNapkinField};
-        for(JTextField field:allFields){
-           field.setEnabled(false);
+        for (JTextField field : allFields) {
+            field.setEnabled(false);
         }
     }
 
@@ -148,7 +148,8 @@ public class InputDialog extends JDialog implements ActionListener {
         add(qspoonField);
         add(napkinLabel);
         add(qNapkinField);
-        */add(refundLabel);
+        */
+        add(refundLabel);
         add(refundField);
         add(okButton);
         add(retryButton);

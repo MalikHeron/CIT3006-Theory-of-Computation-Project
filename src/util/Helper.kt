@@ -67,7 +67,7 @@ class Helper {
                 println("Insufficient funds")
             if (total != 0)
                 refund = true
-                println("Refund: $$total")
+            println("Refund: $$total")
 
             return refund || insufficient
         }
@@ -143,7 +143,7 @@ class Helper {
             while (getFile().filePointer < getFile().length()) {
                 val itemName: String = getFile().readUTF()
                 val currentQuantity: Int = getFile().readInt()
-                if(itemName != "TotalSales") {
+                if (itemName != "TotalSales") {
                     getFile().seek(getFile().filePointer - 4) // Move back to the quantity field
                     getFile().writeInt(20) //update to full quantity
                 }
@@ -180,13 +180,16 @@ class Helper {
                     getFile().seek(getFile().filePointer - 4) // Move back to the quantity field
                     getFile().writeInt(funds.toInt())
                     getFile().close()
-                    JOptionPane.showMessageDialog(null, "Total Sales were successfully updated", "Update Successful", JOptionPane.ERROR_MESSAGE)
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Total Sales were successfully updated",
+                        "Update Successful",
+                        JOptionPane.ERROR_MESSAGE
+                    )
                     return
                 }
             }
             getFile().close()
         }
-
-
     }
 }

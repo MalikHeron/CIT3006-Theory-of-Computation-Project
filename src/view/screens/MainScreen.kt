@@ -9,7 +9,7 @@ class MainScreen : JFrame() {
         setupWindow()
     }
 
-    private fun setupWindow(){
+    private fun setupWindow() {
         this.title = "Vending Machine"
         this.defaultCloseOperation = EXIT_ON_CLOSE
         this.size = Dimension(800, 600)

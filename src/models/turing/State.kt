@@ -7,9 +7,8 @@ import util.Node
 class State {
     companion object {
         private var initialState: Int = 1
-        var acceptState: Int = 30
-        var rejectState: Int = 29
-        var currentState: Int = 0
+        private var acceptState: Int = 30
+        private var rejectState: Int = 29
         private var result: Node? = null
         private var machine = Machine()
         private val lowercaseSymbolList =
