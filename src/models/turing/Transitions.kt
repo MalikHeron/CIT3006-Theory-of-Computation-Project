@@ -1,6 +1,7 @@
 package models.turing
 
 import models.turing.Turing.Companion.head
+import util.Helper
 import util.Node
 
 class Transitions {
@@ -9,7 +10,6 @@ class Transitions {
         private var read: Any? = null
         private var write: Any? = null
         private var right = 'R'
-        private var left = 'L'
 
         fun alphaTransitions(currentState: Int) {
             var previousSymbol: Node? = null
@@ -36,7 +36,8 @@ class Transitions {
                             //Write 'θ' on head position
                             currentSymbol?.data = machine.theta
                             head = currentSymbol
-                            State.getState(4, read as Char, currentSymbol)
+                            if (State.getState(4, read as Char, currentSymbol) != null)
+                                return
                         }
 
                         'β' -> {
@@ -45,7 +46,8 @@ class Transitions {
                             //Write 'μ' on head position
                             currentSymbol?.data = machine.mu
                             head = currentSymbol
-                            State.getState(5, read as Char, currentSymbol)
+                            if (State.getState(5, read as Char, currentSymbol) != null)
+                                return
                         }
 
                         'γ' -> {
@@ -54,7 +56,8 @@ class Transitions {
                             //Write 'Ω' on head position
                             currentSymbol?.data = machine.omega
                             head = currentSymbol
-                            State.getState(6, read as Char, currentSymbol)
+                            if (State.getState(6, read as Char, currentSymbol) != null)
+                                return
                         }
 
                         else -> {
@@ -75,7 +78,7 @@ class Transitions {
                     currentSymbol = head
                 }
             }
-            revertSymbol(currentSymbol)
+            revertSymbol(head)
         }
 
         fun betaTransitions(currentState: Int) {
@@ -89,6 +92,10 @@ class Transitions {
                 head
             }
 
+            read = machine.beta
+            write = machine.beta
+            println("q$currentState: $read -> $write, $right")
+            //Write 'θ' on head position
             if (State.getState(4, null, currentSymbol) == null) {
                 currentSymbol = head
                 while (head?.data != machine.blankSymbol && head?.next != null) {
@@ -102,7 +109,8 @@ class Transitions {
                                 //Write 'θ' on head position
                                 currentSymbol?.data = machine.theta
                                 head = currentSymbol
-                                State.getState(5, read as Char, currentSymbol)
+                                if (State.getState(5, read as Char, currentSymbol) != null)
+                                    return
                             }
 
                             'β' -> {
@@ -111,7 +119,8 @@ class Transitions {
                                 //Write 'μ' on head position
                                 currentSymbol?.data = machine.mu
                                 head = currentSymbol
-                                State.getState(10, read as Char, currentSymbol)
+                                if (State.getState(10, read as Char, currentSymbol) != null)
+                                    return
                             }
 
                             'γ' -> {
@@ -120,7 +129,8 @@ class Transitions {
                                 //Write 'Ω' on head position
                                 currentSymbol?.data = machine.omega
                                 head = currentSymbol
-                                State.getState(11, read as Char, currentSymbol)
+                                if (State.getState(11, read as Char, currentSymbol) != null)
+                                    return
                             }
 
                             else -> {
@@ -141,7 +151,7 @@ class Transitions {
                         currentSymbol = head
                     }
                 }
-                revertSymbol(currentSymbol)
+                revertSymbol(head)
             }
         }
 
@@ -156,6 +166,9 @@ class Transitions {
                 head
             }
 
+            read = machine.delta
+            write = machine.delta
+            println("q$currentState: $read -> $write, $right")
             if (State.getState(13, null, currentSymbol) == null) {
                 currentSymbol = head
                 while (head?.data != machine.blankSymbol && head?.next != null) {
@@ -169,7 +182,8 @@ class Transitions {
                                 //Write 'θ' on head position
                                 currentSymbol?.data = machine.theta
                                 head = currentSymbol
-                                State.getState(6, read as Char, currentSymbol)
+                                if (State.getState(6, read as Char, currentSymbol) != null)
+                                    return
                             }
 
                             'β' -> {
@@ -178,7 +192,8 @@ class Transitions {
                                 //Write 'μ' on head position
                                 currentSymbol?.data = machine.mu
                                 head = currentSymbol
-                                State.getState(11, read as Char, currentSymbol)
+                                if (State.getState(11, read as Char, currentSymbol) != null)
+                                    return
                             }
 
                             'γ' -> {
@@ -187,7 +202,8 @@ class Transitions {
                                 //Write 'Ω' on head position
                                 currentSymbol?.data = machine.omega
                                 head = currentSymbol
-                                State.getState(5, read as Char, currentSymbol)
+                                if (State.getState(5, read as Char, currentSymbol) != null)
+                                    return
                             }
 
                             else -> {
@@ -208,30 +224,29 @@ class Transitions {
                         currentSymbol = head
                     }
                 }
-                revertSymbol(currentSymbol)
+                revertSymbol(head)
             }
         }
 
-        fun giveItem(currentSymbol: Node?, currentState: Int) {
-            read = currentSymbol?.data
-            write = machine.crossSymbol
-            println("q$currentState: $read -> $write, $left")
-            println("Dispense '$read'")
-            //Write 'x' on head position
-            currentSymbol?.data = machine.crossSymbol
+        fun giveItem(item: Char, currentSymbol: Node?) {
+            println("Dispense '$item'")
+            Helper.setItemStock(item, Helper.getItemStock(item) - 1)
             head = currentSymbol
             State.getState(14, currentSymbol?.data, currentSymbol)
         }
 
-        fun giveItemAlt(currentSymbol: Node?, currentState: Int) {
-            read = currentSymbol?.data
-            write = machine.crossSymbol
-            println("q$currentState: $read -> $write, $left")
-            println("Dispense '$read'")
-            //Write 'x' on head position
-            currentSymbol?.data = machine.crossSymbol
+        fun giveItemAlt(item: Char, currentSymbol: Node?) {
+            println("Dispense '$item'")
+            Helper.setItemStock(item, Helper.getItemStock(item) - 1)
             head = currentSymbol
             State.getState(15, currentSymbol?.data, currentSymbol)
+        }
+
+        fun giveItemEnd(item: Char, currentSymbol: Node?) {
+            println("Dispense '$item'")
+            Helper.setItemStock(item, Helper.getItemStock(item) - 1)
+            head = currentSymbol
+            State.getState(29, currentSymbol?.data, currentSymbol)
         }
 
         fun revertComboSymbol(currentSymbol: Node?) {

@@ -58,9 +58,10 @@ class Helper {
             }
             if (insufficient)
                 println("Insufficient funds")
-            if (total != 0)
+            if (total != 0) {
                 refund = true
-            println("Refund: $$total")
+                println("Refund: $$total")
+            }
 
             return refund || insufficient
         }
@@ -74,6 +75,7 @@ class Helper {
             addItem("Knife", 20)
             addItem("Napkin", 20)
             addItem("Spoon", 20)
+            addItem("TotalSales", 0)
         }
 
         @Throws(IOException::class)
@@ -106,6 +108,7 @@ class Helper {
                 val itemName = getFile().readUTF()
                 val quantity = getFile().readInt()
                 if (itemName == name) {
+                    println("$itemName Stock: $quantity")
                     return quantity
                 }
             }
@@ -124,7 +127,7 @@ class Helper {
                 'S' -> "Spoon"
                 else -> {
                     println("An error occurred")
-                    exitProcess(1)
+                    return
                 }
             }
             // Seek to the beginning of the file
@@ -148,31 +151,57 @@ class Helper {
 
         @Throws(IOException::class)
         fun restockInventory() {
+            val items = arrayOf("Fork", "Knife", "Napkin", "Spoon")
             getFile().seek(0)
             // Searching file for item specified
             while (getFile().filePointer < getFile().length()) {
-                val itemName: String = getFile().readUTF()
-                val currentQuantity: Int = getFile().readInt()
-                if (itemName != "TotalSales") {
+                val itemName = getFile().readUTF()
+                val currentQuantity = getFile().readInt()
+                if (items.contains(itemName)) {
+                    // Found the item, update the quantity and write it back to the file
                     getFile().seek(getFile().filePointer - 4) // Move back to the quantity field
-                    getFile().writeInt(20) //update to full quantity
+                    getFile().writeInt(20)
+                } else {
+                    return
                 }
             }
         }
 
         @Throws(IOException::class)
         fun getFunds(): Double {
-            var totalFunds = 0.0
             getFile().seek(0)
             // Searching file for item specified
             while (getFile().filePointer < getFile().length()) {
                 val itemName = getFile().readUTF()
                 val quantity = getFile().readInt()
-                if (itemName == "TotalSale") {
-                    totalFunds = quantity.toDouble()
+                if (itemName == "TotalSales") {
+                    getFile().seek(0)
+                    return quantity.toDouble()
                 }
             }
-            return totalFunds
+            return 0.0
+        }
+
+        fun resetFunds() {
+            // Seek to the beginning of the file
+            getFile().seek(0)
+            // Searching file for item specified
+            while (getFile().filePointer < getFile().length()) {
+                val itemName = getFile().readUTF()
+                val quantity = getFile().readInt()
+                if (itemName == "TotalSales") {
+                    // Found the item, update the quantity and write it back to the file
+                    getFile().seek(getFile().filePointer - 4) // Move back to the quantity field
+                    getFile().writeInt(0)
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Total Sales were successfully updated",
+                            "Update Successful",
+                            JOptionPane.ERROR_MESSAGE
+                    )
+                    return
+                }
+            }
         }
 
         fun setFunds(funds: Double) {

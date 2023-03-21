@@ -1,7 +1,6 @@
 package models.turing
 
 import util.DoublyLinkedList
-import util.Helper
 
 class Turing(input: String) {
 

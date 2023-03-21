@@ -3,12 +3,13 @@ package models.turing
 import models.turing.Turing.Companion.head
 import util.Helper
 import util.Node
+import kotlin.system.exitProcess
 
 class State {
     companion object {
         private var initialState: Int = 1
-        private var acceptState: Int = 30
-        private var rejectState: Int = 29
+        private var acceptState: Int = 40
+        private var rejectState: Int = 39
         private var result: Node? = null
         private var machine = Machine()
         private val lowercaseSymbolList =
@@ -16,11 +17,13 @@ class State {
         private val uppercaseSymbolList =
             arrayOf(machine.alpha, machine.beta, machine.delta)
         private val replaceList = arrayOf('ɑ', 'β', 'γ')
-        private val restockString = arrayOf('N', 'K', 'S', 'F', 'F', 'S', 'K', 'S')
         private var read: Any? = null
         private var write: Any? = null
         private var right = 'R'
         private var left = 'L'
+        private var none = 'N'
+        private var alphaCounter = 0
+        private var betaCounter = 0
 
         fun getState(currentState: Int, input: Char?, currentSymbol: Node?): Node? {
             when (currentState) {
@@ -62,7 +65,7 @@ class State {
 
                         'β' -> {
                             write = machine.beta
-                            println("q$currentState: $read -> $write, $right")
+                            println("q$currentState: $read -> $write, $none")
                             //Write 'B' on head position
                             currentSymbol?.data = machine.beta
                             head = currentSymbol
@@ -71,7 +74,7 @@ class State {
 
                         'γ' -> {
                             write = machine.delta
-                            println("q$currentState: $read -> $write, $right")
+                            println("q$currentState: $read -> $write, $none")
                             //Write 'Δ' on head position
                             currentSymbol?.data = machine.delta
                             head = currentSymbol
@@ -81,7 +84,7 @@ class State {
                         machine.blankSymbol -> {
                             //Move one position to the right
                             write = machine.blankSymbol
-                            println("q$currentState: $read -> $write, $left")
+                            println("q$currentState: $read -> $write, $none")
                             getNextState(18)
                         }
                     }
@@ -109,12 +112,25 @@ class State {
                         nextSymbol = nextSymbol?.next
                     }
 
-                    if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(nextSymbol, currentState)
+                    result = if (found) {
+                        read = nextSymbol?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        nextSymbol?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItem(read as Char, nextSymbol)
+                            head
+                        } else {
+                            //Revert symbols
+                            Transitions.revertComboSymbol(nextSymbol)
+                            null
+                        }
                     } else {
                         //Revert symbols
                         Transitions.revertComboSymbol(nextSymbol)
+                        null
                     }
                 }
 
@@ -125,22 +141,42 @@ class State {
                     while (nextSymbol?.data != 'F') {
                         //Check if end of tape is reached
                         if (nextSymbol?.data == machine.blankSymbol) {
+                            nextSymbol = nextSymbol.prev
                             found = false
                             break
                         }
-                        read = nextSymbol?.data
-                        write = nextSymbol?.data
-                        println("q$currentState: $read -> $write, $right")
+                        if (nextSymbol?.next?.data == machine.blankSymbol) {
+                            read = nextSymbol.next?.data
+                            write = nextSymbol.next?.data
+                            println("q$currentState: $read -> $write, $left")
+                        } else {
+                            read = nextSymbol?.data
+                            write = nextSymbol?.data
+                            println("q$currentState: $read -> $write, $right")
+                        }
                         //Move one position to the right
                         nextSymbol = nextSymbol?.next
                     }
 
-                    if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(nextSymbol, currentState)
+                    result = if (found) {
+                        read = nextSymbol?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        nextSymbol?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItem(read as Char, nextSymbol)
+                            head
+                        } else {
+                            //Revert symbols
+                            Transitions.revertComboSymbol(nextSymbol)
+                            null
+                        }
                     } else {
                         //Revert symbols
                         Transitions.revertComboSymbol(nextSymbol)
+                        null
                     }
                 }
 
@@ -152,6 +188,7 @@ class State {
                     while (current?.data != 'K') {
                         //Check if end of tape is reached
                         if (current?.data == machine.blankSymbol) {
+                            current = current.prev
                             found = false
                             break
                         }
@@ -159,41 +196,70 @@ class State {
                             read = current.data
                             write = machine.crossSymbol
                             println("q$currentState: $read -> $write, $left")
-                            println("Dispense '$read'")
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(7, 'ɑ', head)
+                            if (Helper.getItemStock(read as Char) > 0) {
+                                println("Dispense '$read'")
+                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                getNextState(7, 'ɑ', head)
+                            }
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
                             read = current.data
                             write = machine.crossSymbol
                             println("q$currentState: $read -> $write, $left")
-                            println("Dispense '$read'")
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(8, 'β', head)
+                            if (Helper.getItemStock(read as Char) > 0) {
+                                println("Dispense '$read'")
+                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                getNextState(8, 'β', head)
+                            }
                             alternate = true
                             break
                         }
-                        read = current?.data
-                        write = current?.data
-                        println("q$currentState: $read -> $write, $right")
+                        if (current?.next?.data == machine.blankSymbol) {
+                            read = current.next?.data
+                            write = current.next?.data
+                            println("q$currentState: $read -> $write, $left")
+                        } else {
+                            read = current?.data
+                            write = current?.data
+                            println("q$currentState: $read -> $write, $right")
+                        }
                         //Move one position to the right
                         current = current?.next
                     }
 
-                    if (alternate) {
+                    result = if (alternate) {
+                        read = head?.data
+                        write = head?.data
+                        println("q$currentState: $read -> $write, $none")
                         // Go to tape front
                         Transitions.goToFront()
+                        null
                     } else if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(current, currentState)
+                        read = current?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        current?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItem(read as Char, current)
+                            head
+                        } else {
+                            //Revert symbols
+                            Transitions.revertComboSymbol(current)
+                            null
+                        }
                     } else {
                         //Revert symbols
                         Transitions.revertComboSymbol(current)
+                        null
                     }
                 }
 
@@ -263,22 +329,42 @@ class State {
                     var nextSymbol = currentSymbol?.next
                     while (nextSymbol?.data != 'S') {
                         if (nextSymbol?.data == machine.blankSymbol) {
+                            nextSymbol = nextSymbol.prev
                             found = false
                             break
                         }
-                        read = nextSymbol?.data
-                        write = nextSymbol?.data
-                        println("q$currentState: $read -> $write, $right")
+                        if (nextSymbol?.next?.data == machine.blankSymbol) {
+                            read = nextSymbol.next?.data
+                            write = nextSymbol.next?.data
+                            println("q$currentState: $read -> $write, $left")
+                        } else {
+                            read = nextSymbol?.data
+                            write = nextSymbol?.data
+                            println("q$currentState: $read -> $write, $right")
+                        }
                         //Move one position to the right
                         nextSymbol = nextSymbol?.next
                     }
 
-                    if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(nextSymbol, currentState)
+                    result = if (found) {
+                        read = nextSymbol?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        nextSymbol?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItem(read as Char, nextSymbol)
+                            head
+                        } else {
+                            //Revert symbols
+                            Transitions.revertComboSymbol(nextSymbol)
+                            null
+                        }
                     } else {
                         //Revert symbols
                         Transitions.revertComboSymbol(nextSymbol)
+                        null
                     }
                 }
 
@@ -289,6 +375,7 @@ class State {
 
                     while (current?.data != 'S') {
                         if (current?.data == machine.blankSymbol) {
+                            current = current.prev
                             found = false
                             break
                         }
@@ -296,41 +383,67 @@ class State {
                             read = current.data
                             write = machine.crossSymbol
                             println("q$currentState: $read -> $write, $left")
-                            println("Dispense '$read'")
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(7, 'ɑ', head)
+                            if (Helper.getItemStock(read as Char) > 0) {
+                                println("Dispense '$read'")
+                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                getNextState(7, 'ɑ', head)
+                            }
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
                             read = current.data
                             write = machine.crossSymbol
                             println("q$currentState: $read -> $write, $left")
-                            println("Dispense '$read'")
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(8, 'β', head)
+                            if (Helper.getItemStock(read as Char) > 0) {
+                                println("Dispense '$read'")
+                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                getNextState(8, 'β', head)
+                            }
                             alternate = true
                             break
                         }
-                        read = current?.data
-                        write = current?.data
-                        println("q$currentState: $read -> $write, $right")
+                        if (current?.next?.data == machine.blankSymbol) {
+                            read = current.next?.data
+                            write = current.next?.data
+                            println("q$currentState: $read -> $write, $left")
+                        } else {
+                            read = current?.data
+                            write = current?.data
+                            println("q$currentState: $read -> $write, $right")
+                        }
                         //Move one position to the right
                         current = current?.next
                     }
 
-                    if (alternate) {
+                    result = if (alternate) {
                         // Go to tape front
                         Transitions.goToFront()
+                        null
                     } else if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItemAlt(current, currentState)
+                        read = current?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        current?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItemAlt(read as Char, current)
+                            null
+                        } else {
+                            //Revert symbols
+                            Transitions.revertComboSymbol(current)
+                            null
+                        }
                     } else {
                         //Revert symbols
                         Transitions.revertComboSymbol(current)
+                        null
                     }
                 }
 
@@ -347,6 +460,7 @@ class State {
                     while (current?.data != 'S') {
                         //Check if end of tape is reached
                         if (current?.data == machine.blankSymbol) {
+                            current = current.prev
                             found = false
                             break
                         }
@@ -354,41 +468,67 @@ class State {
                             read = current.data
                             write = machine.crossSymbol
                             println("q$currentState: $read -> $write, $left")
-                            println("Dispense '$read'")
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(7, 'ɑ', head)
+                            if (Helper.getItemStock(read as Char) > 0) {
+                                println("Dispense '$read'")
+                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                getNextState(7, 'ɑ', head)
+                            }
                             alternate = true
                             break
                         } else if (current?.data == 'N') {
                             read = current.data
                             write = machine.crossSymbol
                             println("q$currentState: $read -> $write, $left")
-                            println("Dispense '$read'")
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            getNextState(8, 'β', head)
+                            if (Helper.getItemStock(read as Char) > 0) {
+                                println("Dispense '$read'")
+                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                getNextState(8, 'β', head)
+                            }
                             alternate = true
                             break
                         }
-                        read = current?.data
-                        write = current?.data
-                        println("q$currentState: $read -> $write, $right")
+                        if (current?.next?.data == machine.blankSymbol) {
+                            read = current.next?.data
+                            write = current.next?.data
+                            println("q$currentState: $read -> $write, $left")
+                        } else {
+                            read = current?.data
+                            write = current?.data
+                            println("q$currentState: $read -> $write, $right")
+                        }
                         //Move one position to the right
                         current = current?.next
                     }
 
-                    if (alternate) {
+                    result = if (alternate) {
                         // Go to tape front
                         Transitions.goToFront()
+                        null
                     } else if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(current, currentState)
+                        read = current?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        current?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItem(read as Char, current)
+                            head
+                        } else {
+                            //Write back the symbols
+                            Transitions.revertComboSymbol(current)
+                            null
+                        }
                     } else {
                         //Write back the symbols
                         Transitions.revertComboSymbol(current)
+                        null
                     }
                 }
 
@@ -463,6 +603,7 @@ class State {
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'ɑ' on head position
                                 current.data = replaceList[0]
+                                head = current
                                 return null
                             }
                             if (read == machine.mu) {
@@ -470,6 +611,7 @@ class State {
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'β' on head position
                                 current.data = replaceList[1]
+                                head = current
                                 return null
                             }
                             if (read == machine.omega) {
@@ -477,6 +619,7 @@ class State {
                                 println("q$currentState: $read -> $write, $right")
                                 //Write 'γ' on head position
                                 current.data = replaceList[2]
+                                head = current
                                 return null
                             }
                         }
@@ -498,7 +641,7 @@ class State {
                 }
 
                 17 -> {
-                    var current = currentSymbol
+                    var current = currentSymbol?.next
 
                     while (current != null) {
                         val data = current.data
@@ -523,26 +666,26 @@ class State {
                                 current.data = replaceList[2]
                             }
                         }
-                        if (current.prev == null) {
-                            read = current.data
-                            write = current.data
-                            println("q$currentState: $read -> $write, $right")
-                            //Move one position to the right
-                            head = current.next
-                        } else {
+                        if (current.next == null) {
                             read = current.data
                             write = current.data
                             println("q$currentState: $read -> $write, $left")
+                            //Move one position to the right
+                            head = current.prev
+                        } else {
+                            read = current.data
+                            write = current.data
+                            println("q$currentState: $read -> $write, $right")
                         }
-                        //Move one position to the left
-                        current = current.prev
+                        //Move one position to the right
+                        current = current.next
                     }
                     println("Tape: ${Turing.tape.getData()}\n")
                     getNextState(18)
                 }
 
                 18 -> {
-                    var current = currentSymbol?.prev
+                    var current = head
 
                     while (current != null) {
                         val data = current.data
@@ -580,33 +723,29 @@ class State {
                 }
 
                 19 -> {
-                    var alphaCounter = 0
-                    var betaCounter = 0
-
-                    while (head?.data != machine.blankSymbol) {
+                    while (head != null) {
                         when (head?.data) {
                             'ɑ' -> {
                                 alphaCounter++
                                 read = head?.data
                                 write = machine.alpha
-                                println("q$currentState: $read -> $write, $right")
+                                println("q$currentState: $read -> $write, $none")
                                 //Write 'A' on head position
                                 head?.data = machine.alpha
+                                //Check for symbols
+                                Helper.checkCount(alphaCounter, betaCounter)
                             }
 
                             'β' -> {
                                 betaCounter++
                                 read = head?.data
                                 write = machine.beta
-                                println("q$currentState: $read -> $write, $right")
+                                println("q$currentState: $read -> $write, $none")
                                 //Write 'B' on head position
                                 head?.data = machine.beta
+                                //Check for symbols
+                                Helper.checkCount(alphaCounter, betaCounter)
                             }
-                        }
-                        //Check for symbols
-                        if (Helper.checkCount(alphaCounter, betaCounter) != null) {
-                            betaCounter = 0
-                            alphaCounter = 0
                         }
                         if (head?.next != null) {
                             read = head?.data
@@ -615,7 +754,10 @@ class State {
                             //Move one position to the right
                             head = head!!.next
                         } else {
-                            return null
+                            read = head?.data
+                            write = head?.data
+                            println("q$currentState: $read -> $write, $left")
+                            break
                         }
                     }
                     println("Tape: ${Turing.tape.getData()}\n")
@@ -626,22 +768,34 @@ class State {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     //Check if Fork is a requested item
-                    while (nextSymbol?.data != 'K') {
+                    while (nextSymbol?.data != 'K' && nextSymbol != null) {
                         //Check if end of tape is reached
-                        if (nextSymbol?.data == machine.blankSymbol) {
+                        if (nextSymbol.data == machine.blankSymbol) {
                             found = false
                             break
                         }
-                        read = nextSymbol?.data
-                        write = nextSymbol?.data
+                        read = nextSymbol.data
+                        write = nextSymbol.data
                         println("q$currentState: $read -> $write, $right")
                         //Move one position to the right
-                        nextSymbol = nextSymbol?.next
+                        nextSymbol = nextSymbol.next
                     }
 
                     if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(nextSymbol, currentState)
+                        alphaCounter = 0
+                        betaCounter = 0
+                        read = nextSymbol?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        nextSymbol?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItemEnd(read as Char, nextSymbol)
+                        }
+                    } else {
+                        head = nextSymbol
+                        getNextState(30)
                     }
                 }
 
@@ -649,22 +803,34 @@ class State {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     //Check if Fork is a requested item
-                    while (nextSymbol?.data != 'S') {
+                    while (nextSymbol?.data != 'S' && nextSymbol != null) {
                         //Check if end of tape is reached
-                        if (nextSymbol?.data == machine.blankSymbol) {
+                        if (nextSymbol.data == machine.blankSymbol) {
                             found = false
                             break
                         }
-                        read = nextSymbol?.data
-                        write = nextSymbol?.data
+                        read = nextSymbol.data
+                        write = nextSymbol.data
                         println("q$currentState: $read -> $write, $right")
                         //Move one position to the right
-                        nextSymbol = nextSymbol?.next
+                        nextSymbol = nextSymbol.next
                     }
 
                     if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(nextSymbol, currentState)
+                        alphaCounter = 0
+                        betaCounter = 0
+                        read = nextSymbol?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        nextSymbol?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItemEnd(read as Char, nextSymbol)
+                        }
+                    } else {
+                        head = nextSymbol
+                        getNextState(30)
                     }
                 }
 
@@ -672,35 +838,50 @@ class State {
                     var found = true
                     var nextSymbol = currentSymbol?.next
                     //Check if Fork is a requested item
-                    while (nextSymbol?.data != 'F') {
+                    while (nextSymbol?.data != 'F' && nextSymbol != null) {
                         //Check if end of tape is reached
-                        if (nextSymbol?.data == machine.blankSymbol) {
+                        if (nextSymbol.data == machine.blankSymbol) {
                             found = false
                             break
                         }
-                        read = nextSymbol?.data
-                        write = nextSymbol?.data
+                        read = nextSymbol.data
+                        write = nextSymbol.data
                         println("q$currentState: $read -> $write, $right")
                         //Move one position to the right
-                        nextSymbol = nextSymbol?.next
+                        nextSymbol = nextSymbol.next
                     }
 
                     if (found) {
-                        //Give the item and check it off
-                        Transitions.giveItem(nextSymbol, currentState)
+                        alphaCounter = 0
+                        betaCounter = 0
+                        read = nextSymbol?.data
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
+                        //Write 'x' on head position
+                        nextSymbol?.data = machine.crossSymbol
+                        if (Helper.getItemStock(read as Char) > 0) {
+                            //Give the item and check it off
+                            Transitions.giveItemEnd(read as Char, nextSymbol)
+                        }
+                    } else {
+                        head = nextSymbol
+                        getNextState(30)
                     }
                 }
 
                 23 -> {
-                    val current = head?.prev
+                    val current = head
                     if (current != null) {
-                        head = head?.prev
                         while (head?.prev != null) {
                             //Move one position to the left
                             head = head!!.prev
                             read = head?.data
                             write = head?.data
-                            println("q$currentState: $read -> $write, $left")
+                            if (head?.prev == null) {
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                println("q$currentState: $read -> $write, $left")
+                            }
                         }
                         head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
@@ -728,28 +909,19 @@ class State {
                         head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
-                    getNextState(25)
+                    getNextState(25, head?.data, head)
                 }
 
                 25 -> {
-                    restockString.forEach {
-                        if (it == head?.data) {
-                            head = head?.next
-                            read = head?.data
-                            write = head?.data
-                            if (head?.prev == null) {
-                                println("q$currentState: $read -> $write, $right")
-                            } else {
-                                println("q$currentState: $read -> $write, $left")
-                            }
-                        } else {
-                            getNextState(26)
-                            return null
-                        }
+                    read = input
+                    write = currentSymbol?.data
+                    if (read == 'N') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(31)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
                     }
-                    Helper.restockInventory()
-                    println("Funds: $${Helper.getFunds()}")
-                    getNextState(acceptState)
                 }
 
                 26 -> {
@@ -793,11 +965,17 @@ class State {
 
                 28 -> {
                     //Loop while not at the end of the tape
-                    while (head != null && head?.data != machine.blankSymbol) {
-                        if (getNextState(2, head?.data, head) != null) {
-                            return null
+                    while (head != null) {
+                        if (head?.data == 'ɑ' || head?.data == 'β' || head?.data == 'γ'
+                            || head?.data == machine.blankSymbol) {
+                            read = head?.prev?.data
+                            write = head?.prev?.data
+                            println("q$currentState: $read -> $write, $right")
+                            if (getNextState(2, head?.data, head) != null) {
+                                return null
+                            }
                         }
-                        if (head?.next != null) {
+                        if (head?.next == null) {
                             read = head?.data
                             write = head?.data
                             println("q$currentState: $read -> $write, $right")
@@ -807,15 +985,174 @@ class State {
                     }
                 }
 
+                29 -> {
+                    var current: Node?
+                    current = currentSymbol?.prev
+
+                    while (current != null) {
+                        val data = current.data
+                        if (uppercaseSymbolList.contains(data)) {
+                            read = data
+                            write = machine.crossSymbol
+                            println("q$currentState: $read -> $write, $left")
+                            //Write 'x' on head position
+                            current.data = machine.crossSymbol
+                        }
+                        if (current.prev == null) {
+                            read = current.data
+                            write = current.data
+                            println("q$currentState: $read -> $write, $right")
+                            //Move one position to the right
+                            head = current.next
+                        } else {
+                            read = current.data
+                            write = current.data
+                            println("q$currentState: $read -> $write, $left")
+                        }
+                        //Move one position to the left
+                        current = current.prev
+                    }
+                    getNextState(19)
+                }
+
+                30 -> {
+                    if (head?.prev != null) {
+                        while (head?.data != machine.alpha && head?.data != machine.beta) {
+                            read = head?.data
+                            write = head?.data
+                            if (head?.prev == null) {
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                println("q$currentState: $read -> $write, $left")
+                            }
+                            //Move one position to the left
+                            head = head!!.prev
+                        }
+                        head = head?.next
+                        println("Tape: ${Turing.tape.getData()}\n")
+                    }
+                    getNextState(19)
+                }
+
+                31 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == 'K') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(32)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
+                32 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == 'S') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(33)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
+                33 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == 'F') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(34)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
+                34 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == 'F') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(35)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
+                35 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == 'S') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(36)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
+                36 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == 'K') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(37)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
+                37 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == 'S') {
+                        println("q$currentState: $read -> $write, $right")
+                        getNextState(38)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
+                38 -> {
+                    head = currentSymbol?.next
+                    read = head?.data
+                    write = head?.data
+                    if (read == machine.blankSymbol) {
+                        println("q$currentState: $read -> $write, $right")
+                        println("Funds: $${Helper.getFunds()}")
+                        Helper.restockInventory()
+                        Helper.resetFunds()
+                        getNextState(acceptState)
+                        getNextState(acceptState)
+                    } else {
+                        println("q$currentState: $read -> $write, $left")
+                        getNextState(26)
+                    }
+                }
+
                 rejectState -> {
                     //Stop machine
                     println("\nqr: Halt")
+                    //exitProcess(0)
                     return head
                 }
 
                 acceptState -> {
                     //Stop machine
                     println("\nqa: Halt")
+                    //exitProcess(0)
                     return head
                 }
             }

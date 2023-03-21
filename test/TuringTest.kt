@@ -83,4 +83,11 @@ class TuringTest {
         val result = Turing("⊔NKSFFSKS⊔").run()
         assertEquals("⊔NKSFFSKS⊔", result)
     }
+
+    @Test
+    @Order(12)
+    fun test() {
+        val result = Turing("⊔γɑK⊔").run()
+        assertEquals("⊔xxx⊔", result)
+    }
 }

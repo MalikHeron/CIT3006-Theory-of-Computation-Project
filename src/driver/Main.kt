@@ -1,21 +1,17 @@
 package driver
 
 import models.turing.Turing
+import util.Helper
+import view.dialogs.InputDialog
 import view.screens.MainScreen
 
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
-        MainScreen()
-        Turing("ɑɑβββγβɑFKFS⊔") //Correct result = xxxxxxxxxxx⊔
-        //Turing("ɑɑββγβɑFKF⊔"); //Correct result = xxxxxβxxxx⊔
-        //Turing("ɑɑβγFKF⊔"); //Correct result = xxxxxxF⊔
-        //Turing("ɑβɑγFNF⊔") //Correct result = xxxxxxx⊔
-        //Turing("γβɑSK⊔"); //Correct result = xBAxK⊔
-        //Turing("βγɑSK⊔"); //Correct result = BxAxK⊔
-        //Turing("δNKF⊔"); //Correct result = invalid
-        //Turing("βδNKF⊔"); //Correct result = refund $10
-        //Turing("γN⊔"); //Correct result = βx⊔
-        //Turing("ɑɑɑɑS⊔"); //Correct result = xxxxx⊔
+        //Helper.addItems()
+        //Helper.resetFunds()
+        //Helper.setItemStock('F', 1)
+        //MainScreen()
+        //InputDialog()
     }
 }
