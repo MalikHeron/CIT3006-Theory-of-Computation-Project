@@ -1,5 +1,6 @@
 package view.screens
 
+import models.turing.Turing
 import java.awt.*
 import java.awt.FlowLayout.CENTER
 import java.awt.event.ActionEvent
@@ -7,14 +8,16 @@ import java.awt.event.ActionListener
 import java.util.*
 import javax.swing.*
 import javax.swing.border.BevelBorder
-
+import javax.swing.border.LineBorder
+import javax.swing.border.SoftBevelBorder
+import javax.swing.border.TitledBorder
 
 const val WINDOW_WIDTH = 900
 const val WINDOW_HEIGHT = 700
 const val HALF_WINDOW = WINDOW_WIDTH / 2
 
 class MainScreen() : JFrame(), ActionListener {
-    private var leftPanel = JPanel(FlowLayout(CENTER, 0, 0))
+    private var leftPanel = JPanel(null)
     private var rightPanel = JPanel(FlowLayout(CENTER, 10, 10))
     private lateinit var machineImage: JLabel
     private lateinit var inputDisplay: JTextField
@@ -32,6 +35,7 @@ class MainScreen() : JFrame(), ActionListener {
     private lateinit var aButton: JButton
     private lateinit var deleteButton: JButton
     private lateinit var enterButton: JButton
+    private lateinit var inventoryDisplay: JTextArea
 
     private var buttons = arrayListOf<JButton>()
 
@@ -44,22 +48,21 @@ class MainScreen() : JFrame(), ActionListener {
     private fun setupComponents(){
         leftPanel.size = Dimension(HALF_WINDOW, WINDOW_HEIGHT)
         leftPanel.background = Color.DARK_GRAY
-        leftPanel.alignmentY = CENTER_ALIGNMENT
 
         rightPanel.size = Dimension(HALF_WINDOW, WINDOW_HEIGHT)
         rightPanel.background = Color.GRAY
 
-
         val image = ImageIcon(Objects.requireNonNull(javaClass.getResource("/res/vendingMachineWindow_900.png")))
         machineImage = JLabel(image)
-        machineImage.verticalAlignment = JLabel.CENTER
         machineImage.size = Dimension(HALF_WINDOW, WINDOW_HEIGHT)
+        machineImage.border = LineBorder(Color.BLACK, 12, true)
 
         inputDisplay = JTextField("")
-        inputDisplay.preferredSize = Dimension(HALF_WINDOW - 30, 70)
+        inputDisplay.preferredSize = Dimension(HALF_WINDOW - 40, 70)
         inputDisplay.background = Color.decode("#c8d96a")
         inputDisplay.isEditable = false
-        inputDisplay.border = BevelBorder(BevelBorder.LOWERED)
+        inputDisplay.horizontalAlignment = JLabel.CENTER
+        inputDisplay.border = SoftBevelBorder(SoftBevelBorder.LOWERED)
         inputDisplay.font = Font(Font.SANS_SERIF, Font.BOLD, 30)
 
         alphaButton = JButton("$5")
@@ -67,7 +70,6 @@ class MainScreen() : JFrame(), ActionListener {
         gammaButton = JButton("$20")
         deltaButton = JButton("$50")
         epsilonButton = JButton("$100")
-
         nButton = JButton("N")
         kButton = JButton("K")
         sButton = JButton("S")
@@ -75,7 +77,6 @@ class MainScreen() : JFrame(), ActionListener {
         zButton = JButton("Z")
         wButton = JButton("W")
         aButton = JButton("A")
-
         deleteButton = JButton("Delete")
         enterButton= JButton("ENTER")
 
@@ -99,6 +100,7 @@ class MainScreen() : JFrame(), ActionListener {
         for (btn in buttons){
             btn.preferredSize = Dimension(130, 70)
             btn.background = Color.LIGHT_GRAY
+            btn.foreground = Color.BLACK
             btn.isFocusPainted = false
             btn.border = BevelBorder(BevelBorder.RAISED)
             btn.font = Font(Font.SANS_SERIF, Font.BOLD, 30)
@@ -109,21 +111,34 @@ class MainScreen() : JFrame(), ActionListener {
         deleteButton.background = Color.decode("#d60f34")
         enterButton.preferredSize = Dimension(200, 70)
         enterButton.background = Color.decode("#289946")
+
+        inventoryDisplay = JTextArea("N - 20\tK - 20\tS - 20\tF - 20")
+        inventoryDisplay.preferredSize = Dimension(HALF_WINDOW-40, 60)
+        inventoryDisplay.background = Color.GRAY
+        inventoryDisplay.isEditable = false
+        inventoryDisplay.font = Font(Font.SANS_SERIF, Font.BOLD, 15)
+        inventoryDisplay.border = TitledBorder(
+            SoftBevelBorder(SoftBevelBorder.LOWERED),
+            "ITEMS AVAILABLE",
+            TitledBorder.DEFAULT_POSITION,
+            TitledBorder.DEFAULT_JUSTIFICATION,
+            Font(Font.SANS_SERIF, Font.BOLD, 16)
+        )
     }
 
     private fun addComponentsToPanels(){
         leftPanel.add(machineImage)
 
-        val space = JLabel(" ")
-        space.preferredSize = Dimension(WINDOW_WIDTH, 60)
-        rightPanel.add(space)
+        rightPanel.add(verticalSpace(10))
+        rightPanel.add(inventoryDisplay)
+        rightPanel.add(verticalSpace(30))
         rightPanel.add(inputDisplay)
 
         for(btn in buttons){
             rightPanel.add(btn)
         }
 
-        // add panels to jframe
+        // add panels to frame
         this.add(leftPanel)
         this.add(rightPanel)
     }
@@ -131,48 +146,52 @@ class MainScreen() : JFrame(), ActionListener {
     private fun setupWindow(){
         this.title = "Vending Machine"
         this.defaultCloseOperation = EXIT_ON_CLOSE
-//        this.size = Dimension(WINDOW_WIDTH, WINDOW_HEIGHT + 100)
         this.contentPane.preferredSize = Dimension(WINDOW_WIDTH, WINDOW_HEIGHT)
-        this.pack()
         this.layout = GridLayout(1,2)
+        this.pack()
         this.isResizable = false
         this.isVisible = true
     }
 
     override fun actionPerformed(e: ActionEvent?) {
-        // clear error
+        // clear any errors
         if(inputDisplay.text == "NO INPUT")
             inputDisplay.text = ""
 
-        if(e?.source == alphaButton){
-            inputDisplay.text = inputDisplay.text + "α"
-        }
-        else if(e?.source == betaButton){
-            inputDisplay.text = inputDisplay.text + "β"
-        }
-        else if(e?.source == gammaButton){
-            inputDisplay.text = inputDisplay.text + "γ"
-        }
-        else if(e?.source == deltaButton){
-            inputDisplay.text = inputDisplay.text + "δ"
-        }
-        else if(e?.source == epsilonButton){
-            inputDisplay.text = inputDisplay.text + "ε"
-        }
-        else if(e?.source == deleteButton){
-            inputDisplay.text = inputDisplay.text.dropLast(1)
-        }
-        else if(e?.source == enterButton){
-            if(inputDisplay.text.isEmpty()){
-                inputDisplay.text = "NO INPUT"
-                return
+        when(e?.source){
+            alphaButton -> inputDisplay.text = inputDisplay.text + "ɑ"
+            betaButton -> inputDisplay.text = inputDisplay.text + "β"
+            gammaButton -> inputDisplay.text = inputDisplay.text + "γ"
+            deltaButton -> inputDisplay.text = inputDisplay.text + "δ"
+            epsilonButton -> inputDisplay.text = inputDisplay.text + "ε"
+            deleteButton -> inputDisplay.text = inputDisplay.text.dropLast(1)
+            enterButton -> {
+                if(inputDisplay.text.isEmpty()){
+                    Toolkit.getDefaultToolkit().beep()
+                    inputDisplay.text = "NO INPUT"
+                    return
+                }
+                // process
+                handleTuringRequest()
             }
+            else -> inputDisplay.text = inputDisplay.text + (e?.source as? JButton)?.text
+        }
+    }
 
-            // send input to machine
-        }
-        else{
-            inputDisplay.text = inputDisplay.text + (e?.source as? JButton)?.text
-        }
+    private fun handleTuringRequest(){
+        Turing("⊔" + inputDisplay.text + "⊔")
+
+        // display results
+
+        // update stock amounts
+        // inventoryDisplay.text = "N - 20\tK - 20\tS - 20\tF - 20"
+    }
+
+    private fun verticalSpace(height: Int): JLabel {
+        val space = JLabel(" ")
+        space.preferredSize = Dimension(WINDOW_WIDTH, height)
+
+        return space
     }
 
 }
