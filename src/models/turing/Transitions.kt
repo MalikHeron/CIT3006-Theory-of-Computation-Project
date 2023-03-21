@@ -1,7 +1,6 @@
 package models.turing
 
 import models.turing.Turing.Companion.head
-import models.turing.Turing.Companion.tape
 import util.Node
 
 class Transitions {
@@ -26,7 +25,7 @@ class Transitions {
             }
 
             //While not end of input
-            while (head?.data != machine.blankSymbol) {
+            while (head?.data != machine.blankSymbol && head?.next != null) {
                 if (currentSymbol != previousSymbol) {
                     //Read value under head
                     read = currentSymbol?.data
@@ -37,8 +36,7 @@ class Transitions {
                             //Write 'θ' on head position
                             currentSymbol?.data = machine.theta
                             head = currentSymbol
-                            if (State.getState(4, read as Char, currentSymbol) != null)
-                                return
+                            State.getState(4, read as Char, currentSymbol)
                         }
 
                         'β' -> {
@@ -47,8 +45,7 @@ class Transitions {
                             //Write 'μ' on head position
                             currentSymbol?.data = machine.mu
                             head = currentSymbol
-                            if (State.getState(5, read as Char, currentSymbol) != null)
-                                return
+                            State.getState(5, read as Char, currentSymbol)
                         }
 
                         'γ' -> {
@@ -57,26 +54,26 @@ class Transitions {
                             //Write 'Ω' on head position
                             currentSymbol?.data = machine.omega
                             head = currentSymbol
-                            if (State.getState(6, read as Char, currentSymbol) != null)
-                                return
+                            State.getState(6, read as Char, currentSymbol)
                         }
 
                         else -> {
                             //Check if only alphabet symbols remain
                             if (machine.inputAlphabet.contains(read)) {
                                 revertComboSymbol(currentSymbol)
-                                return
+                                break
                             }
                         }
                     }
                 }
-                read = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
-                write = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
-                println("q$currentState: $read -> $right [${head?.data}]")
+                if (head?.next != null) {
+                    write = read
+                    println("q$currentState: $read -> $write, $right")
 
-                previousSymbol = currentSymbol
-                head = head?.next
-                currentSymbol = head
+                    previousSymbol = currentSymbol
+                    head = head?.next
+                    currentSymbol = head
+                }
             }
             revertSymbol(currentSymbol)
         }
@@ -94,7 +91,7 @@ class Transitions {
 
             if (State.getState(4, null, currentSymbol) == null) {
                 currentSymbol = head
-                while (head?.data != machine.blankSymbol) {
+                while (head?.data != machine.blankSymbol && head?.next != null) {
                     if (currentSymbol != previousSymbol) {
                         //Read value under head
                         read = currentSymbol?.data
@@ -105,8 +102,7 @@ class Transitions {
                                 //Write 'θ' on head position
                                 currentSymbol?.data = machine.theta
                                 head = currentSymbol
-                                if (State.getState(5, read as Char, currentSymbol) != null)
-                                    return
+                                State.getState(5, read as Char, currentSymbol)
                             }
 
                             'β' -> {
@@ -115,8 +111,7 @@ class Transitions {
                                 //Write 'μ' on head position
                                 currentSymbol?.data = machine.mu
                                 head = currentSymbol
-                                if (State.getState(10, read as Char, currentSymbol) != null)
-                                    return
+                                State.getState(10, read as Char, currentSymbol)
                             }
 
                             'γ' -> {
@@ -125,26 +120,26 @@ class Transitions {
                                 //Write 'Ω' on head position
                                 currentSymbol?.data = machine.omega
                                 head = currentSymbol
-                                if (State.getState(11, read as Char, currentSymbol) != null)
-                                    return
+                                State.getState(11, read as Char, currentSymbol)
                             }
 
                             else -> {
                                 //Check if only alphabet symbols remain
                                 if (machine.inputAlphabet.contains(read)) {
                                     revertComboSymbol(currentSymbol)
-                                    return
+                                    break
                                 }
                             }
                         }
                     }
-                    read = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
-                    write = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
-                    println("q$currentState: $read -> $right [${head?.data}]")
+                    if (head?.next != null) {
+                        write = read
+                        println("q$currentState: $read -> $write, $right")
 
-                    previousSymbol = currentSymbol
-                    head = head?.next
-                    currentSymbol = head
+                        previousSymbol = currentSymbol
+                        head = head?.next
+                        currentSymbol = head
+                    }
                 }
                 revertSymbol(currentSymbol)
             }
@@ -163,7 +158,7 @@ class Transitions {
 
             if (State.getState(13, null, currentSymbol) == null) {
                 currentSymbol = head
-                while (head?.data != machine.blankSymbol) {
+                while (head?.data != machine.blankSymbol && head?.next != null) {
                     if (currentSymbol != previousSymbol) {
                         //Read value under head
                         read = currentSymbol?.data
@@ -174,8 +169,7 @@ class Transitions {
                                 //Write 'θ' on head position
                                 currentSymbol?.data = machine.theta
                                 head = currentSymbol
-                                if (State.getState(6, read as Char, currentSymbol) != null)
-                                    return
+                                State.getState(6, read as Char, currentSymbol)
                             }
 
                             'β' -> {
@@ -184,8 +178,7 @@ class Transitions {
                                 //Write 'μ' on head position
                                 currentSymbol?.data = machine.mu
                                 head = currentSymbol
-                                if (State.getState(11, read as Char, currentSymbol) != null)
-                                    return
+                                State.getState(11, read as Char, currentSymbol)
                             }
 
                             'γ' -> {
@@ -194,26 +187,26 @@ class Transitions {
                                 //Write 'Ω' on head position
                                 currentSymbol?.data = machine.omega
                                 head = currentSymbol
-                                if (State.getState(5, read as Char, currentSymbol) != null)
-                                    return
+                                State.getState(5, read as Char, currentSymbol)
                             }
 
                             else -> {
                                 //Check if only alphabet symbols remain
                                 if (machine.inputAlphabet.contains(read)) {
                                     revertComboSymbol(currentSymbol)
-                                    return
+                                    break
                                 }
                             }
                         }
                     }
-                    read = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
-                    write = "F, K, N, S, A, B, Δ, θ, μ, Ω, x"
-                    println("q$currentState: $read -> $right [${head?.data}]")
+                    if (head?.next != null) {
+                        write = read
+                        println("q$currentState: $read -> $write, $right")
 
-                    previousSymbol = currentSymbol
-                    head = head?.next
-                    currentSymbol = head
+                        previousSymbol = currentSymbol
+                        head = head?.next
+                        currentSymbol = head
+                    }
                 }
                 revertSymbol(currentSymbol)
             }
@@ -243,16 +236,14 @@ class Transitions {
 
         fun revertComboSymbol(currentSymbol: Node?) {
             State.getState(16, currentSymbol?.data, currentSymbol)
-            println("Tape: ${tape.getData()}\n")
         }
 
         private fun revertSymbol(currentSymbol: Node?) {
             State.getState(17, currentSymbol?.data, currentSymbol)
-            println("Tape: ${tape.getData()}\n")
         }
 
         fun goToFront() {
-            State.getState(28, null, null)
+            State.getState(27, null, null)
         }
     }
 }
