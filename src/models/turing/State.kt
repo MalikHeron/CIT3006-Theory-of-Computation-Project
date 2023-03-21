@@ -3,13 +3,12 @@ package models.turing
 import models.turing.Turing.Companion.head
 import util.Helper
 import util.Node
-import kotlin.system.exitProcess
 
 class State {
     companion object {
         private var initialState: Int = 1
-        var acceptState: Int = 31
-        var rejectState: Int = 30
+        var acceptState: Int = 30
+        var rejectState: Int = 29
         var currentState: Int = 0
         private var result: Node? = null
         private var machine = Machine()
@@ -29,19 +28,25 @@ class State {
                 initialState -> {
                     println("q${currentState}: Turing Machine started...")
                     head = head?.next
-                    while (head?.data != machine.blankSymbol) {
+                    while (head != null) {
                         //Check for invalid input
                         if (!machine.tapeAlphabet.contains(head?.data)) {
                             println("Invalid input detected!")
                             getNextState(rejectState)
                             return null
                         }
+                        if (head?.next == null) {
+                            read = head?.data
+                            write = head?.data
+                            println("q$currentState: $read -> $write, $left")
+                            break
+                        }
                         read = head?.data
                         write = head?.data
-                        println("q$currentState: $read -> $right")
+                        println("q$currentState: $read -> $write, $right")
                         head = head?.next
                     }
-                    getNextState(25)
+                    getNextState(24)
                 }
 
                 2 -> {
@@ -415,7 +420,7 @@ class State {
                         //Move one position to the left
                         current = current.prev
                     }
-                    getNextState(29)
+                    getNextState(28)
                 }
 
                 15 -> {
@@ -490,6 +495,7 @@ class State {
                         //Move one position to the left
                         current = current.prev
                     }
+                    println("Tape: ${Turing.tape.getData()}\n")
                 }
 
                 17 -> {
@@ -532,6 +538,7 @@ class State {
                         //Move one position to the left
                         current = current.prev
                     }
+                    println("Tape: ${Turing.tape.getData()}\n")
                     getNextState(18)
                 }
 
@@ -699,34 +706,15 @@ class State {
                         head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
-                    getNextState(24)
+                    result = if (Helper.isRemaining())
+                        getNextState(rejectState)
+                    else
+                        getNextState(acceptState)
                 }
 
                 24 -> {
-                    while (head?.data != machine.blankSymbol) {
-                        if (head?.data == 'F' || head?.data == 'K' || head?.data == 'N' || head?.data == 'S') {
-                            println("\nInsufficient funds")
-                            getNextState(rejectState)
-                            return null
-                        }
-                        if (lowercaseSymbolList.contains(head?.data) || uppercaseSymbolList.contains(head?.data)
-                            || head?.data == 'ɑ' || head?.data == 'β' || head?.data == 'γ'
-                        ) {
-                            getNextState(rejectState)
-                            return null
-                        }
-                        read = head?.data
-                        write = head?.data
-                        println("q$currentState: $read -> $write, $right")
-                        head = head?.next
-                    }
-                    getNextState(acceptState)
-                }
-
-                25 -> {
                     val current = head?.prev
                     if (current != null) {
-                        head = head?.prev
                         while (head?.prev != null) {
                             //Move one position to the left
                             head = head!!.prev
@@ -741,10 +729,10 @@ class State {
                         head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
-                    getNextState(26)
+                    getNextState(25)
                 }
 
-                26 -> {
+                25 -> {
                     restockString.forEach {
                         if (it == head?.data) {
                             head = head?.next
@@ -756,14 +744,14 @@ class State {
                                 println("q$currentState: $read -> $write, $left")
                             }
                         } else {
-                            getNextState(27)
+                            getNextState(26)
                             return null
                         }
                     }
                     getNextState(acceptState)
                 }
 
-                27 -> {
+                26 -> {
                     val current = head?.prev
                     if (current != null) {
                         head = head?.prev
@@ -781,10 +769,10 @@ class State {
                         head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
-                    getNextState(29)
+                    getNextState(28)
                 }
 
-                28 -> {
+                27 -> {
                     if (head?.prev != null) {
                         while (head?.prev != null) {
                             //Move one position to the left
@@ -802,10 +790,12 @@ class State {
                     }
                 }
 
-                29 -> {
+                28 -> {
                     //Loop while not at the end of the tape
                     while (head != null && head?.data != machine.blankSymbol) {
-                        getNextState(2, head?.data, head)
+                        if (getNextState(2, head?.data, head) != null) {
+                            return null
+                        }
                         if (head?.next != null) {
                             read = head?.data
                             write = head?.data
@@ -814,17 +804,18 @@ class State {
                         //Move one position to the right
                         head = head?.next
                     }
-                    Helper.refund()
                 }
 
                 rejectState -> {
                     //Stop machine
-                    println("qr: Halt")
+                    println("\nqr: Halt")
+                    return head
                 }
 
                 acceptState -> {
                     //Stop machine
                     println("\nqa: Halt")
+                    return head
                 }
             }
             return result
@@ -834,8 +825,8 @@ class State {
             return getState(nextState, null, head)
         }
 
-        private fun getNextState(nextState: Int, read: Char?, currentSymbol: Node?) {
-            getState(nextState, read, currentSymbol)
+        private fun getNextState(nextState: Int, read: Char?, currentSymbol: Node?): Node? {
+            return getState(nextState, read, currentSymbol)
         }
     }
 }

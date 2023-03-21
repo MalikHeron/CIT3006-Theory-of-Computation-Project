@@ -46,9 +46,13 @@ class Helper {
             return null
         }
 
-        fun refund() {
+        fun isRemaining(): Boolean {
             var total = 0
+            var insufficient = false
+            var refund = false
             tape.getData().forEach {
+                if (it == 'F' || it == 'K' || it == 'N' || it == 'S')
+                    insufficient = true
                 if (it == 'ɑ' || it == 'A')
                     total += 5
                 if (it == 'β' || it == 'B')
@@ -56,8 +60,13 @@ class Helper {
                 if (it == 'γ' || it == 'Δ')
                     total += 20
             }
+            if (insufficient)
+                println("Insufficient funds")
             if (total != 0)
-                println("Refund: $$total\n")
+                refund = true
+                println("Refund: $$total")
+
+            return refund || insufficient
         }
     }
 }

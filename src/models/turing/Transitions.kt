@@ -1,7 +1,6 @@
 package models.turing
 
 import models.turing.Turing.Companion.head
-import models.turing.Turing.Companion.tape
 import util.Node
 
 class Transitions {
@@ -237,16 +236,14 @@ class Transitions {
 
         fun revertComboSymbol(currentSymbol: Node?) {
             State.getState(16, currentSymbol?.data, currentSymbol)
-            println("Tape: ${tape.getData()}\n")
         }
 
         private fun revertSymbol(currentSymbol: Node?) {
             State.getState(17, currentSymbol?.data, currentSymbol)
-            println("Tape: ${tape.getData()}\n")
         }
 
         fun goToFront() {
-            State.getState(28, null, null)
+            State.getState(27, null, null)
         }
     }
 }
