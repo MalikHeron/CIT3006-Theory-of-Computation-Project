@@ -6,19 +6,12 @@ import models.turing.Turing.Companion.tape
 import java.io.IOException
 import java.io.RandomAccessFile
 import javax.swing.JOptionPane
+import kotlin.system.exitProcess
 
 class Helper {
     companion object {
 
-        fun buildTape(input: String) {
-            //Iterate through the symbols in the input
-            input.forEach {
-                //Add the characters as symbols to the tape
-                tape.addNewNode(it)
-            }
-            head = tape.getCurrent()
-            println("Tape: ${tape.getData()}\n")
-        }
+        private var file = RandomAccessFile("files//inventory.txt", "rw")
 
         fun checkCount(alphaCounter: Int, betaCounter: Int): Node? {
             when (alphaCounter) {
@@ -72,41 +65,50 @@ class Helper {
             return refund || insufficient
         }
 
-        private var file: RandomAccessFile? = null
-
         private fun getFile(): RandomAccessFile {
-            if (file == null) {
-                throw IllegalStateException("File not properly initialized")
-            }
-            return file!!
+            return file
+        }
+
+        fun addItems() {
+            addItem("Fork", 20)
+            addItem("Knife", 20)
+            addItem("Napkin", 20)
+            addItem("Spoon", 20)
         }
 
         @Throws(IOException::class)
-        fun addItem(name: String?, quantity: Int) {//use this same method to add TotalSales during file creation
+        fun addItem(name: String, quantity: Int) {//use this same method to add TotalSales during file creation
             try {
                 // Go to end of the file before adding a new record
                 getFile().seek(getFile().length())
                 getFile().writeUTF(name)
                 getFile().writeInt(quantity)
-                getFile().close()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
 
         @Throws(IOException::class)
-        fun getItemStock(name: Char): Int {//Parameter less, how??
+        fun getItemStock(symbol: Char): Int {
+            val name = when (symbol) {
+                'F' -> "Fork"
+                'K' -> "Knife"
+                'N' -> "Napkin"
+                'S' -> "Spoon"
+                else -> {
+                    println("An error occurred")
+                    exitProcess(1)
+                }
+            }
             getFile().seek(0)
             // Searching file for item specified
             while (getFile().filePointer < getFile().length()) {
                 val itemName = getFile().readUTF()
                 val quantity = getFile().readInt()
-                if (itemName == name.toString()) {
-                    getFile().close()
+                if (itemName == name) {
                     return quantity
                 }
             }
-            getFile().close()
             // If item was not found, throw exception
             val errorMessage = "$name is not an item in the inventory"
             JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE)
@@ -114,22 +116,30 @@ class Helper {
         }
 
         @Throws(IOException::class)
-        fun setItemStock(name: Char, quantity: Int) {
+        fun setItemStock(symbol: Char, quantity: Int) {
+            val name = when (symbol) {
+                'F' -> "Fork"
+                'K' -> "Knife"
+                'N' -> "Napkin"
+                'S' -> "Spoon"
+                else -> {
+                    println("An error occurred")
+                    exitProcess(1)
+                }
+            }
             // Seek to the beginning of the file
             getFile().seek(0)
             // Searching file for item specified
             while (getFile().filePointer < getFile().length()) {
                 val itemName = getFile().readUTF()
                 val currentQuantity = getFile().readInt()
-                if (itemName == name.toString()) {
+                if (itemName == name) {
                     // Found the item, update the quantity and write it back to the file
                     getFile().seek(getFile().filePointer - 4) // Move back to the quantity field
                     getFile().writeInt(quantity)
-                    getFile().close()
                     return
                 }
             }
-            getFile().close()
             // If item was not found, throw an exception
             val errorMessage = "$name is not an item in the inventory"
             JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE)
@@ -148,7 +158,6 @@ class Helper {
                     getFile().writeInt(20) //update to full quantity
                 }
             }
-            getFile().close()
         }
 
         @Throws(IOException::class)
@@ -160,11 +169,9 @@ class Helper {
                 val itemName = getFile().readUTF()
                 val quantity = getFile().readInt()
                 if (itemName == "TotalSale") {
-                    getFile().close()
                     totalFunds = quantity.toDouble()
                 }
             }
-            getFile().close()
             return totalFunds
         }
 
@@ -179,16 +186,18 @@ class Helper {
                     // Found the item, update the quantity and write it back to the file
                     getFile().seek(getFile().filePointer - 4) // Move back to the quantity field
                     getFile().writeInt(funds.toInt())
-                    getFile().close()
                     JOptionPane.showMessageDialog(
-                        null,
-                        "Total Sales were successfully updated",
-                        "Update Successful",
-                        JOptionPane.ERROR_MESSAGE
+                            null,
+                            "Total Sales were successfully updated",
+                            "Update Successful",
+                            JOptionPane.ERROR_MESSAGE
                     )
                     return
                 }
             }
+        }
+
+        fun closeFile() {
             getFile().close()
         }
     }

@@ -747,6 +747,8 @@ class State {
                             return null
                         }
                     }
+                    Helper.restockInventory()
+                    println("Funds: $${Helper.getFunds()}")
                     getNextState(acceptState)
                 }
 

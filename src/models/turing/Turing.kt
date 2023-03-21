@@ -14,7 +14,17 @@ class Turing(input: String) {
 
     init {
         //Build tape from input
-        Helper.buildTape(input)
+        buildTape(input)
+    }
+
+    private fun buildTape(input: String) {
+        //Iterate through the symbols in the input
+        input.forEach {
+            //Add the characters as symbols to the tape
+            tape.addNewNode(it)
+        }
+        head = tape.getCurrent()
+        println("Tape: ${tape.getData()}\n")
     }
 
     fun run(): String {

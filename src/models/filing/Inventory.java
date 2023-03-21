@@ -8,9 +8,9 @@ import javax.swing.JOptionPane;
 public class Inventory {
     private RandomAccessFile file;
 
-    public Inventory(String filename) {
+    public Inventory() {
         try {
-            setFile(new RandomAccessFile(filename, "rw")); //NTS: revisit for specifying paths based on project strucutre
+            setFile(new RandomAccessFile("inventory.txt", "rw")); //NTS: revisit for specifying paths based on project structure
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -78,7 +78,6 @@ public class Inventory {
         getFile().close();
     }
 
-
     //Method used to retrieve quantity of remaining items
     public int getQuantity(String name) throws IOException {
         getFile().seek(0);
@@ -114,5 +113,4 @@ public class Inventory {
         getFile().close();
         return inventory.toString();
     }
-
 }
