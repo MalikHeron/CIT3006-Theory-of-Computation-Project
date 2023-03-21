@@ -1,6 +1,7 @@
 package models.turing
 
 import util.DoublyLinkedList
+import util.Helper
 
 class Turing(input: String) {
 
@@ -29,6 +30,7 @@ class Turing(input: String) {
     fun run(): String {
         //Start turing machine
         State.getState(1, null, null)
+        Helper.getResults()
         return tape.getData()
     }
 }

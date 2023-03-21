@@ -1,9 +1,8 @@
 package models.turing
 
+import models.inventory.Inventory
 import models.turing.Turing.Companion.head
-import util.Helper
 import util.Node
-import kotlin.system.exitProcess
 
 class State {
     companion object {
@@ -118,7 +117,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         nextSymbol?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItem(read as Char, nextSymbol)
                             head
@@ -164,7 +163,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         nextSymbol?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItem(read as Char, nextSymbol)
                             head
@@ -199,9 +198,9 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            if (Helper.getItemStock(read as Char) > 0) {
+                            if (Inventory.getItemStock(read as Char) > 0) {
                                 println("Dispense '$read'")
-                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                Inventory.setItemStock(read as Char, Inventory.getItemStock(read as Char) - 1)
                                 getNextState(7, 'ɑ', head)
                             }
                             alternate = true
@@ -213,9 +212,9 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            if (Helper.getItemStock(read as Char) > 0) {
+                            if (Inventory.getItemStock(read as Char) > 0) {
                                 println("Dispense '$read'")
-                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                Inventory.setItemStock(read as Char, Inventory.getItemStock(read as Char) - 1)
                                 getNextState(8, 'β', head)
                             }
                             alternate = true
@@ -247,7 +246,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         current?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItem(read as Char, current)
                             head
@@ -352,7 +351,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         nextSymbol?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItem(read as Char, nextSymbol)
                             head
@@ -386,9 +385,9 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            if (Helper.getItemStock(read as Char) > 0) {
+                            if (Inventory.getItemStock(read as Char) > 0) {
                                 println("Dispense '$read'")
-                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                Inventory.setItemStock(read as Char, Inventory.getItemStock(read as Char) - 1)
                                 getNextState(7, 'ɑ', head)
                             }
                             alternate = true
@@ -400,9 +399,9 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            if (Helper.getItemStock(read as Char) > 0) {
+                            if (Inventory.getItemStock(read as Char) > 0) {
                                 println("Dispense '$read'")
-                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                Inventory.setItemStock(read as Char, Inventory.getItemStock(read as Char) - 1)
                                 getNextState(8, 'β', head)
                             }
                             alternate = true
@@ -431,7 +430,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         current?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItemAlt(read as Char, current)
                             null
@@ -471,9 +470,9 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            if (Helper.getItemStock(read as Char) > 0) {
+                            if (Inventory.getItemStock(read as Char) > 0) {
                                 println("Dispense '$read'")
-                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                Inventory.setItemStock(read as Char, Inventory.getItemStock(read as Char) - 1)
                                 getNextState(7, 'ɑ', head)
                             }
                             alternate = true
@@ -485,9 +484,9 @@ class State {
                             //Write 'x' on head position
                             current.data = machine.crossSymbol
                             head = current
-                            if (Helper.getItemStock(read as Char) > 0) {
+                            if (Inventory.getItemStock(read as Char) > 0) {
                                 println("Dispense '$read'")
-                                Helper.setItemStock(read as Char, Helper.getItemStock(read as Char) - 1)
+                                Inventory.setItemStock(read as Char, Inventory.getItemStock(read as Char) - 1)
                                 getNextState(8, 'β', head)
                             }
                             alternate = true
@@ -516,7 +515,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         current?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItem(read as Char, current)
                             head
@@ -732,8 +731,6 @@ class State {
                                 println("q$currentState: $read -> $write, $none")
                                 //Write 'A' on head position
                                 head?.data = machine.alpha
-                                //Check for symbols
-                                Helper.checkCount(alphaCounter, betaCounter)
                             }
 
                             'β' -> {
@@ -743,9 +740,19 @@ class State {
                                 println("q$currentState: $read -> $write, $none")
                                 //Write 'B' on head position
                                 head?.data = machine.beta
-                                //Check for symbols
-                                Helper.checkCount(alphaCounter, betaCounter)
                             }
+                        }
+                        if ((alphaCounter == 1 && betaCounter == 2)
+                            || (alphaCounter == 3 && betaCounter == 1) || alphaCounter == 5
+                        ) {
+                            getNextState(20)
+                            return null
+                        } else if (alphaCounter == 4 || (alphaCounter == 2 && betaCounter == 1)) {
+                            getNextState(21)
+                            return null
+                        } else if (alphaCounter == 3 && betaCounter == 0) {
+                            getNextState(22)
+                            return null
                         }
                         if (head?.next != null) {
                             read = head?.data
@@ -789,7 +796,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         nextSymbol?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItemEnd(read as Char, nextSymbol)
                         }
@@ -824,7 +831,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         nextSymbol?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItemEnd(read as Char, nextSymbol)
                         }
@@ -859,7 +866,7 @@ class State {
                         println("q$currentState: $read -> $write, $left")
                         //Write 'x' on head position
                         nextSymbol?.data = machine.crossSymbol
-                        if (Helper.getItemStock(read as Char) > 0) {
+                        if (Inventory.getItemStock(read as Char) > 0) {
                             //Give the item and check it off
                             Transitions.giveItemEnd(read as Char, nextSymbol)
                         }
@@ -882,14 +889,15 @@ class State {
                             } else {
                                 println("q$currentState: $read -> $write, $left")
                             }
+                            if (machine.inputAlphabet.contains(head?.data) || lowercaseSymbolList.contains(head?.data)
+                                || uppercaseSymbolList.contains(head?.data)
+                            )
+                                result = getNextState(rejectState)
                         }
                         head = head?.next
                         println("Tape: ${Turing.tape.getData()}\n")
                     }
-                    result = if (Helper.isRemaining())
-                        getNextState(rejectState)
-                    else
-                        getNextState(acceptState)
+                    result = getNextState(acceptState)
                 }
 
                 24 -> {
@@ -967,7 +975,8 @@ class State {
                     //Loop while not at the end of the tape
                     while (head != null) {
                         if (head?.data == 'ɑ' || head?.data == 'β' || head?.data == 'γ'
-                            || head?.data == machine.blankSymbol) {
+                            || head?.data == machine.blankSymbol
+                        ) {
                             read = head?.prev?.data
                             write = head?.prev?.data
                             println("q$currentState: $read -> $write, $right")
@@ -1131,9 +1140,9 @@ class State {
                     write = head?.data
                     if (read == machine.blankSymbol) {
                         println("q$currentState: $read -> $write, $right")
-                        println("Funds: $${Helper.getFunds()}")
-                        Helper.restockInventory()
-                        Helper.resetFunds()
+                        println("Funds: $${Inventory.getFunds()}")
+                        Inventory.restockInventory()
+                        Inventory.resetFunds()
                         getNextState(acceptState)
                         getNextState(acceptState)
                     } else {
@@ -1144,15 +1153,13 @@ class State {
 
                 rejectState -> {
                     //Stop machine
-                    println("\nqr: Halt")
-                    //exitProcess(0)
+                    println("qr: Halt")
                     return head
                 }
 
                 acceptState -> {
                     //Stop machine
-                    println("\nqa: Halt")
-                    //exitProcess(0)
+                    println("qa: Halt")
                     return head
                 }
             }

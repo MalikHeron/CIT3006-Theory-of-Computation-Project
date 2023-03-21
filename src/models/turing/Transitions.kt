@@ -1,7 +1,7 @@
 package models.turing
 
+import models.inventory.Inventory
 import models.turing.Turing.Companion.head
-import util.Helper
 import util.Node
 
 class Transitions {
@@ -230,21 +230,24 @@ class Transitions {
 
         fun giveItem(item: Char, currentSymbol: Node?) {
             println("Dispense '$item'")
-            Helper.setItemStock(item, Helper.getItemStock(item) - 1)
+            Inventory.setItemStock(item, Inventory.getItemStock(item) - 1)
+            Inventory.setFunds(Inventory.getPrice(item))
             head = currentSymbol
             State.getState(14, currentSymbol?.data, currentSymbol)
         }
 
         fun giveItemAlt(item: Char, currentSymbol: Node?) {
             println("Dispense '$item'")
-            Helper.setItemStock(item, Helper.getItemStock(item) - 1)
+            Inventory.setItemStock(item, Inventory.getItemStock(item) - 1)
+            Inventory.setFunds(Inventory.getPrice(item))
             head = currentSymbol
             State.getState(15, currentSymbol?.data, currentSymbol)
         }
 
         fun giveItemEnd(item: Char, currentSymbol: Node?) {
             println("Dispense '$item'")
-            Helper.setItemStock(item, Helper.getItemStock(item) - 1)
+            Inventory.setItemStock(item, Inventory.getItemStock(item) - 1)
+            Inventory.setFunds(Inventory.getPrice(item))
             head = currentSymbol
             State.getState(29, currentSymbol?.data, currentSymbol)
         }
