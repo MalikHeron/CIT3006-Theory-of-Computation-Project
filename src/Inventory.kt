@@ -130,7 +130,7 @@ class Inventory {
                 null,
                 "Total Sales were successfully updated",
                 "Update Successful",
-                JOptionPane.ERROR_MESSAGE
+                JOptionPane.INFORMATION_MESSAGE
             )
         }
 
@@ -147,17 +147,10 @@ class Inventory {
             registerMachine.run(arrayOf("LOAD $quantity 1", "LOAD ${funds.toInt()} 2", "ADD 1 2"))
 
             val newQuantity = registerMachine.getRegisterValue(0) ?: 0
-
             getFile().writeInt(newQuantity)
-            JOptionPane.showMessageDialog(
-                null,
-                "Total Sales were successfully updated",
-                "Update Successful",
-                JOptionPane.ERROR_MESSAGE
-            )
+
             return
         }
-
 
         //Reads entire inventory for all details if necessary
         @Throws(IOException::class)

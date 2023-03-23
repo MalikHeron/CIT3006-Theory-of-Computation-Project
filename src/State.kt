@@ -36,26 +36,30 @@ class State {
     private fun getState(currentState: Int) {
         when (currentState) {
             initialState -> {
-                while (inputHead != (inputTape.lastIndex + 1)) {
-                    read = inputTape[inputHead]
-                    write = read
+                if (inputTape[inputHead] == machine.blankSymbol) {
+                    getNextState(rejectState)
+                } else {
+                    while (inputHead != (inputTape.lastIndex + 1)) {
+                        read = inputTape[inputHead]
+                        write = read
 
-                    //Check for invalid input
-                    if (!machine.tapeAlphabet.contains(inputTape[inputHead])) {
-                        println("Invalid input detected!")
-                        getNextState(rejectState)
-                        return
+                        //Check for invalid input
+                        if (!machine.tapeAlphabet.contains(inputTape[inputHead])) {
+                            println("Invalid input detected!")
+                            getNextState(rejectState)
+                            return
+                        }
+                        if (inputHead != inputTape.lastIndex) {
+                            println("q$currentState: $read -> $write, $right")
+                        } else {
+                            println("q$currentState: $read -> $write, $left")
+                            inputHead--
+                            break
+                        }
+                        inputHead++
                     }
-                    if (inputHead != inputTape.lastIndex) {
-                        println("q$currentState: $read -> $write, $right")
-                    } else {
-                        println("q$currentState: $read -> $write, $left")
-                        inputHead--
-                        break
-                    }
-                    inputHead++
+                    getNextState(2)
                 }
-                getNextState(2)
             }
 
             2 -> {

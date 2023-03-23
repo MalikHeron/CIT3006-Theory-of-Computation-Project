@@ -78,13 +78,6 @@ class TuringTest {
 
     @Test
     @Order(11)
-    fun restockAndCheckSale() {
-        val result = Turing("NKSFFSKS").run()
-        assertEquals("NKSFFSKS⊔", result)
-    }
-
-    @Test
-    @Order(12)
     fun accept3() {
         val result = Turing("γɑK").run()
         assertEquals("xxK⊔", result)
@@ -92,8 +85,22 @@ class TuringTest {
 
     @Test
     @Order(12)
-    fun test() {
+    fun insufficientFunds2() {
         val result = Turing("NKɑ").run()
         assertEquals("xxx⊔ɑ", result)
+    }
+
+    @Test
+    @Order(13)
+    fun noInput() {
+        val result = Turing("").run()
+        assertEquals("⊔", result)
+    }
+
+    @Test
+    @Order(14)
+    fun restockAndCheckSale() {
+        val result = Turing("NKSFFSKS").run()
+        assertEquals("NKSFFSKS⊔", result)
     }
 }
