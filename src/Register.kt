@@ -1,5 +1,15 @@
 class Register {
-    private val registers = mutableMapOf(0 to 0, 1 to 0, 2 to 0, 3 to 0, 4 to 0, 5 to 0, 6 to 0, 7 to 0, 8 to 0)
+    private val registers = mutableMapOf(
+        0 to 0,
+        1 to 0,
+        2 to 0,
+        3 to 0,
+        4 to 0,
+        5 to 0,
+        6 to 0,
+        7 to 0,
+        8 to 0
+    )
 
     fun run(instructions: Array<String>) {
         var currentInstruction = 0
@@ -34,7 +44,7 @@ class Register {
             currentInstruction++
         }
         println("Final configuration: ")
-        registers.forEach{
+        registers.forEach {
             println("Register ${it.key} = ${it.value}")
         }
         println()

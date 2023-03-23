@@ -64,7 +64,7 @@ class TuringTest {
 
     @Test
     @Order(9)
-    fun noStock() {
+    fun refund() {
         val result = Turing("γN").run()
         assertEquals("xN⊔β", result)
     }

@@ -25,6 +25,7 @@ class Turing(input: String) {
         output.forEach {
             result += it
         }
+        println("Result: $result")
         return result
     }
 }

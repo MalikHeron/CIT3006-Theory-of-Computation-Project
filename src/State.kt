@@ -140,7 +140,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 1 &&
                             (register.getRegisterValue(2) ?: 0) >= 1
@@ -156,7 +155,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
@@ -170,7 +168,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else {
                             write = machine.crossSymbol
@@ -194,7 +191,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 1 &&
                             (register.getRegisterValue(2) ?: 0) >= 2
@@ -211,7 +207,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 5) {
                             if (inStock(read)) {
@@ -225,7 +220,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 1 &&
                             (register.getRegisterValue(3) ?: 0) >= 1
@@ -241,7 +235,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else {
                             write = machine.crossSymbol
@@ -262,7 +255,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(2) ?: 0) >= 1
                         ) {
@@ -277,7 +269,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
@@ -291,7 +282,7 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
+
                             }
                         } else {
                             write = machine.crossSymbol
@@ -312,7 +303,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(2) ?: 0) >= 2
                         ) {
@@ -327,7 +317,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1
                         ) {
@@ -342,7 +331,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else {
                             write = machine.crossSymbol
@@ -402,7 +390,7 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
+
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 1 &&
                             (register.getRegisterValue(2) ?: 0) >= 1
@@ -418,7 +406,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
@@ -432,7 +419,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else {
                             write = machine.crossSymbol
@@ -456,7 +442,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 1 &&
                             (register.getRegisterValue(2) ?: 0) >= 2
@@ -473,7 +458,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 5) {
                             if (inStock(read)) {
@@ -487,7 +471,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 1 &&
                             (register.getRegisterValue(3) ?: 0) >= 1
@@ -503,7 +486,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else {
                             write = machine.crossSymbol
@@ -524,7 +506,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(2) ?: 0) >= 1
                         ) {
@@ -539,7 +520,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
@@ -553,7 +533,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else {
                             write = machine.crossSymbol
@@ -574,7 +553,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(2) ?: 0) >= 2
                         ) {
@@ -589,7 +567,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1
                         ) {
@@ -604,7 +581,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-                                stockTape.add(read)
                             }
                         } else {
                             write = machine.crossSymbol
@@ -640,9 +616,7 @@ class State {
 
             10 -> {
                 while (itemHead != (itemTape.lastIndex + 1)) {
-                    println("Item Head: $itemHead")
-                    println("Input Head: $inputHead")
-                    if (inputHead == inputTape.lastIndex) {
+                    if (itemHead == itemTape.lastIndex) {
                         inputHead--
                         itemHead--
                         break
@@ -706,7 +680,7 @@ class State {
 
                     //Reset register 0
                     register.resetRegister(0)
-                    //Empty the till and calculate to total sales
+                    //Empty the till and calculate total sales
                     repeat(reg6) { register.run(arrayOf("DEC 6", "LOAD 5 5", "ADD 0 5")) }
                     repeat(reg7) { register.run(arrayOf("DEC 7", "LOAD 10 5", "ADD 0 5")) }
                     repeat(reg8) { register.run(arrayOf("DEC 8", "LOAD 20 5", "ADD 0 5")) }
@@ -878,6 +852,8 @@ class State {
                 registerM.run(arrayOf("LOAD $itemStock 1", "DEC 1"))
                 Inventory.setItemStock(symbol, (registerM.getRegisterValue(1) ?: 0))
                 return true
+            } else {
+                stockTape.add(symbol)
             }
         }
         return false

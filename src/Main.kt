@@ -3,12 +3,9 @@ import ui.MainScreen
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
-        MainScreen()
+        //MainScreen()
         //Inventory.addItems()
+        println( Inventory.getItemStock('N'))
         //Turing("ɑɑβββγβɑFKFS").run()
-        //Turing("ɑɑββγβɑFKF").run()
-        //Turing("δNKF").run()
-        //Turing("ɑɑβγFKF").run()
-        //Turing("NKSFFSKS").run()
     }
 }
