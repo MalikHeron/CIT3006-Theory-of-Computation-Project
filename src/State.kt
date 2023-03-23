@@ -642,15 +642,17 @@ class State {
             }
 
             10 -> {
-                while (stockHead != stockTape.lastIndex) {
-                    read = stockTape[stockHead]
-                    write = machine.crossSymbol
-                    println("q$currentState: $read -> $write, $left")
+                if (stockTape.isNotEmpty()) {
+                    while (stockHead != stockTape.lastIndex) {
+                        read = stockTape[stockHead]
+                        write = machine.crossSymbol
+                        println("q$currentState: $read -> $write, $left")
 
-                    if (itemList.contains(read)) {
-                        println("${items[read]} is out of stock.")
+                        if (itemList.contains(read)) {
+                            println("${items[read]} is out of stock.")
+                        }
+                        stockHead++
                     }
-                    stockHead++
                 }
 
                 val reg1 = (register.getRegisterValue(1) ?: 0)

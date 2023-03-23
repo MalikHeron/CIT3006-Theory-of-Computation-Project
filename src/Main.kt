@@ -1,6 +1,9 @@
+import ui.MainScreen
+
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
+        MainScreen()
         //Inventory.addItems()
         //Turing("ɑɑβββγβɑFKFS").run()
         //Turing("ɑɑββγβɑFKF").run()

@@ -49,7 +49,7 @@ class MainScreen : JFrame(), ActionListener {
         rightPanel.size = Dimension(HALF_WINDOW, WINDOW_HEIGHT)
         rightPanel.background = Color.GRAY
 
-        val image = ImageIcon(Objects.requireNonNull(javaClass.getResource("/res/vendingMachineWindow_900.png")))
+        val image = ImageIcon(Objects.requireNonNull(javaClass.getResource("/vendingMachineWindow_900.png")))
         machineImage = JLabel(image)
         machineImage.verticalAlignment = JLabel.CENTER
         machineImage.size = Dimension(HALF_WINDOW, WINDOW_HEIGHT)
