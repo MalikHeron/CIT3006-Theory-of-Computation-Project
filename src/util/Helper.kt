@@ -1,9 +1,10 @@
 package util
 
-import models.inventory.Inventory.Companion.addItem
-import models.inventory.Inventory.Companion.getFile
-import models.turing.Register
-import models.turing.Turing.Companion.tape
+import Inventory.Companion.addItem
+import Inventory.Companion.getFile
+import Register
+import Turing.Companion.inputTape
+import Turing.Companion.itemTape
 
 class Helper {
     companion object {
@@ -12,7 +13,7 @@ class Helper {
             val registerMachine = Register()
             registerMachine.resetAllRegisters()
 
-            tape.getData().forEach {
+            itemTape.forEach {
                 when (it) {
                     // register 2 is used to track if there are insufficient funds
                     'F', 'K', 'N', 'S' -> registerMachine.run(arrayOf("INC 3"))
@@ -20,10 +21,12 @@ class Helper {
                         registerMachine.setRegisterValue(1, 5)
                         registerMachine.run(arrayOf("ADD 0 1")) // add 5 to register 0
                     }
+
                     'β', 'B' -> {
                         registerMachine.setRegisterValue(1, 10)
                         registerMachine.run(arrayOf("ADD 0 1")) // add 10 to register 0
                     }
+
                     'γ', 'Δ' -> {
                         registerMachine.setRegisterValue(1, 20)
                         registerMachine.run(arrayOf("ADD 0 1")) // add 20 to register 0
@@ -51,6 +54,10 @@ class Helper {
 
         fun closeFile() {
             getFile().close()
+        }
+
+        fun getFileLength(): Long {
+            return getFile().length()
         }
     }
 }

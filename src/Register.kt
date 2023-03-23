@@ -1,5 +1,3 @@
-package models.turing
-
 class Register {
     private val registers = mutableMapOf(0 to 0, 1 to 0, 2 to 0, 3 to 0)
 
@@ -30,7 +28,7 @@ class Register {
         }
         println(
             "Final configuration: Register 0 = ${registers[0]}, " +
-                    "Register 1 = ${registers[1]}, Register 2 = ${registers[2]}\n"
+                    "Register 1 = ${registers[1]}, Register 2 = ${registers[2]}, Register 3 = ${registers[3]}\n"
         )
     }
 

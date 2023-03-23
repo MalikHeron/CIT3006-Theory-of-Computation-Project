@@ -1,15 +1,14 @@
-package models.turing
-
-import util.DoublyLinkedList
 import util.Helper
 
 class Turing(input: String) {
 
     companion object {
-        var tape: DoublyLinkedList = DoublyLinkedList()
-
         //Get the head of the tape
-        var head = tape.getCurrent()
+        var inputHead = 0
+        var itemHead = 0
+        var inputTape = arrayListOf<Char>()
+        var itemTape = arrayListOf<Char>()
+        var machine = Machine()
     }
 
     init {
@@ -21,16 +20,16 @@ class Turing(input: String) {
         //Iterate through the symbols in the input
         input.forEach {
             //Add the characters as symbols to the tape
-            tape.addNewNode(it)
+            inputTape.add(it)
         }
-        head = tape.getCurrent()
-        println("Tape: ${tape.getData()}\n")
+        inputTape.add(machine.blankSymbol)
+        println("Tape: $inputTape\n")
     }
 
-    fun run(): String {
+    fun run() {
         //Start turing machine
-        State.getState(1, null, null)
-        Helper.getResults()
-        return tape.getData()
+        State.getState(1)
+        //Helper.getResults()
+        //return inputTape
     }
 }

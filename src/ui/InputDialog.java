@@ -1,12 +1,10 @@
-package view.dialogs;
+package ui;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.Arrays;
 
 public class InputDialog extends JDialog implements ActionListener {
