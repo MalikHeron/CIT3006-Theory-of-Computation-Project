@@ -85,8 +85,15 @@ class TuringTest {
 
     @Test
     @Order(12)
-    fun test() {
+    fun accept3() {
         val result = Turing("γɑK").run()
         assertEquals("xxK⊔", result)
+    }
+
+    @Test
+    @Order(12)
+    fun test() {
+        val result = Turing("NKɑ").run()
+        assertEquals("xxx⊔ɑ", result)
     }
 }

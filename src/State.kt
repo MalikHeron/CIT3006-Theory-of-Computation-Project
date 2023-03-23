@@ -8,8 +8,8 @@ class State {
     private var stockTape = arrayListOf<Char>()
     private var machine = Machine()
     private var initialState: Int = 1
-    private var acceptState: Int = 21
-    private var rejectState: Int = 20
+    private var acceptState: Int = 22
+    private var rejectState: Int = 21
     private val items = mutableMapOf(
         'F' to "Fork",
         'N' to "Napkin",
@@ -65,7 +65,7 @@ class State {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
                 }
-                getNextState(11)
+                getNextState(12)
             }
 
             3 -> {
@@ -112,7 +112,7 @@ class State {
                     write = read
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    if (inputHead == 0 || inputTape[inputHead] == machine.crossSymbol) {
+                    if (inputTape[inputHead] == machine.crossSymbol) {
                         inputHead++
                         break
                     }
@@ -625,8 +625,20 @@ class State {
             }
 
             9 -> {
+                while (itemHead != 0) {
+                    read = itemTape[itemHead]
+                    write = read
+                    println("q$currentState: $read -> $write, $left")
+                    itemHead--
+                }
+                getNextState(10)
+            }
+
+            10 -> {
                 while (itemHead != (itemTape.lastIndex + 1)) {
-                    if (inputHead == inputTape.lastIndex || itemHead == itemTape.lastIndex) {
+                    println("Item Head: $itemHead")
+                    println("Input Head: $inputHead")
+                    if (inputHead == inputTape.lastIndex) {
                         inputHead--
                         itemHead--
                         break
@@ -638,10 +650,10 @@ class State {
                     inputHead++
                     itemHead++
                 }
-                getNextState(10)
+                getNextState(11)
             }
 
-            10 -> {
+            11 -> {
                 if (stockTape.isNotEmpty()) {
                     while (stockHead != stockTape.lastIndex) {
                         read = stockTape[stockHead]
@@ -707,58 +719,44 @@ class State {
                 }
             }
 
-            11 -> {
+            12 -> {
                 read = inputTape[inputHead]
                 write = read
                 if (read == 'N') {
                     println("q$currentState: $read -> $write, $right")
                     inputHead++
-                    getNextState(12)
-                } else {
-                    println("q$currentState: $read -> $write, $none")
-                    getNextState(4)
-                }
-            }
-
-            12 -> {
-                read = inputTape[inputHead]
-                write = read
-                if (read == 'K') {
-                    println("q$currentState: $read -> $write, $right")
-                    inputHead++
                     getNextState(13)
                 } else {
-                    println("q$currentState: $read -> $write, $left")
-                    inputHead--
-                    getNextState(4)
+                    println("q$currentState: $read -> $write, $none")
+                    getNextState(3)
                 }
             }
 
             13 -> {
                 read = inputTape[inputHead]
                 write = read
-                if (read == 'S') {
+                if (read == 'K') {
                     println("q$currentState: $read -> $write, $right")
                     inputHead++
                     getNextState(14)
                 } else {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    getNextState(4)
+                    getNextState(3)
                 }
             }
 
             14 -> {
                 read = inputTape[inputHead]
                 write = read
-                if (read == 'F') {
+                if (read == 'S') {
                     println("q$currentState: $read -> $write, $right")
                     inputHead++
                     getNextState(15)
                 } else {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    getNextState(4)
+                    getNextState(3)
                 }
             }
 
@@ -772,53 +770,67 @@ class State {
                 } else {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    getNextState(4)
+                    getNextState(3)
                 }
             }
 
             16 -> {
                 read = inputTape[inputHead]
                 write = read
-                if (read == 'S') {
+                if (read == 'F') {
                     println("q$currentState: $read -> $write, $right")
                     inputHead++
                     getNextState(17)
                 } else {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    getNextState(4)
+                    getNextState(3)
                 }
             }
 
             17 -> {
                 read = inputTape[inputHead]
                 write = read
-                if (read == 'K') {
+                if (read == 'S') {
                     println("q$currentState: $read -> $write, $right")
                     inputHead++
                     getNextState(18)
                 } else {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    getNextState(4)
+                    getNextState(3)
                 }
             }
 
             18 -> {
                 read = inputTape[inputHead]
                 write = read
-                if (read == 'S') {
+                if (read == 'K') {
                     println("q$currentState: $read -> $write, $right")
                     inputHead++
                     getNextState(19)
                 } else {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    getNextState(4)
+                    getNextState(3)
                 }
             }
 
             19 -> {
+                read = inputTape[inputHead]
+                write = read
+                if (read == 'S') {
+                    println("q$currentState: $read -> $write, $right")
+                    inputHead++
+                    getNextState(20)
+                } else {
+                    println("q$currentState: $read -> $write, $left")
+                    inputHead--
+                    getNextState(3)
+                }
+            }
+
+            20 -> {
                 read = inputTape[inputHead]
                 write = read
                 if (read == machine.blankSymbol) {
@@ -830,7 +842,7 @@ class State {
                 } else {
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
-                    getNextState(4)
+                    getNextState(3)
                 }
             }
 
