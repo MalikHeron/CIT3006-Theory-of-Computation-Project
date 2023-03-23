@@ -144,9 +144,7 @@ class Inventory {
             getFile().seek(getFile().filePointer - 4)
 
             registerMachine.resetAllRegisters()
-            registerMachine.setRegisterValue(0, quantity)
-            registerMachine.setRegisterValue(1, funds.toInt())
-            registerMachine.run(arrayOf("ADD 0 1"))
+            registerMachine.run(arrayOf("LOAD $quantity 1", "LOAD ${funds.toInt()} 2", "ADD 1 2"))
 
             val newQuantity = registerMachine.getRegisterValue(0) ?: 0
 
@@ -178,7 +176,19 @@ class Inventory {
             return inventory.toString()
         }
 
-        fun getFile(): RandomAccessFile {
+        fun addItems() {
+            addItem("Fork", 15, 20)
+            addItem("Knife", 25, 20)
+            addItem("Napkin", 10, 20)
+            addItem("Spoon", 20, 20)
+            addItem("TotalSales", 0, 0)
+        }
+
+        fun closeFile() {
+            getFile().close()
+        }
+
+        private fun getFile(): RandomAccessFile {
             return file
         }
     }

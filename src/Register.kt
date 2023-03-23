@@ -1,5 +1,5 @@
 class Register {
-    private val registers = mutableMapOf(0 to 0, 1 to 0, 2 to 0, 3 to 0)
+    private val registers = mutableMapOf(0 to 0, 1 to 0, 2 to 0, 3 to 0, 4 to 0, 5 to 0, 6 to 0, 7 to 0, 8 to 0)
 
     fun run(instructions: Array<String>) {
         var currentInstruction = 0
@@ -7,6 +7,13 @@ class Register {
             val instruction = instructions[currentInstruction]
             println("\nExecuting instruction $currentInstruction: $instruction")
             when {
+                instruction.startsWith("LOAD") -> {
+                    val parts = instruction.split(" ")
+                    val value = parts[1].toInt()
+                    val register = parts[2].toInt()
+                    setRegisterValue(register, value)
+                }
+
                 instruction.startsWith("INC") -> {
                     val register = instruction.split(" ")[1].toInt()
                     increment(register)
@@ -26,17 +33,18 @@ class Register {
             }
             currentInstruction++
         }
-        println(
-            "Final configuration: Register 0 = ${registers[0]}, " +
-                    "Register 1 = ${registers[1]}, Register 2 = ${registers[2]}, Register 3 = ${registers[3]}\n"
-        )
+        println("Final configuration: ")
+        registers.forEach{
+            println("Register ${it.key} = ${it.value}")
+        }
+        println()
     }
 
     fun isRegisterEmpty(register: Int): Boolean {
         return registers[register] == null
     }
 
-    private fun resetRegister(register: Int) {
+    fun resetRegister(register: Int) {
         registers[register] = 0
     }
 
@@ -48,28 +56,29 @@ class Register {
         return registers[register]
     }
 
-    fun setRegisterValue(register: Int, value: Int) {
+    private fun setRegisterValue(register: Int, value: Int) {
         registers[register] = value
+        println("Register $register = ${registers[register]}\n")
     }
 
     private fun increment(register: Int) {
         registers[register] = (registers[register] ?: 0) + 1
-        println("Register $register value: ${registers[register]}")
+        println("Register $register = ${registers[register]}\n")
     }
 
     private fun decrement(register: Int) {
         if ((registers[register] ?: 0) > 0) {
             registers[register] = (registers[register] ?: 0) - 1
-            println("Register $register value: ${registers[register]}")
+            println("Register $register = ${registers[register]}\n")
         } else {
-            println("Register $register value is already 0 and cannot be decremented")
+            println("Register $register value is already 0 and cannot be decremented.\n")
         }
     }
 
     private fun add(registerX: Int, registerY: Int) {
         registers[0] = (registers[registerX] ?: 0) + (registers[registerY] ?: 0)
-        println("Register $registerX value: ${registers[registerX]}")
-        println("Register $registerY value: ${registers[registerY]}")
-        println("Result stored in Register 0. Register 0 value: ${registers[0]}")
+        println("Register $registerX = ${registers[registerX]}")
+        println("Register $registerY = ${registers[registerY]}")
+        println("Result stored in Register 0.\n")
     }
 }

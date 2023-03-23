@@ -1,15 +1,7 @@
-import util.Helper
-
 class Turing(input: String) {
 
-    companion object {
-        //Get the head of the tape
-        var inputHead = 0
-        var itemHead = 0
-        var inputTape = arrayListOf<Char>()
-        var itemTape = arrayListOf<Char>()
-        var machine = Machine()
-    }
+    private var inputTape = arrayListOf<Char>()
+    private var machine = Machine()
 
     init {
         //Build tape from input
@@ -26,10 +18,13 @@ class Turing(input: String) {
         println("Tape: $inputTape\n")
     }
 
-    fun run() {
+    fun run(): String {
         //Start turing machine
-        State.getState(1)
-        //Helper.getResults()
-        //return inputTape
+        val output = State().doTransitions(inputTape)
+        var result = ""
+        output.forEach {
+            result += it
+        }
+        return result
     }
 }
