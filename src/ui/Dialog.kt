@@ -180,6 +180,7 @@ class Dialog {
             summaryDialog.add(inputLabel)
             summaryDialog.add(inputField)
             summaryDialog.add(dispenseLabel)
+            summaryDialog.add(knifeLabel)
             summaryDialog.add(qknifeField)
             summaryDialog.add(forkLabel)
             summaryDialog.add(qforkField)
@@ -187,9 +188,9 @@ class Dialog {
             summaryDialog.add(qspoonField)
             summaryDialog.add(napkinLabel)
             summaryDialog.add(qNapkinField)
-            summaryDialog.add(refundLabel)
             summaryDialog.add(stockLabel)
             summaryDialog.add(stocks)
+            summaryDialog.add(refundLabel)
             summaryDialog.add(refundField)
             summaryDialog.add(okButton)
         }

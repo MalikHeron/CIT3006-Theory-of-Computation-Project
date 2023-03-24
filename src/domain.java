@@ -6,7 +6,7 @@ public class domain {
 
     public static void main(String args[]){
         dialogs dialog = new dialogs();
-        dialog.validateInput('e');
-        //dialog.summaryDialog("ɑɑβββγβɑFKFS");
+        //dialog.validateInput('e');
+        dialog.summaryDialog("ɑɑβββγβɑFKFS");
     }
 }
