@@ -400,7 +400,7 @@ class State {
                     inputHead++
                 }
                 println("Input tape: $inputTape")
-                println("Item tape: $itemTape\n")
+                println("Item tape: $itemTape")
                 getNextState(7)
             }
 
@@ -686,12 +686,16 @@ class State {
                     inputHead++
                 }
                 println("Input tape: $inputTape")
-                println("Item tape: $itemTape\n")
+                println("Item tape: $itemTape")
                 //Transition to state 9
                 getNextState(9)
             }
 
             9 -> {
+                //Add the blank symbol at the end of the tape
+                stockTape.add(machine.blankSymbol)
+                println("Stock tape: $stockTape\n")
+
                 //Move to the left of the item tape
                 while (itemHead != 0) {
                     read = itemTape[itemHead]
@@ -733,13 +737,20 @@ class State {
                 * For each symbol read it prints that the item is out of stock
                 * */
                 if (stockTape.isNotEmpty()) {
-                    while (stockHead != stockTape.lastIndex) {
+                    while (stockHead != (stockTape.lastIndex + 1)) {
                         read = stockTape[stockHead]
                         write = machine.crossSymbol
-                        println("q$currentState: $read -> $write, $left")
 
                         if (itemList.contains(read)) {
                             println("${items[read]} is out of stock.")
+                        }
+                        if (stockHead != stockTape.lastIndex) {
+                            println("q$currentState: $read -> $write, $right")
+                        } else {
+                            write = read
+                            println("q$currentState: $read -> $write, $left")
+                            stockHead--
+                            break
                         }
                         stockHead++
                     }
