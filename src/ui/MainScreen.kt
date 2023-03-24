@@ -1,16 +1,20 @@
 package ui
 
+import Inventory
 import Turing
 import java.awt.*
 import java.awt.FlowLayout.CENTER
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.util.*
 import javax.swing.*
 import javax.swing.border.BevelBorder
 import javax.swing.border.LineBorder
 import javax.swing.border.SoftBevelBorder
 import javax.swing.border.TitledBorder
+
 
 const val WINDOW_WIDTH = 900
 const val WINDOW_HEIGHT = 700
@@ -45,7 +49,7 @@ class MainScreen : JFrame(), ActionListener {
         setupWindow()
     }
 
-    private fun setupComponents(){
+    private fun setupComponents() {
         leftPanel.size = Dimension(HALF_WINDOW, WINDOW_HEIGHT)
         leftPanel.background = Color.DARK_GRAY
         rightPanel.size = Dimension(HALF_WINDOW, WINDOW_HEIGHT)
@@ -77,7 +81,7 @@ class MainScreen : JFrame(), ActionListener {
         wButton = JButton("W")
         aButton = JButton("A")
         deleteButton = JButton("Clear")
-        enterButton= JButton("NEXT")
+        enterButton = JButton("NEXT")
 
         buttons = arrayListOf(
             alphaButton,
@@ -96,7 +100,7 @@ class MainScreen : JFrame(), ActionListener {
             enterButton,
         )
         // loop to shorten code
-        for (btn in buttons){
+        for (btn in buttons) {
             btn.preferredSize = Dimension(130, 70)
             btn.background = Color.LIGHT_GRAY
             btn.foreground = Color.BLACK
@@ -113,11 +117,11 @@ class MainScreen : JFrame(), ActionListener {
 
         inventoryDisplay = JTextArea(
             "N - ${Inventory.getItemStock('N')} \t" +
-            "K - ${Inventory.getItemStock('K')} \t" +
-            "S - ${Inventory.getItemStock('S')} \t" +
-            "F - ${Inventory.getItemStock('F')}"
+                    "K - ${Inventory.getItemStock('K')} \t" +
+                    "S - ${Inventory.getItemStock('S')} \t" +
+                    "F - ${Inventory.getItemStock('F')}"
         )
-        inventoryDisplay.preferredSize = Dimension(HALF_WINDOW-40, 60)
+        inventoryDisplay.preferredSize = Dimension(HALF_WINDOW - 40, 60)
         inventoryDisplay.background = Color.GRAY
         inventoryDisplay.isEditable = false
         inventoryDisplay.font = Font(Font.SANS_SERIF, Font.BOLD, 15)
@@ -132,7 +136,7 @@ class MainScreen : JFrame(), ActionListener {
         setActiveInputType("prices")
     }
 
-    private fun addComponentsToPanels(){
+    private fun addComponentsToPanels() {
         leftPanel.add(machineImage)
 
         rightPanel.add(verticalSpace(10))
@@ -140,7 +144,7 @@ class MainScreen : JFrame(), ActionListener {
         rightPanel.add(verticalSpace(30))
         rightPanel.add(inputDisplay)
 
-        for(btn in buttons){
+        for (btn in buttons) {
             rightPanel.add(btn)
         }
 
@@ -149,15 +153,35 @@ class MainScreen : JFrame(), ActionListener {
         this.add(rightPanel)
     }
 
-    private fun setupWindow(){
+    private fun setupWindow() {
         this.title = "Vending Machine"
-        this.defaultCloseOperation = EXIT_ON_CLOSE
+        this.defaultCloseOperation = DO_NOTHING_ON_CLOSE
         this.contentPane.preferredSize = Dimension(WINDOW_WIDTH, WINDOW_HEIGHT)
-        this.layout = GridLayout(1,2)
+        this.layout = GridLayout(1, 2)
         this.pack()
         this.setLocationRelativeTo(null)
         this.isResizable = false
         this.isVisible = true
+
+        this.addWindowListener(object : WindowAdapter() {
+            override fun windowClosing(e: WindowEvent?) {
+                try {
+                    // Set system look and feel
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                if (JOptionPane.showConfirmDialog(
+                        null,
+                        "Are you sure you want to exit?", "Confirm Exit",
+                        JOptionPane.YES_NO_OPTION
+                    ) == JOptionPane.YES_OPTION
+                ) {
+                    Inventory.closeFile()
+                    dispose()
+                }
+            }
+        })
     }
 
     // {type} is "prices" or "items"
@@ -169,15 +193,15 @@ class MainScreen : JFrame(), ActionListener {
         priceButtons.forEach { it.isEnabled = type == "prices" }
         itemButtons.forEach { it.isEnabled = type == "items" }
 
-        enterButton.text = if(type == "prices") "NEXT" else "ENTER"
+        enterButton.text = if (type == "prices") "NEXT" else "ENTER"
     }
 
     override fun actionPerformed(e: ActionEvent?) {
         // clear any errors
-        if(inputDisplay.text == "NO INPUT")
+        if (inputDisplay.text == "NO INPUT")
             inputDisplay.text = ""
 
-        when(e?.source){
+        when (e?.source) {
             alphaButton -> inputDisplay.text = inputDisplay.text + "ɑ"
             betaButton -> inputDisplay.text = inputDisplay.text + "β"
             gammaButton -> inputDisplay.text = inputDisplay.text + "γ"
@@ -185,23 +209,23 @@ class MainScreen : JFrame(), ActionListener {
             epsilonButton -> inputDisplay.text = inputDisplay.text + "ε"
             deleteButton -> clearInput()
             enterButton -> {
-                if(inputDisplay.text.isEmpty()){
+                if (inputDisplay.text.isEmpty()) {
                     Toolkit.getDefaultToolkit().beep()
                     inputDisplay.text = "NO INPUT"
                     return
                 }
 
                 // change functionality
-                if(enterPressed){
+                if (enterPressed) {
                     handleTuringRequest()
                     clearInput()
-                }
-                else{
+                } else {
                     // lock price selectors and enable item selectors
                     setActiveInputType("items")
                     enterPressed = true
                 }
             }
+
             else -> inputDisplay.text = inputDisplay.text + (e?.source as? JButton)?.text
         }
     }
@@ -212,15 +236,15 @@ class MainScreen : JFrame(), ActionListener {
         enterPressed = false
     }
 
-    private fun handleTuringRequest(){
+    private fun handleTuringRequest() {
         Turing(inputDisplay.text).run()
 
         // update stock amounts
         inventoryDisplay.text =
             "N - ${Inventory.getItemStock('N')} \t" +
-            "K - ${Inventory.getItemStock('K')} \t" +
-            "S - ${Inventory.getItemStock('S')} \t" +
-            "F - ${Inventory.getItemStock('F')}"
+                    "K - ${Inventory.getItemStock('K')} \t" +
+                    "S - ${Inventory.getItemStock('S')} \t" +
+                    "F - ${Inventory.getItemStock('F')}"
     }
 
     private fun verticalSpace(height: Int): JLabel {
