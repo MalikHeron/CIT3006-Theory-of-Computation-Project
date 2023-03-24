@@ -1,5 +1,6 @@
 package ui
 
+import Turing
 import java.awt.*
 import java.awt.FlowLayout.CENTER
 import java.awt.event.ActionEvent
@@ -145,7 +146,7 @@ class MainScreen : JFrame(), ActionListener {
             inputDisplay.text = ""
 
         if (e?.source == alphaButton) {
-            inputDisplay.text = inputDisplay.text + "α"
+            inputDisplay.text = inputDisplay.text + "ɑ"
         } else if (e?.source == betaButton) {
             inputDisplay.text = inputDisplay.text + "β"
         } else if (e?.source == gammaButton) {
@@ -163,6 +164,7 @@ class MainScreen : JFrame(), ActionListener {
             }
 
             // send input to machine
+            Turing(inputDisplay.text).run()
         } else {
             inputDisplay.text = inputDisplay.text + (e?.source as? JButton)?.text
         }

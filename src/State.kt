@@ -45,7 +45,7 @@ class State {
 
                         //Check for invalid input
                         if (!machine.tapeAlphabet.contains(inputTape[inputHead])) {
-                            println("Invalid input detected!")
+                            println("Invalid input '${inputTape[inputHead]}' detected!")
                             getNextState(rejectState)
                             return
                         }
@@ -304,6 +304,22 @@ class State {
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
                             }
+                        } else if ((register.getRegisterValue(1) ?: 0) >= 2 &&
+                            (register.getRegisterValue(2) ?: 0) >= 1
+                        ) {
+                            if (inStock(read)) {
+                                repeat(2) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                register.run(arrayOf("DEC 2", "INC 7"))
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = read
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = write
+                                println("q$currentState: $read -> $write, $right")
+                            }
                         } else if ((register.getRegisterValue(2) ?: 0) >= 2
                         ) {
                             if (inStock(read)) {
@@ -543,6 +559,22 @@ class State {
                         if ((register.getRegisterValue(1) ?: 0) >= 4) {
                             if (inStock(read)) {
                                 repeat(4) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = read
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = write
+                                println("q$currentState: $read -> $write, $right")
+                            }
+                        } else if ((register.getRegisterValue(1) ?: 0) >= 2 &&
+                            (register.getRegisterValue(2) ?: 0) >= 1
+                        ) {
+                            if (inStock(read)) {
+                                repeat(2) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                register.run(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
