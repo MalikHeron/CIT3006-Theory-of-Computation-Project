@@ -110,6 +110,7 @@ class Dialog {
             stocks.font = lrgLabelFont
             stocks.preferredSize = Dimension(300, 65)
             stocks.verticalAlignment = SwingConstants.CENTER
+
             refundLabel = JLabel("Refund/Change")
             refundLabel.font = lrgLabelFont
             refundLabel.preferredSize = Dimension(300, 65)
@@ -130,6 +131,48 @@ class Dialog {
             for (field in allFields) {
                 field.isEnabled = false
             }
+            // Use a timer to update the values of the sold items
+            val timer = Timer(200) { e ->
+            // Increment the values and update the text fields
+                var soldKnife = SOLD['K']!!
+                var knives = Integer.valueOf(qknifeField.text)
+                if(soldKnife > knives) {
+                    knives += 1
+                    qknifeField.text = knives.toString()
+                }
+
+                var soldFork = SOLD['F']!!
+                var fork = Integer.valueOf(qforkField.text)
+                if(soldFork > fork) {
+                    fork += 1
+                    qforkField.text = fork.toString()
+                }
+                var soldSpoon = SOLD['S']!!
+                var spoon = Integer.valueOf(qspoonField.text)
+                if(soldSpoon > spoon) {
+                    spoon += 1
+                    qspoonField.text = spoon.toString()
+                }
+
+                var soldNapkin = SOLD['N']!!
+                var napkin = Integer.valueOf(qNapkinField.text)
+                if(soldNapkin > napkin) {
+                    napkin += 1
+                    qNapkinField.text = napkin.toString()
+                }
+                // Check if all items are sold out and stop the timer
+                if (soldKnife == knives && soldFork == fork &&  soldSpoon == spoon && soldNapkin == napkin) {
+                    (e.source as Timer).stop()
+                    var OoS = ""
+                    for ((_, value) in NO_STOCK) {
+                        OoS += "$value, "
+                    }
+                    stocks.text = OoS
+                }
+            }
+            timer.start()
+
+
         }
 
         private fun addComponentsToWindow() {

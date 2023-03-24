@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class dialogs extends JDialog implements ActionListener {
     private JTextField inputField, refundField, qforkField, qknifeField, qspoonField, qNapkinField;
-    private JLabel inputLabel, refundLabel, quantityLabel, itemLabel, forkLabel, knifeLabel, spoonLabel,
+    private JLabel inputLabel, refundLabel, forkLabel, knifeLabel, spoonLabel,
             napkinLabel, displayLabel, dispenseLabel, stockLabel, stocks;
-    private JButton okButton, retryButton;
+    private JButton okButton;
     private String input = "";
     private JDialog summaryDialog;
     private double refund = 0;
@@ -25,6 +25,7 @@ public class dialogs extends JDialog implements ActionListener {
     }};
 
     private static final Map<Character, String> NO_STOCK = new HashMap<Character, String>();
+
 
     private void initializeComponents() {
         //Panel Properties
@@ -57,7 +58,7 @@ public class dialogs extends JDialog implements ActionListener {
         knifeLabel.setFont(fieldFont); //NTS: MIXING OF FONTS,Keep this one
         knifeLabel.setPreferredSize(new Dimension(200, 60));
 
-        qknifeField = new JTextField(String.valueOf(SOLD.get('K')));
+        qknifeField = new JTextField(String.valueOf("0"));//SOLD.get('K')));
         qknifeField.setFont(fieldFont); //NTS: MIXING OF FONTS,Keep this one
         qknifeField.setPreferredSize(new Dimension(100, 60));
         qknifeField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -66,7 +67,7 @@ public class dialogs extends JDialog implements ActionListener {
         forkLabel.setFont(smlLabelFont);
         forkLabel.setPreferredSize(new Dimension(200, 60));
 
-        qforkField = new JTextField(String.valueOf(SOLD.get('F')));
+        qforkField = new JTextField(String.valueOf("0"));//SOLD.get('F')));
         qforkField.setFont(fieldFont); //NTS: MIXING OF FONTS,Keep this one
         qforkField.setPreferredSize(new Dimension(100, 60));
         qforkField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -75,26 +76,26 @@ public class dialogs extends JDialog implements ActionListener {
         spoonLabel.setFont(smlLabelFont);
         spoonLabel.setPreferredSize(new Dimension(200, 60));
 
-        qspoonField = new JTextField(String.valueOf(SOLD.get('S')));
-        qspoonField.setFont(fieldFont); //NTS: MIXING OF FONTS,Keep this one
+        qspoonField = new JTextField(String.valueOf("0"));//SOLD.get('S')));
+        qspoonField.setFont(fieldFont);
         qspoonField.setPreferredSize(new Dimension(100, 60));
         qspoonField.setHorizontalAlignment(SwingConstants.CENTER);
 
         napkinLabel = new JLabel("Napkin", SwingConstants.CENTER);
-        napkinLabel.setFont(smlLabelFont); //NTS: MIXING OF FONTS,Keep this one
+        napkinLabel.setFont(smlLabelFont);
         napkinLabel.setPreferredSize(new Dimension(200, 60));
 
-        qNapkinField = new JTextField(String.valueOf(SOLD.get('N')));
+        qNapkinField = new JTextField(String.valueOf("0"));//SOLD.get('N')));
         qNapkinField.setFont(fieldFont); //NTS: MIXING OF FONTS,Keep this one
         qNapkinField.setPreferredSize(new Dimension(100, 60));
         qNapkinField.setHorizontalAlignment(SwingConstants.CENTER);
 
-        stockLabel = new JLabel("Out of Stock"); // Change Text to 'change' based on payment processing
+        stockLabel = new JLabel("Out of Stock");
         stockLabel.setFont(lrgLabelFont);
         stockLabel.setPreferredSize(new Dimension(300, 65));
         stockLabel.setVerticalAlignment(SwingConstants.CENTER);
 
-        stocks = new JLabel(); // Change Text to 'change' based on payment processing
+        stocks = new JLabel();
         stocks.setFont(lrgLabelFont);
         stocks.setPreferredSize(new Dimension(300, 65));
         stocks.setVerticalAlignment(SwingConstants.CENTER);
@@ -120,6 +121,50 @@ public class dialogs extends JDialog implements ActionListener {
         for (JTextField field : allFields) {
             field.setEnabled(false);
         }
+
+        // Use a timer to update the values of the sold items
+        Timer timer = new Timer(200, e -> {
+            // Increment the values and update the text fields
+            int soldKnife = SOLD.get('K');
+            int knives = Integer.valueOf(qknifeField.getText());
+            if (soldKnife > knives) {
+                knives += 1;
+                qknifeField.setText(String.valueOf(knives));
+            }
+
+            int soldFork = SOLD.get('F');
+            int fork = Integer.valueOf(qforkField.getText());
+            if (soldFork > fork) {
+                fork += 1;
+                qforkField.setText(String.valueOf(fork));
+            }
+            int soldSpoon = SOLD.get('S');
+            int spoon = Integer.valueOf(qspoonField.getText());
+            if (soldSpoon > spoon) {
+                spoon += 1;
+                qspoonField.setText(String.valueOf(spoon));
+            }
+
+            int soldNapkin = SOLD.get('N');
+            int napkin = Integer.valueOf(qNapkinField.getText());
+            if (soldNapkin > napkin) {
+                napkin += 1;
+                qNapkinField.setText(String.valueOf(napkin));
+            }
+            // Check if all items are sold out and stop the timer
+            if (soldKnife == knives && soldFork == fork && soldSpoon == spoon && soldNapkin == napkin) {
+                ((Timer) e.getSource()).stop();
+                String OoS = "";
+                for (Map.Entry<Character, String> entry : NO_STOCK.entrySet()) {
+                    OoS += entry.getValue() + ", ";
+                }
+                if(OoS.length() > 3) {
+                    stocks.setText(OoS.substring(0, OoS.length() - 2));
+                }
+            }
+        });
+        timer.start();
+
     }
 
     private void addComponentsToWindow() {
@@ -199,7 +244,8 @@ public class dialogs extends JDialog implements ActionListener {
         SOLD.put(item, count + 1);
     }
 
-    public void summaryDialog() {
+    public void summaryDialog(String inputString) {
+        input = inputString;
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             //Increasing JOptionPane window size as JOptionPane display very small on my machine NTS: Revisit Later
