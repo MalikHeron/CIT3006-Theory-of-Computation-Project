@@ -335,7 +335,6 @@ class State {
                         } else {
                             write = machine.crossSymbol
                             inputTape[inputHead] = write
-                            inputTape[inputHead] = read
                             println("q$currentState: $read -> $write, $right")
                         }
                     }
@@ -585,7 +584,6 @@ class State {
                         } else {
                             write = machine.crossSymbol
                             inputTape[inputHead] = write
-                            inputTape[inputHead] = read
                             println("q$currentState: $read -> $write, $right")
                         }
                     }
