@@ -99,6 +99,13 @@ class TuringTest {
 
     @Test
     @Order(14)
+    fun lettersOnly() {
+        val result = Turing("KFS").run()
+        assertEquals("xxx⊔", result)
+    }
+
+    @Test
+    @Order(15)
     fun restockAndCheckSale() {
         val result = Turing("NKSFFSKS").run()
         assertEquals("NKSFFSKS⊔", result)
