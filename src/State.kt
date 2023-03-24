@@ -29,6 +29,7 @@ class State {
 
     fun doTransitions(inputTape: ArrayList<Char>): ArrayList<Char> {
         this.inputTape = inputTape
+        //Get the first state
         getState(1)
         return this.inputTape
     }
@@ -55,6 +56,7 @@ class State {
                             println("q$currentState: $read -> $write, $right")
                         } else {
                             println("q$currentState: $read -> $write, $left")
+                            //Move to the left on the tape
                             inputHead--
                             break
                         }
