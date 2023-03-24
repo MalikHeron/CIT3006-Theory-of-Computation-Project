@@ -37,7 +37,7 @@ class MainScreen : JFrame(), ActionListener {
     private lateinit var enterButton: JButton
     private lateinit var inventoryDisplay: JTextArea
     private var buttons = arrayListOf<JButton>()
-    private var timesEnterPressed = 0
+    private var enterPressed = false
 
     init {
         setupComponents()
@@ -111,7 +111,12 @@ class MainScreen : JFrame(), ActionListener {
         enterButton.preferredSize = Dimension(200, 70)
         enterButton.background = Color.decode("#289946")
 
-        inventoryDisplay = JTextArea("N - 20\tK - 20\tS - 20\tF - 20")
+        inventoryDisplay = JTextArea(
+            "N - ${Inventory.getItemStock('N')} \t" +
+            "K - ${Inventory.getItemStock('K')} \t" +
+            "S - ${Inventory.getItemStock('S')} \t" +
+            "F - ${Inventory.getItemStock('F')}"
+        )
         inventoryDisplay.preferredSize = Dimension(HALF_WINDOW-40, 60)
         inventoryDisplay.background = Color.GRAY
         inventoryDisplay.isEditable = false
@@ -150,6 +155,7 @@ class MainScreen : JFrame(), ActionListener {
         this.contentPane.preferredSize = Dimension(WINDOW_WIDTH, WINDOW_HEIGHT)
         this.layout = GridLayout(1,2)
         this.pack()
+        this.setLocationRelativeTo(null)
         this.isResizable = false
         this.isVisible = true
     }
@@ -177,11 +183,7 @@ class MainScreen : JFrame(), ActionListener {
             gammaButton -> inputDisplay.text = inputDisplay.text + "γ"
             deltaButton -> inputDisplay.text = inputDisplay.text + "δ"
             epsilonButton -> inputDisplay.text = inputDisplay.text + "ε"
-            deleteButton -> {
-                setActiveInputType("prices")
-                inputDisplay.text = ""
-                timesEnterPressed = 0
-            }
+            deleteButton -> clearInput()
             enterButton -> {
                 if(inputDisplay.text.isEmpty()){
                     Toolkit.getDefaultToolkit().beep()
@@ -190,30 +192,35 @@ class MainScreen : JFrame(), ActionListener {
                 }
 
                 // change functionality
-                if(timesEnterPressed == 0){
+                if(enterPressed){
+                    handleTuringRequest()
+                    clearInput()
+                }
+                else{
                     // lock price selectors and enable item selectors
                     setActiveInputType("items")
-                    timesEnterPressed ++
+                    enterPressed = true
                 }
-                else if(timesEnterPressed == 1){
-                    handleTuringRequest()
-                    setActiveInputType("prices")
-                    inputDisplay.text = ""
-                    timesEnterPressed = 0
-                }
-                // process
             }
             else -> inputDisplay.text = inputDisplay.text + (e?.source as? JButton)?.text
         }
     }
 
-    private fun handleTuringRequest(){
-        Turing("⊔" + inputDisplay.text + "⊔")
+    private fun clearInput() {
+        setActiveInputType("prices")
+        inputDisplay.text = ""
+        enterPressed = false
+    }
 
-        // display results
+    private fun handleTuringRequest(){
+        Turing(inputDisplay.text).run()
 
         // update stock amounts
-        // inventoryDisplay.text = "N - 20\tK - 20\tS - 20\tF - 20"
+        inventoryDisplay.text =
+            "N - ${Inventory.getItemStock('N')} \t" +
+            "K - ${Inventory.getItemStock('K')} \t" +
+            "S - ${Inventory.getItemStock('S')} \t" +
+            "F - ${Inventory.getItemStock('F')}"
     }
 
     private fun verticalSpace(height: Int): JLabel {
