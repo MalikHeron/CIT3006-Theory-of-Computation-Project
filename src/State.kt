@@ -37,6 +37,7 @@ class State {
         when (currentState) {
             initialState -> {
                 if (inputTape[inputHead] == machine.blankSymbol) {
+                    //No inputs on the tape, reject
                     getNextState(rejectState)
                 } else {
                     while (inputHead != (inputTape.lastIndex + 1)) {
@@ -58,40 +59,54 @@ class State {
                         }
                         inputHead++
                     }
+                    //Transition to state 2
                     getNextState(2)
                 }
             }
 
             2 -> {
+                //Go to the front of the tape, reading all symbols on the input alphabet
                 while (inputHead != 0) {
                     read = inputTape[inputHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
                 }
+                //Transition to state 12 for checking if it's the owner input
                 getNextState(12)
             }
 
             3 -> {
+                //Move to the front of the tape
                 while (inputHead != 0) {
                     read = inputTape[inputHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
                 }
+                //Transition to state 4
                 getNextState(4)
             }
 
             4 -> {
+                //Move right on the input tape while reading off symbols
                 while (inputHead != (inputTape.lastIndex + 1)) {
                     read = inputTape[inputHead]
+                    /*If the symbol is an item (F, K, N, S) write to it to the itemTape
+                    * Write it back to the input tape and move to the right
+                    */
                     if (itemList.contains(read)) {
                         write = read
                         itemTape.add(read)
                     }
+                    /*If the symbol is a currency (ɑ, β, γ) write x on the Input tape
+                    * then increment the specified register for the symbol
+                    * Register 1 for ɑ, 2 for β, and 3 for γ
+                    */
                     if (currencyList.contains(read)) {
                         write = machine.crossSymbol
                         inputTape[inputHead] = write
+                        //Increment the appropriate register
                         register.run(arrayOf("INC ${currencyList[read]}"))
                     }
                     if (inputHead != inputTape.lastIndex) {
@@ -107,24 +122,34 @@ class State {
                 }
                 println("Input tape: $inputTape")
                 println("Item tape: $itemTape\n")
+                //Transition to state 5
                 getNextState(5)
             }
 
             5 -> {
+                //Move to the left of the tape
                 while (inputHead != 0) {
                     read = inputTape[inputHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
                     inputHead--
+                    //When a cross symbol is read, move to the right
                     if (inputTape[inputHead] == machine.crossSymbol) {
                         inputHead++
                         break
                     }
                 }
+                //Transition to state 6
                 getNextState(6)
             }
 
             6 -> {
+                /*Read symbols and move to the right of the item tape
+                 For each symbol read, check the register if there is enough money to dispense that item
+                 If there is enough money, decrement the register and increment the till for the currency
+                 Write x on the item tape and write back the item on the input tape
+                 Move to the right on both the input tape and item tape
+                 */
                 while (itemHead != (itemTape.lastIndex + 1)) {
                     read = itemTape[itemHead]
                     if (read == 'F') {
