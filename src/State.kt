@@ -401,13 +401,14 @@ class State {
                 }
                 println("Input tape: $inputTape")
                 println("Item tape: $itemTape")
+                //Transition to state 7
                 getNextState(7)
             }
 
             7 -> {
                 /*
                 * This state moves left on the item tape to check if any symbols remain
-                * If a symbol is found it keep track of the amount on register 4
+                * If a symbol is found it keeps track of the amount on register 4
                 * */
                 while (itemHead != 0) {
                     //If item tape found a symbol, increment register 4
@@ -701,6 +702,7 @@ class State {
                     read = itemTape[itemHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
+                    //Move to the left of the tape
                     itemHead--
                 }
                 //Transition to state 10
@@ -723,6 +725,7 @@ class State {
                         register.run(arrayOf("INC 4"))
                         println("Insufficient funds to purchase ${items[itemTape[itemHead]]}")
                     }
+                    //Move to the right on both tapes
                     inputHead++
                     itemHead++
                 }
@@ -752,6 +755,7 @@ class State {
                             stockHead--
                             break
                         }
+                        //Move to the right of the tape
                         stockHead++
                     }
                 }
@@ -928,13 +932,19 @@ class State {
                 write = read
                 if (read == machine.blankSymbol) {
                     println("q$currentState: $read -> $write, $right")
+                    //Get total sales
                     println("Funds: $${Inventory.getFunds()}")
+                    //Restock the inventory
                     Inventory.restockInventory()
+                    //Empty the till
                     Inventory.resetFunds()
+                    //Transition to accept state
                     getNextState(acceptState)
                 } else {
                     println("q$currentState: $read -> $write, $left")
+                    //Move left on the tape
                     inputHead--
+                    //Transition to state 3
                     getNextState(3)
                 }
             }
