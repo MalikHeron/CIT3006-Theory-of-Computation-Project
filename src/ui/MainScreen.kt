@@ -36,8 +36,8 @@ class MainScreen : JFrame(), ActionListener {
     private lateinit var deleteButton: JButton
     private lateinit var enterButton: JButton
     private lateinit var inventoryDisplay: JTextArea
-
     private var buttons = arrayListOf<JButton>()
+    private var timesEnterPressed = 0
 
     init {
         setupComponents()
@@ -76,8 +76,8 @@ class MainScreen : JFrame(), ActionListener {
         zButton = JButton("Z")
         wButton = JButton("W")
         aButton = JButton("A")
-        deleteButton = JButton("Delete")
-        enterButton= JButton("ENTER")
+        deleteButton = JButton("Clear")
+        enterButton= JButton("NEXT")
 
         buttons = arrayListOf(
             alphaButton,
@@ -123,6 +123,8 @@ class MainScreen : JFrame(), ActionListener {
             TitledBorder.DEFAULT_JUSTIFICATION,
             Font(Font.SANS_SERIF, Font.BOLD, 16)
         )
+
+        setActiveInputType("prices")
     }
 
     private fun addComponentsToPanels(){
@@ -152,6 +154,18 @@ class MainScreen : JFrame(), ActionListener {
         this.isVisible = true
     }
 
+    // {type} is "prices" or "items"
+    private fun setActiveInputType(type: String) {
+        // separate the types of buttons to enable or disable them
+        val priceButtons = arrayListOf(alphaButton, betaButton, gammaButton, deltaButton, epsilonButton)
+        val itemButtons = arrayListOf(nButton, fButton, sButton, kButton, wButton, zButton, aButton)
+
+        priceButtons.forEach { it.isEnabled = type == "prices" }
+        itemButtons.forEach { it.isEnabled = type == "items" }
+
+        enterButton.text = if(type == "prices") "NEXT" else "ENTER"
+    }
+
     override fun actionPerformed(e: ActionEvent?) {
         // clear any errors
         if(inputDisplay.text == "NO INPUT")
@@ -163,7 +177,11 @@ class MainScreen : JFrame(), ActionListener {
             gammaButton -> inputDisplay.text = inputDisplay.text + "γ"
             deltaButton -> inputDisplay.text = inputDisplay.text + "δ"
             epsilonButton -> inputDisplay.text = inputDisplay.text + "ε"
-            deleteButton -> inputDisplay.text = inputDisplay.text.dropLast(1)
+            deleteButton -> {
+                setActiveInputType("prices")
+                inputDisplay.text = ""
+                timesEnterPressed = 0
+            }
             enterButton -> {
                 if(inputDisplay.text.isEmpty()){
                     Toolkit.getDefaultToolkit().beep()
@@ -171,8 +189,19 @@ class MainScreen : JFrame(), ActionListener {
                     return
                 }
 
+                // change functionality
+                if(timesEnterPressed == 0){
+                    // lock price selectors and enable item selectors
+                    setActiveInputType("items")
+                    timesEnterPressed ++
+                }
+                else if(timesEnterPressed == 1){
+                    handleTuringRequest()
+                    setActiveInputType("prices")
+                    inputDisplay.text = ""
+                    timesEnterPressed = 0
+                }
                 // process
-                handleTuringRequest()
             }
             else -> inputDisplay.text = inputDisplay.text + (e?.source as? JButton)?.text
         }
