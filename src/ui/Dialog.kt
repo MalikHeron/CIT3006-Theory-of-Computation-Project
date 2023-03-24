@@ -1,6 +1,9 @@
 package ui
 
-import java.awt.*
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.FlowLayout
+import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.*
 
@@ -15,8 +18,9 @@ class Dialog {
         private lateinit var qNapkinField: JTextField
         private lateinit var inputLabel: JLabel
         private lateinit var refundLabel: JLabel
-        private lateinit var quantityLabel: JLabel
-        private lateinit var itemLabel: JLabel
+        private lateinit var dispenseLabel: JLabel
+        private  lateinit var stockLabel:JLabel
+        private  lateinit var stocks:JLabel
         private lateinit var forkLabel: JLabel
         private lateinit var knifeLabel: JLabel
         private lateinit var spoonLabel: JLabel
@@ -56,17 +60,10 @@ class Dialog {
             inputField.font = fieldFont
             inputField.preferredSize = Dimension(380, 60)
 
-            quantityLabel = JLabel("Quantity")
-            quantityLabel.font = lrgLabelFont
-            quantityLabel.preferredSize = Dimension(300, 65)
-            quantityLabel.verticalAlignment = SwingConstants.CENTER
-            quantityLabel.horizontalAlignment = SwingConstants.CENTER
-
-            itemLabel = JLabel("Item")
-            itemLabel.font = lrgLabelFont
-            itemLabel.preferredSize = Dimension(250, 65)
-            itemLabel.verticalAlignment = SwingConstants.CENTER
-            itemLabel.horizontalAlignment = SwingConstants.CENTER
+            dispenseLabel = JLabel("Dispensing...", SwingConstants.CENTER)
+            dispenseLabel.font = lrgLabelFont
+            dispenseLabel.preferredSize = Dimension(700, 65)
+            dispenseLabel.verticalAlignment = SwingConstants.CENTER
 
             knifeLabel = JLabel("Knife", SwingConstants.CENTER)
             knifeLabel.font = fieldFont
@@ -104,6 +101,15 @@ class Dialog {
             qNapkinField.preferredSize = Dimension(150, 60)
             qNapkinField.horizontalAlignment = SwingConstants.CENTER
 
+            stockLabel = JLabel("Out of Stock") // Change Text to 'change' based on payment processing
+            stockLabel.font = lrgLabelFont
+            stockLabel.preferredSize = Dimension(300, 65)
+            stockLabel.verticalAlignment = SwingConstants.CENTER
+
+            stocks = JLabel() // Change Text to 'change' based on payment processing
+            stocks.font = lrgLabelFont
+            stocks.preferredSize = Dimension(300, 65)
+            stocks.verticalAlignment = SwingConstants.CENTER
             refundLabel = JLabel("Refund/Change")
             refundLabel.font = lrgLabelFont
             refundLabel.preferredSize = Dimension(300, 65)
@@ -130,9 +136,7 @@ class Dialog {
             summaryDialog.add(displayLabel)
             summaryDialog.add(inputLabel)
             summaryDialog.add(inputField)
-            summaryDialog.add(itemLabel)
-            summaryDialog.add(quantityLabel)
-            summaryDialog.add(knifeLabel)
+            summaryDialog.add(dispenseLabel)
             summaryDialog.add(qknifeField)
             summaryDialog.add(forkLabel)
             summaryDialog.add(qforkField)
@@ -141,6 +145,8 @@ class Dialog {
             summaryDialog.add(napkinLabel)
             summaryDialog.add(qNapkinField)
             summaryDialog.add(refundLabel)
+            summaryDialog.add(stockLabel)
+            summaryDialog.add(stocks)
             summaryDialog.add(refundField)
             summaryDialog.add(okButton)
         }
@@ -222,7 +228,7 @@ class Dialog {
         private fun setWindowProperties() {
             summaryDialog.layout = FlowLayout(FlowLayout.LEFT, 30, 30)
             summaryDialog.title = "TRANSACTION COMPLETE"
-            summaryDialog.setSize(820, 950) //820 [500 or 950]
+            summaryDialog.setSize(820, 850) //820 [500 or 950]
             summaryDialog.setLocationRelativeTo(null)
             summaryDialog.isResizable = false
             summaryDialog.isModal = true
