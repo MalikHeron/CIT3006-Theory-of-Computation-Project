@@ -47,6 +47,7 @@ class State {
                         //Check for invalid input
                         if (!machine.tapeAlphabet.contains(inputTape[inputHead])) {
                             println("Invalid input '${inputTape[inputHead]}' detected!")
+                            //Transition to the reject state
                             getNextState(rejectState)
                             return
                         }
@@ -57,6 +58,7 @@ class State {
                             inputHead--
                             break
                         }
+                        //Move to the right on the tape
                         inputHead++
                     }
                     //Transition to state 2
@@ -70,6 +72,7 @@ class State {
                     read = inputTape[inputHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
+                    //Move to the left on the tape
                     inputHead--
                 }
                 //Transition to state 12 for checking if it's the owner input
@@ -82,6 +85,7 @@ class State {
                     read = inputTape[inputHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
+                    //Move to the left on the tape
                     inputHead--
                 }
                 //Transition to state 4
@@ -92,14 +96,16 @@ class State {
                 //Move right on the input tape while reading off symbols
                 while (inputHead != (inputTape.lastIndex + 1)) {
                     read = inputTape[inputHead]
-                    /*If the symbol is an item (F, K, N, S) write to it to the itemTape
+                    /*
+                    * If the symbol is an item (F, K, N, S) write it to the itemTape
                     * Write it back to the input tape and move to the right
                     */
                     if (itemList.contains(read)) {
                         write = read
                         itemTape.add(read)
                     }
-                    /*If the symbol is a currency (ɑ, β, γ) write x on the Input tape
+                    /*
+                    * If the symbol is a currency (ɑ, β, γ) write x on the Input tape
                     * then increment the specified register for the symbol
                     * Register 1 for ɑ, 2 for β, and 3 for γ
                     */
@@ -144,12 +150,15 @@ class State {
             }
 
             6 -> {
-                /*Read symbols and move to the right of the item tape
-                 For each symbol read, check the register if there is enough money to dispense that item
-                 If there is enough money, decrement the register and increment the till for the currency
-                 Write x on the item tape and write back the item on the input tape
-                 Move to the right on both the input tape and item tape
-                 */
+                /*
+                * Read symbols and move to the right of the item tape
+                * For each symbol read, check the register if there is enough money to dispense that item
+                * If there is enough money, decrement the register and increment the till for the currency
+                * Write x on the item tape and write back the item on the input tape
+                * Move to the right on both the input tape and item tape
+                * If there is not enough money, write x on the input tape and write back the item on the item tape
+                * Move to the right on both the input and item tape
+                * */
                 while (itemHead != (itemTape.lastIndex + 1)) {
                     read = itemTape[itemHead]
                     if (read == 'F') {
@@ -386,6 +395,7 @@ class State {
                         inputHead--
                         break
                     }
+                    //Move to the right on both tape
                     itemHead++
                     inputHead++
                 }
@@ -395,26 +405,47 @@ class State {
             }
 
             7 -> {
+                /*
+                * This state moves left on the item tape to check if any symbols remain
+                * If a symbol is found it keep track of the amount on register 4
+                * */
                 while (itemHead != 0) {
+                    //If item tape found a symbol, increment register 4
                     if (itemList.contains(itemTape[itemHead])) {
                         register.run(arrayOf("INC 4"))
                     }
                     read = itemTape[itemHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
+                    //Move to the left on the item tape and input tape
                     inputHead--
                     itemHead--
                 }
+                //Check if register 4 has is greater than zero
                 if ((register.getRegisterValue(4) ?: 0) > 0) {
+                    //Get the value on register 4
                     val count = (register.getRegisterValue(4)) ?: 0
+                    //Decrement register 4 that amount of time (count)
                     repeat(count) { register.run(arrayOf("DEC 4")) }
+                    //Transition to state 8
                     getNextState(8)
                 } else {
+                    //Transition to state 9
                     getNextState(9)
                 }
             }
 
             8 -> {
+                /*
+                * Does the same thing is as state 6, only for doubling checking if we can get any more items
+                * Read symbols and move to the right of the item tape
+                * For each symbol read, check the register if there is enough money to dispense that item
+                * If there is enough money, decrement the register and increment the till for the currency
+                * Write x on the item tape and write back the item on the input tape
+                * Move to the right on both the input tape and item tape
+                * If there is not enough money, write x on the input tape and write back the item on the item tape
+                * Move to the right on both the input and item tape
+                * */
                 while (itemHead != (itemTape.lastIndex + 1)) {
                     read = itemTape[itemHead]
                     if (read == 'F') {
@@ -656,26 +687,34 @@ class State {
                 }
                 println("Input tape: $inputTape")
                 println("Item tape: $itemTape\n")
+                //Transition to state 9
                 getNextState(9)
             }
 
             9 -> {
+                //Move to the left of the item tape
                 while (itemHead != 0) {
                     read = itemTape[itemHead]
                     write = read
                     println("q$currentState: $read -> $write, $left")
                     itemHead--
                 }
+                //Transition to state 10
                 getNextState(10)
             }
 
             10 -> {
+                /*
+                * This state checks the item tape for any item
+                * Items on the item tape are ones that could not be purchased
+                * */
                 while (itemHead != (itemTape.lastIndex + 1)) {
                     if (itemHead == itemTape.lastIndex) {
                         inputHead--
                         itemHead--
                         break
                     }
+                    //If an item is found increment register 4 and display that there is insufficient funds
                     if (itemList.contains(itemTape[itemHead])) {
                         register.run(arrayOf("INC 4"))
                         println("Insufficient funds to purchase ${items[itemTape[itemHead]]}")
@@ -683,10 +722,16 @@ class State {
                     inputHead++
                     itemHead++
                 }
+                //Transition to state 11
                 getNextState(11)
             }
 
             11 -> {
+                /*
+                * Check if the stock tape is empty
+                * If it is not empty it moves to the right
+                * For each symbol read it prints that the item is out of stock
+                * */
                 if (stockTape.isNotEmpty()) {
                     while (stockHead != stockTape.lastIndex) {
                         read = stockTape[stockHead]
@@ -700,6 +745,7 @@ class State {
                     }
                 }
 
+                //Getting the values on all the registers
                 val reg1 = (register.getRegisterValue(1) ?: 0)
                 val reg2 = (register.getRegisterValue(2) ?: 0)
                 val reg3 = (register.getRegisterValue(3) ?: 0)
@@ -744,10 +790,13 @@ class State {
                     val totalSales = register.getRegisterValue(0)
                     Inventory.setFunds(totalSales!!.toDouble())
 
+                    //Transition to reject state
                     getNextState(rejectState)
                 } else if (reg4 > 0) {
+                    //Transition to reject state
                     getNextState(rejectState)
                 } else {
+                    //Transition to accept state
                     getNextState(acceptState)
                 }
             }
@@ -899,15 +948,21 @@ class State {
 
     private fun inStock(symbol: Char): Boolean {
         if (itemList.contains(symbol)) {
+            //Get stock of the specified item
             val itemStock = Inventory.getItemStock(symbol)
+            //Check if stock is greater than zero
             if (itemStock > 0) {
+                //Dispense the item
                 println("Dispense '${items[symbol]}'")
 
                 val registerM = Register()
+                //Load the previous stock onto register 1 and decrement it
                 registerM.run(arrayOf("LOAD $itemStock 1", "DEC 1"))
+                //Set the stock of the item to the new stock
                 Inventory.setItemStock(symbol, (registerM.getRegisterValue(1) ?: 0))
                 return true
             } else {
+                //If stock is zero, add the item to the stock tape
                 stockTape.add(symbol)
             }
         }
