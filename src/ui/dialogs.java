@@ -35,18 +35,18 @@ public class dialogs extends JDialog implements ActionListener {
         //Components Configuration
         summaryDialog = new JDialog();
 
-        displayLabel = new JLabel("Machine Output", SwingConstants.CENTER); //String Accepted! Transaction Complete.
-        displayLabel.setFont(lrgLabelFont); //NTS: MIXING OF FONTS
+        displayLabel = new JLabel("Machine Output", SwingConstants.CENTER);
+        displayLabel.setFont(lrgLabelFont);
         displayLabel.setPreferredSize(new Dimension(700, 65));
         displayLabel.setVerticalAlignment(SwingConstants.CENTER);
 
-        inputLabel = new JLabel("Input String");
+        inputLabel = new JLabel("Input");
         inputLabel.setFont(lrgLabelFont);
         inputLabel.setPreferredSize(new Dimension(300, 65));
         inputLabel.setVerticalAlignment(SwingConstants.CENTER);
 
         inputField = new JTextField(input);
-        inputField.setFont(fieldFont); //NTS: MIXING OF FONTS,Keep this one
+        inputField.setFont(fieldFont);
         inputField.setPreferredSize(new Dimension(380, 60));
 
         dispenseLabel = new JLabel("Dispensing...", SwingConstants.CENTER);
@@ -55,7 +55,7 @@ public class dialogs extends JDialog implements ActionListener {
         dispenseLabel.setVerticalAlignment(SwingConstants.CENTER);
 
         knifeLabel = new JLabel("Knife", SwingConstants.CENTER);
-        knifeLabel.setFont(fieldFont); //NTS: MIXING OF FONTS,Keep this one
+        knifeLabel.setFont(fieldFont);
         knifeLabel.setPreferredSize(new Dimension(200, 60));
 
         qknifeField = new JTextField(String.valueOf("0"));//SOLD.get('K')));
@@ -186,7 +186,7 @@ public class dialogs extends JDialog implements ActionListener {
         summaryDialog.add(refundField);
         summaryDialog.add(okButton);
     }
-h
+
     public void validateInput(String item) {
         // Check if the input char is invalid
         char[] tapeAlphabet = {'F', 'K', 'N', 'S', 'ɑ', 'β', 'γ', '⊔', 'x'};
