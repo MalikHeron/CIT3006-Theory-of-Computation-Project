@@ -210,7 +210,7 @@ class TransactionDialog : ActionListener {
         return output
     }
 
-    fun summaryDialog() {
+    fun showDialog() {
         initializeComponents()
         addComponentsToWindow()
         setWindowProperties()
@@ -223,16 +223,6 @@ class TransactionDialog : ActionListener {
             message,
             "Invalid Input",
             JOptionPane.WARNING_MESSAGE
-        )
-    }
-
-    fun showFundsDialog(totalSale: Double) {
-        val message = "Total sales is $totalSale"
-        JOptionPane.showMessageDialog(
-            null,
-            message,
-            "Funds",
-            JOptionPane.INFORMATION_MESSAGE
         )
     }
 

@@ -234,8 +234,10 @@ class MainScreen : JFrame(), ActionListener {
 
     private fun handleTuringRequest() {
         Turing(inputDisplay.text).run()
+        //Update the various fields
         transactionDialog.updateFields()
-        transactionDialog.summaryDialog()
+        //Show the dialog
+        transactionDialog.showDialog()
         // update stock amounts
         inventoryDisplay.text =
             "N - ${Inventory.getItemStock('N')} \t" +

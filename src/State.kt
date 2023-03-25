@@ -800,6 +800,9 @@ class State {
                         inputTape.add('γ')
                     }
 
+                    //Put blank symbol at end of tape
+                    inputTape.add(machine.blankSymbol)
+
                     //Get value on register 0
                     val total = register.getRegisterValue(0)
                     if (total != null && total > 0) {

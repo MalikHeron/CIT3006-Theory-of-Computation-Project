@@ -203,7 +203,7 @@ class Inventory {
                 val newTransaction: String = (sales.toString() + "\t" + date + "\t" + time)
                 outFileStream.write(newTransaction)
             } catch (e: Exception) {
-                println("\nAn unexpected error occured while saving transaction.")
+                println("\nAn unexpected error occurred while saving the transaction.")
             } finally {
                 if (outFileStream != null) {
                     try {

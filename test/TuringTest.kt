@@ -17,7 +17,7 @@ class TuringTest {
     @Order(2)
     fun refundAlone() {
         val result = Turing("ɑɑββγβɑFKF").run()
-        assertEquals("xxxxxxxFKF⊔β", result)
+        assertEquals("xxxxxxxFKF⊔β⊔", result)
     }
 
     @Test
@@ -38,14 +38,14 @@ class TuringTest {
     @Order(5)
     fun refundAndInsufficientFunds() {
         val result = Turing("γβɑSK").run()
-        assertEquals("xxxSx⊔ɑβ", result)
+        assertEquals("xxxSx⊔ɑβ⊔", result)
     }
 
     @Test
     @Order(6)
     fun refundAndInsufficientFunds2() {
         val result = Turing("βγɑSK").run()
-        assertEquals("xxxSx⊔ɑβ", result)
+        assertEquals("xxxSx⊔ɑβ⊔", result)
     }
 
     @Test
@@ -66,7 +66,7 @@ class TuringTest {
     @Order(9)
     fun refund() {
         val result = Turing("γN").run()
-        assertEquals("xN⊔β", result)
+        assertEquals("xN⊔β⊔", result)
     }
 
     @Test
@@ -87,7 +87,7 @@ class TuringTest {
     @Order(12)
     fun insufficientFunds2() {
         val result = Turing("NKɑ").run()
-        assertEquals("xxx⊔ɑ", result)
+        assertEquals("xxx⊔ɑ⊔", result)
     }
 
     @Test
