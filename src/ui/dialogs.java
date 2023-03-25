@@ -186,7 +186,7 @@ public class dialogs extends JDialog implements ActionListener {
         summaryDialog.add(refundField);
         summaryDialog.add(okButton);
     }
-
+h
     public void validateInput(String item) {
         // Check if the input char is invalid
         char[] tapeAlphabet = {'F', 'K', 'N', 'S', 'ɑ', 'β', 'γ', '⊔', 'x'};
