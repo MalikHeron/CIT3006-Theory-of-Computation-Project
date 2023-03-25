@@ -37,7 +37,7 @@ class TransactionDialog : ActionListener {
     private var closeButton = JButton("Close")
 
     //JDialog
-    private var summaryDialog = JDialog()
+    private var dialog = JDialog()
 
     private var input = ""
     private var output = ""
@@ -143,38 +143,38 @@ class TransactionDialog : ActionListener {
     }
 
     private fun addComponentsToWindow() {
-        summaryDialog.add(outputLabel)
-        summaryDialog.add(outputField)
-        summaryDialog.add(inputLabel)
-        summaryDialog.add(inputField)
-        summaryDialog.add(dispenseLabel)
-        summaryDialog.add(knifeLabel)
-        summaryDialog.add(knifeField)
-        summaryDialog.add(forkLabel)
-        summaryDialog.add(forkField)
-        summaryDialog.add(spoonLabel)
-        summaryDialog.add(spoonField)
-        summaryDialog.add(napkinLabel)
-        summaryDialog.add(napkinField)
-        summaryDialog.add(refundLabel)
-        summaryDialog.add(stockLabel)
-        summaryDialog.add(forkCheckBox)
-        summaryDialog.add(knifeCheckBox)
-        summaryDialog.add(napkinCheckBox)
-        summaryDialog.add(spoonCheckBox)
-        summaryDialog.add(refundField)
-        summaryDialog.add(closeButton)
+        dialog.add(outputLabel)
+        dialog.add(outputField)
+        dialog.add(inputLabel)
+        dialog.add(inputField)
+        dialog.add(dispenseLabel)
+        dialog.add(knifeLabel)
+        dialog.add(knifeField)
+        dialog.add(forkLabel)
+        dialog.add(forkField)
+        dialog.add(spoonLabel)
+        dialog.add(spoonField)
+        dialog.add(napkinLabel)
+        dialog.add(napkinField)
+        dialog.add(refundLabel)
+        dialog.add(stockLabel)
+        dialog.add(forkCheckBox)
+        dialog.add(knifeCheckBox)
+        dialog.add(napkinCheckBox)
+        dialog.add(spoonCheckBox)
+        dialog.add(refundField)
+        dialog.add(closeButton)
     }
 
     //Setting Window Properties
     private fun setWindowProperties() {
-        summaryDialog.layout = null
-        summaryDialog.title = "Transaction Results"
-        summaryDialog.setSize(500, 550)
-        summaryDialog.setLocationRelativeTo(null)
-        summaryDialog.isResizable = false
-        summaryDialog.isModal = true
-        summaryDialog.isVisible = true
+        dialog.layout = null
+        dialog.title = "Transaction Results"
+        dialog.setSize(500, 550)
+        dialog.setLocationRelativeTo(null)
+        dialog.isResizable = false
+        dialog.isModal = true
+        dialog.isVisible = true
     }
 
     fun setOutOfStock(item: Char) {
@@ -261,7 +261,7 @@ class TransactionDialog : ActionListener {
     override fun actionPerformed(e: ActionEvent?) {
         if (e?.source === closeButton) {
             resetFields()
-            summaryDialog.dispose()
+            dialog.dispose()
         }
     }
 }

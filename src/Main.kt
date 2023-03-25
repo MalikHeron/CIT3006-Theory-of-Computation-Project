@@ -9,9 +9,6 @@ object Main {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         MainScreen()
-        //Dialog.summaryDialog()
-        //println(Inventory.getFunds())
     }
 }

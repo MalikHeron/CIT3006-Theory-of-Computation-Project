@@ -132,8 +132,8 @@ class Inventory {
             getFile().writeInt(0)
             JOptionPane.showMessageDialog(
                 null,
-                "Total Sales were successfully updated",
-                "Update Successful",
+                "Till emptied and items restocked.",
+                "Information",
                 JOptionPane.INFORMATION_MESSAGE
             )
         }
@@ -154,23 +154,6 @@ class Inventory {
             getFile().writeInt(newQuantity)
 
             return
-        }
-
-        //Reads entire inventory for all details if necessary
-        @Throws(IOException::class)
-        fun displayInventory(): String {
-            val inventory = StringBuilder()
-            file.seek(0)
-            while (file.filePointer < file.length()) {
-                val itemName = file.readUTF()
-                val price = file.readDouble()
-                val quantity = file.readInt()
-                inventory.append("Name: ").append(itemName).append("\n")
-                    .append("Price: $").append(price).append("\n")
-                    .append("Quantity: ").append(quantity).append("\n\n")
-            }
-            file.close()
-            return inventory.toString()
         }
 
         fun addItems() {

@@ -1,4 +1,5 @@
 import ui.MainScreen.Companion.transactionDialog
+import ui.SalesDialog
 
 class State {
 
@@ -950,10 +951,7 @@ class State {
                     println("q$currentState: $read -> $write, $right")
                     //Get total sales
                     println("Funds: $${Inventory.getFunds()}")
-                    //Restock the inventory
-                    Inventory.restockInventory()
-                    //Empty the till
-                    Inventory.resetFunds()
+                    SalesDialog().showDialog()
                     //Transition to accept state
                     getNextState(acceptState)
                 } else {

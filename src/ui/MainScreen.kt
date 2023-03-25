@@ -252,5 +252,4 @@ class MainScreen : JFrame(), ActionListener {
 
         return space
     }
-
 }
