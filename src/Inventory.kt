@@ -183,7 +183,7 @@ class Inventory {
             var outFileStream: FileWriter? = null
             try {
                 outFileStream = FileWriter(File("data//sales.txt"), true)
-                val newTransaction: String = (sales.toString() + "\t" + date + "\t" + time)
+                val newTransaction: String = (sales.toString() + "\t" + date + "\t" + time + "\n")
                 outFileStream.write(newTransaction)
             } catch (e: Exception) {
                 println("\nAn unexpected error occurred while saving the transaction.")
