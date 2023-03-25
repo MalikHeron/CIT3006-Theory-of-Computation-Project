@@ -100,7 +100,7 @@ class SalesDialog : ActionListener {
     //Setting Window Properties
     private fun setWindowProperties() {
         dialog.layout = null
-        dialog.title = "Transaction Results"
+        dialog.title = "System Information"
         dialog.setSize(500, 350)
         dialog.setLocationRelativeTo(null)
         dialog.isResizable = false

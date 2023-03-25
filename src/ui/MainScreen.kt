@@ -205,12 +205,6 @@ class MainScreen : JFrame(), ActionListener {
             epsilonButton -> inputDisplay.text = inputDisplay.text + "ε"
             deleteButton -> clearInput()
             enterButton -> {
-                if (inputDisplay.text.isEmpty()) {
-                    Toolkit.getDefaultToolkit().beep()
-                    inputDisplay.text = "NO INPUT"
-                    return
-                }
-
                 // change functionality
                 if (enterPressed) {
                     handleTuringRequest()
