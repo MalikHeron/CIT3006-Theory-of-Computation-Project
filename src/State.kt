@@ -119,7 +119,7 @@ class State {
                         write = machine.crossSymbol
                         inputTape[inputHead] = write
                         //Increment the appropriate register
-                        register.run(arrayOf("INC ${currencyList[read]}"))
+                        register.RunInstructions(arrayOf("INC ${currencyList[read]}"))
                     }
                     if (inputHead != inputTape.lastIndex) {
                         println("q$currentState: $read -> $write, $right")
@@ -175,7 +175,7 @@ class State {
                     if (read == 'F') {
                         if ((register.getRegisterValue(1) ?: 0) >= 3) {
                             if (inStock(read)) {
-                                repeat(3) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(3) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -190,7 +190,7 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 1", "DEC 2", "INC 6", "INC 7"))
+                                register.RunInstructions(arrayOf("DEC 1", "DEC 2", "INC 6", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -203,7 +203,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 3", "INC 1", "INC 8", "DEC 6"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 1", "INC 8", "DEC 6"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -225,8 +225,8 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                repeat(3) { register.run(arrayOf("DEC 1", "INC 6")) }
-                                register.run(arrayOf("DEC 2", "INC 7"))
+                                repeat(3) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
+                                register.RunInstructions(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -241,8 +241,8 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 2
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 1"))
-                                repeat(2) { register.run(arrayOf("DEC 2", "INC 7")) }
+                                register.RunInstructions(arrayOf("DEC 1"))
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 2", "INC 7")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -255,7 +255,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 5) {
                             if (inStock(read)) {
-                                repeat(5) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(5) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -270,7 +270,7 @@ class State {
                             (register.getRegisterValue(3) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 1", "INC 6", "DEC 3", "INC 8"))
+                                register.RunInstructions(arrayOf("DEC 1", "INC 6", "DEC 3", "INC 8"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -290,7 +290,7 @@ class State {
                     if (read == 'N') {
                         if ((register.getRegisterValue(1) ?: 0) >= 2) {
                             if (inStock(read)) {
-                                repeat(2) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -304,7 +304,7 @@ class State {
                         } else if ((register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 2", "INC 7"))
+                                register.RunInstructions(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -317,7 +317,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 3", "INC 8", "INC 2", "DEC 7"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 8", "INC 2", "DEC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -338,7 +338,7 @@ class State {
                     if (read == 'S') {
                         if ((register.getRegisterValue(1) ?: 0) >= 4) {
                             if (inStock(read)) {
-                                repeat(4) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(4) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -353,8 +353,8 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                repeat(2) { register.run(arrayOf("DEC 1", "INC 6")) }
-                                register.run(arrayOf("DEC 2", "INC 7"))
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
+                                register.RunInstructions(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -368,7 +368,7 @@ class State {
                         } else if ((register.getRegisterValue(2) ?: 0) >= 2
                         ) {
                             if (inStock(read)) {
-                                repeat(2) { register.run(arrayOf("DEC 2", "INC 7")) }
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 2", "INC 7")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -382,7 +382,7 @@ class State {
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 3", "INC 8"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 8"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -424,7 +424,7 @@ class State {
                 while (itemHead != 0) {
                     //If item tape found a symbol, increment register 4
                     if (itemList.contains(itemTape[itemHead])) {
-                        register.run(arrayOf("INC 4"))
+                        register.RunInstructions(arrayOf("INC 4"))
                     }
                     read = itemTape[itemHead]
                     write = read
@@ -438,7 +438,7 @@ class State {
                     //Get the value on register 4
                     val count = (register.getRegisterValue(4)) ?: 0
                     //Decrement register 4 that amount of time (count)
-                    repeat(count) { register.run(arrayOf("DEC 4")) }
+                    repeat(count) { register.RunInstructions(arrayOf("DEC 4")) }
                     //Transition to state 8
                     getNextState(8)
                 } else {
@@ -463,7 +463,7 @@ class State {
                     if (read == 'F') {
                         if ((register.getRegisterValue(1) ?: 0) >= 3) {
                             if (inStock(read)) {
-                                repeat(3) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(3) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -479,7 +479,7 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 1", "DEC 2", "INC 6", "INC 7"))
+                                register.RunInstructions(arrayOf("DEC 1", "DEC 2", "INC 6", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -492,7 +492,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 3", "INC 1", "INC 8", "DEC 6"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 1", "INC 8", "DEC 6"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -514,8 +514,8 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                repeat(3) { register.run(arrayOf("DEC 1", "INC 6")) }
-                                register.run(arrayOf("DEC 2", "INC 7"))
+                                repeat(3) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
+                                register.RunInstructions(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -530,8 +530,8 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 2
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 1"))
-                                repeat(2) { register.run(arrayOf("DEC 2", "INC 7")) }
+                                register.RunInstructions(arrayOf("DEC 1"))
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 2", "INC 7")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -544,7 +544,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 5) {
                             if (inStock(read)) {
-                                repeat(5) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(5) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -559,7 +559,7 @@ class State {
                             (register.getRegisterValue(3) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 1", "INC 6", "DEC 3", "INC 8"))
+                                register.RunInstructions(arrayOf("DEC 1", "INC 6", "DEC 3", "INC 8"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -579,7 +579,7 @@ class State {
                     if (read == 'N') {
                         if ((register.getRegisterValue(1) ?: 0) >= 2) {
                             if (inStock(read)) {
-                                repeat(2) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -593,7 +593,7 @@ class State {
                         } else if ((register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 2", "INC 7"))
+                                register.RunInstructions(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -606,7 +606,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 3", "INC 8", "INC 2", "DEC 7"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 8", "INC 2", "DEC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -626,7 +626,7 @@ class State {
                     if (read == 'S') {
                         if ((register.getRegisterValue(1) ?: 0) >= 4) {
                             if (inStock(read)) {
-                                repeat(4) { register.run(arrayOf("DEC 1", "INC 6")) }
+                                repeat(4) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -641,8 +641,8 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                repeat(2) { register.run(arrayOf("DEC 1", "INC 6")) }
-                                register.run(arrayOf("DEC 2", "INC 7"))
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
+                                register.RunInstructions(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -656,7 +656,7 @@ class State {
                         } else if ((register.getRegisterValue(2) ?: 0) >= 2
                         ) {
                             if (inStock(read)) {
-                                repeat(2) { register.run(arrayOf("DEC 2", "INC 7")) }
+                                repeat(2) { register.RunInstructions(arrayOf("DEC 2", "INC 7")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -670,7 +670,7 @@ class State {
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1
                         ) {
                             if (inStock(read)) {
-                                register.run(arrayOf("DEC 3", "INC 8"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 8"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -734,8 +734,9 @@ class State {
                     }
                     //If an item is found increment register 4 and display that there is insufficient funds
                     if (itemList.contains(itemTape[itemHead])) {
-                        register.run(arrayOf("INC 4"))
+                        register.RunInstructions(arrayOf("INC 4"))
                         println("Insufficient funds to purchase ${items[itemTape[itemHead]]}")
+                        transactionDialog.showInsufficientFundsDialog(itemTape[itemHead])
                     }
                     //Move to the right on both tapes
                     inputHead++
@@ -778,28 +779,19 @@ class State {
                 val reg2 = (register.getRegisterValue(2) ?: 0)
                 val reg3 = (register.getRegisterValue(3) ?: 0)
                 val reg4 = (register.getRegisterValue(4) ?: 0)
-                val reg6 = (register.getRegisterValue(6) ?: 0)
-                val reg7 = (register.getRegisterValue(7) ?: 0)
-                val reg8 = (register.getRegisterValue(8) ?: 0)
 
                 if (reg1 > 0 || reg2 > 0 || reg3 > 0) {
-                    repeat(reg1) {
-                        // decrease register 1, load 5 on register 5 and add value on register 5 to register 0
-                        register.run(arrayOf("DEC 1", "LOAD 5 5", "ADD 0 5"))
-                        inputTape.add('ɑ')
-                    }
+                    // decrease register 1, load 5 on register 5 and add value on register 5 to register 0
+                    register.CalculateFunds(arrayOf("DEC 1", "LOAD 5 5"))
+                    repeat(reg1) { inputTape.add('ɑ') }
 
-                    repeat(reg2) {
-                        // decrease register 2, load 10 on register 5 and add value on register 5 to register 0
-                        register.run(arrayOf("DEC 2", "LOAD 10 5", "ADD 0 5"))
-                        inputTape.add('β')
-                    }
+                    // decrease register 2, load 10 on register 5 and add value on register 5 to register 0
+                    register.CalculateFunds(arrayOf("DEC 2", "LOAD 10 5"))
+                    repeat(reg2) { inputTape.add('β') }
 
-                    repeat(reg3) {
-                        // decrease register 3, load 20 on register 5 and add value on register 5 to register 0
-                        register.run(arrayOf("DEC 3", "LOAD 20 5", "ADD 0 5"))
-                        inputTape.add('γ')
-                    }
+                    // decrease register 3, load 20 on register 5 and add value on register 5 to register 0
+                    register.CalculateFunds(arrayOf("DEC 3", "LOAD 20 5"))
+                    repeat(reg3) { inputTape.add('γ') }
 
                     //Put blank symbol at end of tape
                     inputTape.add(machine.blankSymbol)
@@ -811,23 +803,19 @@ class State {
                         transactionDialog.setRefund(total)
                     }
 
-                    //Reset register 0
-                    register.resetRegister(0)
-                    //Empty the till and calculate total sales
-                    repeat(reg6) { register.run(arrayOf("DEC 6", "LOAD 5 5", "ADD 0 5")) }
-                    repeat(reg7) { register.run(arrayOf("DEC 7", "LOAD 10 5", "ADD 0 5")) }
-                    repeat(reg8) { register.run(arrayOf("DEC 8", "LOAD 20 5", "ADD 0 5")) }
-
-                    //Get value on register 0
-                    val totalSales = register.getRegisterValue(0)
-                    Inventory.setFunds(totalSales!!.toDouble())
+                    //Calculate Sales
+                    calculateSales()
 
                     //Transition to reject state
                     getNextState(rejectState)
                 } else if (reg4 > 0) {
+                    //Calculate Sales
+                    calculateSales()
                     //Transition to reject state
                     getNextState(rejectState)
                 } else {
+                    //Calculate Sales
+                    calculateSales()
                     //Transition to accept state
                     getNextState(acceptState)
                 }
@@ -991,8 +979,9 @@ class State {
                 println("Dispense '${items[symbol]}'")
                 transactionDialog.setDispense(symbol)
                 val registerM = Register()
-                //Load the previous stock onto register 1 and decrement it
-                registerM.run(arrayOf("LOAD $itemStock 1", "DEC 1"))
+                //Add the previous stock onto register 1 and decrement it
+                repeat(itemStock) { registerM.RunInstructions(arrayOf("INC 1")) }
+                registerM.RunInstructions(arrayOf("DEC 1"))
                 //Set the stock of the item to the new stock
                 Inventory.setItemStock(symbol, (registerM.getRegisterValue(1) ?: 0))
                 return true
@@ -1002,5 +991,18 @@ class State {
             }
         }
         return false
+    }
+
+    private fun calculateSales() {
+        //Reset register 0
+        register.resetRegister(0)
+        //Empty the till and calculate total sales
+        register.CalculateFunds(arrayOf("DEC 6", "LOAD 5 5"))
+        register.CalculateFunds(arrayOf("DEC 7", "LOAD 10 5"))
+        register.CalculateFunds(arrayOf("DEC 8", "LOAD 20 5"))
+
+        //Get value on register 0
+        val totalSales = register.getRegisterValue(0)
+        Inventory.setFunds(totalSales!!.toDouble())
     }
 }

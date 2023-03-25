@@ -42,7 +42,13 @@ class TransactionDialog : ActionListener {
     private var input = ""
     private var output = ""
     private var refund = 0
-    private val items = hashMapOf(
+    private val items = mutableMapOf(
+        'F' to "Fork",
+        'N' to "Napkin",
+        'S' to "Spoon",
+        'K' to "Knife"
+    )
+    private val dispenseList = hashMapOf(
         'N' to 0,
         'K' to 0,
         'F' to 0,
@@ -190,8 +196,8 @@ class TransactionDialog : ActionListener {
     }
 
     fun setDispense(item: Char) {
-        val count = items[item] ?: 0
-        items[item] = count + 1
+        val count = dispenseList[item] ?: 0
+        dispenseList[item] = count + 1
     }
 
     fun setInput(input: String) {
@@ -226,14 +232,24 @@ class TransactionDialog : ActionListener {
         )
     }
 
+    fun showInsufficientFundsDialog(symbol: Char) {
+        val message = "Insufficient funds to purchase ${items[symbol]}"
+        JOptionPane.showMessageDialog(
+            null,
+            message,
+            "Insufficient Funds",
+            JOptionPane.WARNING_MESSAGE
+        )
+    }
+
     fun updateFields() {
         outputField.text = getOutput()
         inputField.text = getInput()
         refundField.text = getRefund().toString()
-        forkField.text = items['F'].toString()
-        knifeField.text = items['K'].toString()
-        napkinField.text = items['N'].toString()
-        spoonField.text = items['S'].toString()
+        forkField.text = dispenseList['F'].toString()
+        knifeField.text = dispenseList['K'].toString()
+        napkinField.text = dispenseList['N'].toString()
+        spoonField.text = dispenseList['S'].toString()
         forkCheckBox.isSelected = isOutOfStock['F']!!
         knifeCheckBox.isSelected = isOutOfStock['K']!!
         napkinCheckBox.isSelected = isOutOfStock['N']!!
@@ -244,10 +260,10 @@ class TransactionDialog : ActionListener {
         setRefund(0)
         setOutput("")
         setInput("")
-        items['F'] = 0
-        items['K'] = 0
-        items['N'] = 0
-        items['S'] = 0
+        dispenseList['F'] = 0
+        dispenseList['K'] = 0
+        dispenseList['N'] = 0
+        dispenseList['S'] = 0
         forkCheckBox.isSelected = false
         knifeCheckBox.isSelected = false
         napkinCheckBox.isSelected = false

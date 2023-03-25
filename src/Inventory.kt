@@ -148,7 +148,7 @@ class Inventory {
             getFile().seek(getFile().filePointer - 4)
 
             registerMachine.resetAllRegisters()
-            registerMachine.run(arrayOf("LOAD $quantity 1", "LOAD ${funds.toInt()} 2", "ADD 1 2"))
+            registerMachine.CalculateSales(arrayOf("LOAD $quantity 1", "LOAD ${funds.toInt()} 2"))
 
             val newQuantity = registerMachine.getRegisterValue(0) ?: 0
             getFile().writeInt(newQuantity)
