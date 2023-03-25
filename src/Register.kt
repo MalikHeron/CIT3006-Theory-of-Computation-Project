@@ -15,6 +15,7 @@ class Register {
         private var currentInstruction = 0
 
         init {
+            //Start running the instructions
             execute()
         }
 
@@ -27,16 +28,18 @@ class Register {
                     println("Executing instruction $currentInstruction: $instruction")
                 }
                 when {
+                    //Check if instruction is to increment
                     instruction.startsWith("INC") -> {
                         val register = instruction.split(" ")[1].toInt()
                         increment(register)
                     }
-
+                    //Check if instruction is to decrement
                     instruction.startsWith("DEC") -> {
                         val register = instruction.split(" ")[1].toInt()
                         decrement(register)
                     }
                 }
+                //Go to next instruction
                 currentInstruction++
             }
             println("Final configuration: ")
@@ -46,11 +49,8 @@ class Register {
             println()
         }
 
-        private fun decrement(register: Int) {
-            registers[register] = (registers[register] ?: 0) - 1
-        }
-
         private fun increment(register: Int) {
+            //Increment the register value
             registers[register] = (registers[register] ?: 0) + 1
         }
     }
@@ -129,15 +129,8 @@ class Register {
                 instruction3()
             }
 
-            private fun decrement(register: Int) {
-                registers[register] = (registers[register] ?: 0) - 1
-            }
-
-            private fun increment() {
-                registers[0] = (registers[0] ?: 0) + 1
-            }
-
             private fun halt() {
+                //End of instructions
                 return
             }
         }
@@ -202,22 +195,14 @@ class Register {
                 instruction2()
             }
 
-            private fun decrement(register: Int) {
-                registers[register] = (registers[register] ?: 0) - 1
-            }
-
-            private fun increment() {
-                registers[0] = (registers[0] ?: 0) + 1
-            }
-
             private fun halt() {
                 return
             }
         }
     }
 
-    fun isRegisterEmpty(register: Int): Boolean {
-        return registers[register] == null
+    private fun checkIfZero(register: Int): Boolean {
+        return registers[register] == 0
     }
 
     fun resetRegister(register: Int) {
@@ -225,6 +210,7 @@ class Register {
     }
 
     fun resetAllRegisters() {
+        //Reset each register to 0
         registers.keys.forEach { resetRegister(it) }
     }
 
@@ -234,5 +220,17 @@ class Register {
 
     private fun setRegisterValue(register: Int, value: Int) {
         registers[register] = value
+    }
+
+    private fun increment() {
+        //Increment register 0 value
+        registers[0] = (registers[0] ?: 0) + 1
+    }
+
+    private fun decrement(register: Int) {
+        //Decrement register if the value is greater than zero
+        if (!checkIfZero(register)) {
+            registers[register] = registers[register]!! - 1
+        }
     }
 }

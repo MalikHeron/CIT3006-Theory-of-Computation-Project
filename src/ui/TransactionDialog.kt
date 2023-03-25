@@ -62,7 +62,6 @@ class TransactionDialog : ActionListener {
         'S' to false
     )
 
-
     private fun initializeComponents() {
         val smlLabelFont = Font("SANS_SERIF", Font.PLAIN, 16)
         val lrgLabelFont = Font("SANS_SERIF", Font.PLAIN, 18)
