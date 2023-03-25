@@ -28,6 +28,13 @@ class Register {
                     println("Executing instruction $currentInstruction: $instruction")
                 }
                 when {
+                    //Check if instruction is to load
+                    instruction.startsWith("LOAD") -> {
+                        val parts = instruction.split(" ")
+                        val value = parts[1].toInt()
+                        val register = parts[2].toInt()
+                        setRegisterValue(register, value)
+                    }
                     //Check if instruction is to increment
                     instruction.startsWith("INC") -> {
                         val register = instruction.split(" ")[1].toInt()
@@ -184,7 +191,7 @@ class Register {
                     //Go to instruction 3
                     instruction3()
                 } else {
-                    instruction1()
+                    halt()
                 }
             }
 
