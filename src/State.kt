@@ -1,3 +1,5 @@
+import ui.MainScreen.Companion.transactionDialog
+
 class State {
 
     private var inputHead = 0
@@ -48,6 +50,7 @@ class State {
                         //Check for invalid input
                         if (!machine.tapeAlphabet.contains(inputTape[inputHead])) {
                             println("Invalid input '${inputTape[inputHead]}' detected!")
+                            transactionDialog.showInvalidInputDialog(read)
                             //Transition to the reject state
                             getNextState(rejectState)
                             return
@@ -748,6 +751,7 @@ class State {
 
                         if (itemList.contains(read)) {
                             println("${items[read]} is out of stock.")
+                            transactionDialog.setOutOfStock(read)
                         }
                         if (stockHead != stockTape.lastIndex) {
                             println("q$currentState: $read -> $write, $right")
@@ -794,6 +798,7 @@ class State {
                     val total = register.getRegisterValue(0)
                     if (total != null && total > 0) {
                         println("Refund: $$total")
+                        transactionDialog.setRefund(total)
                     }
 
                     //Reset register 0
@@ -977,7 +982,7 @@ class State {
             if (itemStock > 0) {
                 //Dispense the item
                 println("Dispense '${items[symbol]}'")
-
+                transactionDialog.setDispense(symbol)
                 val registerM = Register()
                 //Load the previous stock onto register 1 and decrement it
                 registerM.run(arrayOf("LOAD $itemStock 1", "DEC 1"))

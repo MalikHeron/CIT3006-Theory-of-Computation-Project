@@ -15,7 +15,6 @@ import javax.swing.border.LineBorder
 import javax.swing.border.SoftBevelBorder
 import javax.swing.border.TitledBorder
 
-
 const val WINDOW_WIDTH = 900
 const val WINDOW_HEIGHT = 700
 const val HALF_WINDOW = WINDOW_WIDTH / 2
@@ -42,6 +41,10 @@ class MainScreen : JFrame(), ActionListener {
     private lateinit var inventoryDisplay: JTextArea
     private var buttons = arrayListOf<JButton>()
     private var enterPressed = false
+
+    companion object {
+        var transactionDialog = TransactionDialog()
+    }
 
     init {
         setupComponents()
@@ -81,7 +84,7 @@ class MainScreen : JFrame(), ActionListener {
         wButton = JButton("W")
         aButton = JButton("A")
         deleteButton = JButton("Clear")
-        enterButton = JButton("NEXT")
+        enterButton = JButton("Enter")
 
         buttons = arrayListOf(
             alphaButton,
@@ -102,8 +105,8 @@ class MainScreen : JFrame(), ActionListener {
         // loop to shorten code
         for (btn in buttons) {
             btn.preferredSize = Dimension(130, 70)
-            btn.background = Color.LIGHT_GRAY
-            btn.foreground = Color.BLACK
+            //btn.background = Color.LIGHT_GRAY
+            //btn.foreground = Color.BLACK
             btn.isFocusPainted = false
             btn.border = BevelBorder(BevelBorder.RAISED)
             btn.font = Font(Font.SANS_SERIF, Font.BOLD, 30)
@@ -111,9 +114,7 @@ class MainScreen : JFrame(), ActionListener {
         }
 
         deleteButton.preferredSize = Dimension(200, 70)
-        deleteButton.background = Color.decode("#d60f34")
         enterButton.preferredSize = Dimension(200, 70)
-        enterButton.background = Color.decode("#289946")
 
         inventoryDisplay = JTextArea(
             "N - ${Inventory.getItemStock('N')} \t" +
@@ -165,12 +166,6 @@ class MainScreen : JFrame(), ActionListener {
 
         this.addWindowListener(object : WindowAdapter() {
             override fun windowClosing(e: WindowEvent?) {
-                try {
-                    // Set system look and feel
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
                 if (JOptionPane.showConfirmDialog(
                         null,
                         "Are you sure you want to exit?", "Confirm Exit",
@@ -183,6 +178,7 @@ class MainScreen : JFrame(), ActionListener {
             }
         })
     }
+
 
     // {type} is "prices" or "items"
     private fun setActiveInputType(type: String) {
@@ -238,7 +234,8 @@ class MainScreen : JFrame(), ActionListener {
 
     private fun handleTuringRequest() {
         Turing(inputDisplay.text).run()
-
+        transactionDialog.updateFields()
+        transactionDialog.summaryDialog()
         // update stock amounts
         inventoryDisplay.text =
             "N - ${Inventory.getItemStock('N')} \t" +

@@ -1,3 +1,5 @@
+import ui.MainScreen.Companion.transactionDialog
+
 class Turing(input: String) {
 
     private var inputTape = arrayListOf<Char>()
@@ -9,6 +11,8 @@ class Turing(input: String) {
     }
 
     private fun buildTape(input: String) {
+        //Store input
+        transactionDialog.setInput(input)
         //Iterate through the symbols in the input
         input.forEach {
             //Add the characters as symbols to the tape
@@ -26,6 +30,8 @@ class Turing(input: String) {
             result += it
         }
         println("Result: $result")
+        //Store output
+        transactionDialog.setOutput(result)
         return result
     }
 }
