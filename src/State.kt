@@ -138,20 +138,25 @@ class State {
             }
 
             5 -> {
-                //Move to the left of the tape
-                while (inputHead != 0) {
-                    read = inputTape[inputHead]
-                    write = read
-                    println("q$currentState: $read -> $write, $left")
-                    inputHead--
-                    //When a cross symbol is read, move to the right
-                    if (inputTape[inputHead] == machine.crossSymbol) {
-                        inputHead++
-                        break
+                if (itemTape[itemHead] == machine.blankSymbol) {
+                    //No inputs on the tape, reject
+                    getNextState(rejectState)
+                } else {
+                    //Move to the left of the tape
+                    while (inputHead != 0) {
+                        read = inputTape[inputHead]
+                        write = read
+                        println("q$currentState: $read -> $write, $left")
+                        inputHead--
+                        //When a cross symbol is read, move to the right
+                        if (inputTape[inputHead] == machine.crossSymbol) {
+                            inputHead++
+                            break
+                        }
                     }
+                    //Transition to state 6
+                    getNextState(6)
                 }
-                //Transition to state 6
-                getNextState(6)
             }
 
             6 -> {
@@ -709,6 +714,7 @@ class State {
                     println("q$currentState: $read -> $write, $left")
                     //Move to the left of the tape
                     itemHead--
+                    inputHead--
                 }
                 //Transition to state 10
                 getNextState(10)
