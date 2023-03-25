@@ -1,5 +1,9 @@
+import java.io.File
+import java.io.FileWriter
 import java.io.IOException
 import java.io.RandomAccessFile
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.swing.JOptionPane
 
 class Inventory {
@@ -183,6 +187,32 @@ class Inventory {
 
         private fun getFile(): RandomAccessFile {
             return file
+        }
+
+        @Throws(IOException::class)
+        fun storeTransaction(){
+            val now = LocalDateTime.now()
+            val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+            val date = now.format(dateFormatter)
+            val time = now.format(timeFormatter)
+            val sales = getFunds()
+            var outFileStream: FileWriter? = null
+            try {
+                outFileStream = FileWriter(File("data//sales.txt"), true)
+                val newTransaction: String = (sales.toString() + "\t" + date + "\t" + time)
+                outFileStream.write(newTransaction)
+            } catch (e: Exception) {
+                println("\nAn unexpected error occured while saving transaction.")
+            } finally {
+                if (outFileStream != null) {
+                    try {
+                        outFileStream.close()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
         }
     }
 }
