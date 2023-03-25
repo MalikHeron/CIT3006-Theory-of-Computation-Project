@@ -241,7 +241,7 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 2
                         ) {
                             if (inStock(read)) {
-                                register.RunInstructions(arrayOf("DEC 1"))
+                                register.RunInstructions(arrayOf("DEC 1", "INC 6"))
                                 repeat(2) { register.RunInstructions(arrayOf("DEC 2", "INC 7")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
@@ -530,7 +530,7 @@ class State {
                             (register.getRegisterValue(2) ?: 0) >= 2
                         ) {
                             if (inStock(read)) {
-                                register.RunInstructions(arrayOf("DEC 1"))
+                                register.RunInstructions(arrayOf("DEC 1", "INC 6"))
                                 repeat(2) { register.RunInstructions(arrayOf("DEC 2", "INC 7")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
@@ -976,8 +976,8 @@ class State {
                 println("Dispense '${items[symbol]}'")
                 transactionDialog.setDispense(symbol)
                 val registerM = Register()
-                //Add the previous stock onto register 1 and decrement it
-                repeat(itemStock) { registerM.RunInstructions(arrayOf("INC 1")) }
+                //Load the previous stock onto register 1 and decrement it
+                registerM.RunInstructions(arrayOf("LOAD $itemStock 1"))
                 registerM.RunInstructions(arrayOf("DEC 1"))
                 //Set the stock of the item to the new stock
                 Inventory.setItemStock(symbol, (registerM.getRegisterValue(1) ?: 0))
@@ -991,15 +991,21 @@ class State {
     }
 
     private fun calculateSales() {
+        //Getting the values on all the registers
+        val reg6 = (register.getRegisterValue(6) ?: 0)
+        val reg7 = (register.getRegisterValue(7) ?: 0)
+        val reg8 = (register.getRegisterValue(8) ?: 0)
+
         //Reset register 0
         register.resetRegister(0)
         //Empty the till and calculate total sales
-        register.CalculateFunds(arrayOf("DEC 6", "LOAD 5 5"))
-        register.CalculateFunds(arrayOf("DEC 7", "LOAD 10 5"))
-        register.CalculateFunds(arrayOf("DEC 8", "LOAD 20 5"))
+        repeat(reg6) { register.CalculateFunds(arrayOf("DEC 6", "LOAD 5 5")) }
+        repeat(reg7) { register.CalculateFunds(arrayOf("DEC 7", "LOAD 10 5")) }
+        repeat(reg8) { register.CalculateFunds(arrayOf("DEC 8", "LOAD 20 5")) }
 
         //Get value on register 0
         val totalSales = register.getRegisterValue(0)
         Inventory.setFunds(totalSales!!.toDouble())
+        println("Current Sale: $totalSales")
     }
 }
