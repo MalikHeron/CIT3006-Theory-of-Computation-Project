@@ -736,7 +736,7 @@ class State {
                     if (itemList.contains(itemTape[itemHead])) {
                         register.RunInstructions(arrayOf("INC 4"))
                         println("Insufficient funds to purchase ${items[itemTape[itemHead]]}")
-                        transactionDialog.showInsufficientFundsDialog(itemTape[itemHead])
+                        transactionDialog.setInsufficient(itemTape[itemHead])
                     }
                     //Move to the right on both tapes
                     inputHead++
@@ -759,7 +759,6 @@ class State {
 
                         if (itemList.contains(read)) {
                             println("${items[read]} is out of stock.")
-                            transactionDialog.setOutOfStock(read)
                         }
                         if (stockHead != stockTape.lastIndex) {
                             println("q$currentState: $read -> $write, $right")
@@ -802,10 +801,8 @@ class State {
                         println("Refund: $$total")
                         transactionDialog.setRefund(total)
                     }
-
                     //Calculate Sales
                     calculateSales()
-
                     //Transition to reject state
                     getNextState(rejectState)
                 } else if (reg4 > 0) {

@@ -1,5 +1,6 @@
 package ui
 
+import Inventory
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -21,7 +22,7 @@ class TransactionDialog : ActionListener {
     private var outputLabel = JLabel("Output: ")
     private var refundLabel = JLabel("Refund: $")
     private var dispenseLabel = JLabel("Items Dispensed")
-    private var stockLabel = JLabel("Items out of stock")
+    private var stockLabel = JLabel("Items in stock")
     private var forkLabel = JLabel("Fork")
     private var knifeLabel = JLabel("Knife")
     private var spoonLabel = JLabel("Spoon")
@@ -49,17 +50,18 @@ class TransactionDialog : ActionListener {
         'K' to "Knife"
     )
     private val dispenseList = hashMapOf(
-        'N' to 0,
-        'K' to 0,
         'F' to 0,
+        'K' to 0,
+        'N' to 0,
         'S' to 0
     )
-    private val isOutOfStock = hashMapOf(
+    private val insufficientList = hashMapOf(
         'F' to false,
         'K' to false,
         'N' to false,
         'S' to false
     )
+
 
     private fun initializeComponents() {
         val smlLabelFont = Font("SANS_SERIF", Font.PLAIN, 16)
@@ -183,10 +185,6 @@ class TransactionDialog : ActionListener {
         dialog.isVisible = true
     }
 
-    fun setOutOfStock(item: Char) {
-        isOutOfStock[item] = true
-    }
-
     fun setRefund(refund: Int) {
         this.refund = refund
     }
@@ -216,6 +214,10 @@ class TransactionDialog : ActionListener {
         return output
     }
 
+    fun setInsufficient(symbol: Char) {
+        insufficientList[symbol] = true
+    }
+
     fun showDialog() {
         initializeComponents()
         addComponentsToWindow()
@@ -232,14 +234,18 @@ class TransactionDialog : ActionListener {
         )
     }
 
-    fun showInsufficientFundsDialog(symbol: Char) {
-        val message = "Insufficient funds to purchase ${items[symbol]}"
-        JOptionPane.showMessageDialog(
-            null,
-            message,
-            "Insufficient Funds",
-            JOptionPane.WARNING_MESSAGE
-        )
+    private fun showInsufficientFundsDialog() {
+        insufficientList.forEach {
+            if (it.value) {
+                val message = "Insufficient funds to purchase ${items[it.key]}"
+                JOptionPane.showMessageDialog(
+                    null,
+                    message,
+                    "Insufficient Funds",
+                    JOptionPane.WARNING_MESSAGE
+                )
+            }
+        }
     }
 
     fun updateFields() {
@@ -250,10 +256,11 @@ class TransactionDialog : ActionListener {
         knifeField.text = dispenseList['K'].toString()
         napkinField.text = dispenseList['N'].toString()
         spoonField.text = dispenseList['S'].toString()
-        forkCheckBox.isSelected = isOutOfStock['F']!!
-        knifeCheckBox.isSelected = isOutOfStock['K']!!
-        napkinCheckBox.isSelected = isOutOfStock['N']!!
-        spoonCheckBox.isSelected = isOutOfStock['S']!!
+        forkCheckBox.isSelected = Inventory.getItemStock('F') > 0
+        knifeCheckBox.isSelected = Inventory.getItemStock('K') > 0
+        napkinCheckBox.isSelected = Inventory.getItemStock('N') > 0
+        spoonCheckBox.isSelected = Inventory.getItemStock('S') > 0
+        showInsufficientFundsDialog()
     }
 
     private fun resetFields() {
@@ -264,14 +271,14 @@ class TransactionDialog : ActionListener {
         dispenseList['K'] = 0
         dispenseList['N'] = 0
         dispenseList['S'] = 0
-        forkCheckBox.isSelected = false
-        knifeCheckBox.isSelected = false
-        napkinCheckBox.isSelected = false
-        spoonCheckBox.isSelected = false
-        isOutOfStock['F'] = false
-        isOutOfStock['K'] = false
-        isOutOfStock['N'] = false
-        isOutOfStock['M'] = false
+        forkCheckBox.isSelected = Inventory.getItemStock('F') > 0
+        knifeCheckBox.isSelected = Inventory.getItemStock('K') > 0
+        napkinCheckBox.isSelected = Inventory.getItemStock('N') > 0
+        spoonCheckBox.isSelected = Inventory.getItemStock('S') > 0
+        insufficientList['F'] = false
+        insufficientList['K'] = false
+        insufficientList['N'] = false
+        insufficientList['S'] = false
     }
 
     override fun actionPerformed(e: ActionEvent?) {
