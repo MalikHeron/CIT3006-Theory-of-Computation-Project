@@ -93,22 +93,11 @@ class Inventory {
 
         @Throws(IOException::class)
         fun getPrice(symbol: Char): Double {
-            val name = items[symbol]
             val position = positions[symbol]
-
             //Seek position of item
             getFile().seek(position!!)
-
-            val itemName = getFile().readUTF()
-            if (itemName == name) {
-                return getFile().readInt().toDouble()
-            } else {
-                println("An error occurred while reading the file.")
-                // If item was not found, throw an exception
-                val errorMessage = "$name is not an item in the inventory"
-                JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE)
-                throw IllegalArgumentException(errorMessage)
-            }
+            getFile().readUTF()
+            return getFile().readInt().toDouble()
         }
 
         @Throws(IOException::class)
