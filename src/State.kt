@@ -281,6 +281,34 @@ class State {
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
                             }
+                        } else if ((register.getRegisterValue(2) ?: 0) >= 1 &&
+                            (register.getRegisterValue(3) ?: 0) >= 1
+                        ) {
+                            if (inStock(read)) {
+                                register.RunInstructions(arrayOf("DEC 2", "INC 1", "INC 6", "DEC 3", "INC 8"))
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = read
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = write
+                                println("q$currentState: $read -> $write, $right")
+                            }
+                        } else if ((register.getRegisterValue(3) ?: 0) >= 2) {
+                            if (inStock(read)) {
+                                register.RunInstructions(arrayOf("DEC 3", "DEC 3", "INC 1", "INC 2", "INC 6", "INC 8"))
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = read
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = write
+                                println("q$currentState: $read -> $write, $right")
+                            }
                         } else {
                             write = machine.crossSymbol
                             inputTape[inputHead] = write
@@ -317,7 +345,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.RunInstructions(arrayOf("DEC 3", "INC 8", "INC 2", "DEC 7"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -327,7 +355,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-
                             }
                         } else {
                             write = machine.crossSymbol
@@ -570,6 +597,34 @@ class State {
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
                             }
+                        } else if ((register.getRegisterValue(2) ?: 0) >= 1 &&
+                            (register.getRegisterValue(3) ?: 0) >= 1
+                        ) {
+                            if (inStock(read)) {
+                                register.RunInstructions(arrayOf("DEC 2", "INC 1", "INC 6", "DEC 3", "INC 8"))
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = read
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = write
+                                println("q$currentState: $read -> $write, $right")
+                            }
+                        } else if ((register.getRegisterValue(3) ?: 0) >= 2) {
+                            if (inStock(read)) {
+                                register.RunInstructions(arrayOf("DEC 3", "DEC 3", "INC 1", "INC 2", "INC 6", "INC 8"))
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = read
+                                println("q$currentState: $read -> $write, $right")
+                            } else {
+                                write = machine.crossSymbol
+                                itemTape[itemHead] = write
+                                inputTape[inputHead] = write
+                                println("q$currentState: $read -> $write, $right")
+                            }
                         } else {
                             write = machine.crossSymbol
                             inputTape[inputHead] = write
@@ -606,7 +661,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.RunInstructions(arrayOf("DEC 3", "INC 8", "INC 2", "DEC 7"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -781,16 +836,22 @@ class State {
 
                 if (reg1 > 0 || reg2 > 0 || reg3 > 0) {
                     // decrease register 1, load 5 on register 5 and add value on register 5 to register 0
-                    register.CalculateFunds(arrayOf("DEC 1", "LOAD 5 5"))
-                    repeat(reg1) { inputTape.add('ɑ') }
+                    repeat(reg1) {
+                        register.CalculateFunds(arrayOf("DEC 1", "LOAD 5 5"))
+                        inputTape.add('ɑ')
+                    }
 
                     // decrease register 2, load 10 on register 5 and add value on register 5 to register 0
-                    register.CalculateFunds(arrayOf("DEC 2", "LOAD 10 5"))
-                    repeat(reg2) { inputTape.add('β') }
+                    repeat(reg2) {
+                        register.CalculateFunds(arrayOf("DEC 2", "LOAD 10 5"))
+                        inputTape.add('β')
+                    }
 
                     // decrease register 3, load 20 on register 5 and add value on register 5 to register 0
-                    register.CalculateFunds(arrayOf("DEC 3", "LOAD 20 5"))
-                    repeat(reg3) { inputTape.add('γ') }
+                    repeat(reg3) {
+                        register.CalculateFunds(arrayOf("DEC 3", "LOAD 20 5"))
+                        inputTape.add('γ')
+                    }
 
                     //Put blank symbol at end of tape
                     inputTape.add(machine.blankSymbol)
@@ -1006,6 +1067,6 @@ class State {
         //Get value on register 0
         val totalSales = register.getRegisterValue(0)
         Inventory.setFunds(totalSales!!.toDouble())
-        println("Current Sale: $totalSales")
+        println("\nCurrent Sale: $$totalSales")
     }
 }

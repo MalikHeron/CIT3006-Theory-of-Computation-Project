@@ -82,20 +82,12 @@ class Inventory {
 
         @Throws(IOException::class)
         fun restockInventory() {
-            val items = arrayOf("Fork", "Knife", "Napkin", "Spoon")
-            getFile().seek(0)
-            // Searching file for item specified
-            while (getFile().filePointer < getFile().length()) {
-                val itemName = getFile().readUTF()
-                val price = getFile().readInt()
-                val currentQuantity = getFile().readInt()
-                if (items.contains(itemName)) {
-                    // Found the item, update the quantity and write it back to the file
-                    getFile().seek(getFile().filePointer - 4) // Move back to the quantity field
-                    getFile().writeInt(20)
-                } else {
-                    return
-                }
+            positions.forEach {
+                getFile().seek(it.value)
+                getFile().readUTF()
+                getFile().readInt()
+                //Update the quantity and write it back to the file
+                getFile().writeInt(20)
             }
         }
 
@@ -156,12 +148,19 @@ class Inventory {
             return
         }
 
-        fun addItems() {
+        private fun addItems() {
             addItem("Fork", 15, 20)
             addItem("Knife", 25, 20)
             addItem("Napkin", 10, 20)
             addItem("Spoon", 20, 20)
             addItem("TotalSales", 0, 0)
+        }
+
+        fun initializeFiles() {
+            if (getFile().length().toInt() == 0) {
+                //If file is empty add the items
+                addItems()
+            }
         }
 
         fun closeFile() {
@@ -173,7 +172,7 @@ class Inventory {
         }
 
         @Throws(IOException::class)
-        fun storeTransaction(){
+        fun storeTransaction() {
             val now = LocalDateTime.now()
             val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
