@@ -5,7 +5,7 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName())
         } catch (e: Exception) {
             e.printStackTrace()
         }
