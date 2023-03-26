@@ -105,8 +105,11 @@ class MainScreen : JFrame(), ActionListener {
         // loop to shorten code
         for (btn in buttons) {
             btn.preferredSize = Dimension(130, 70)
-            //btn.background = Color.LIGHT_GRAY
-            //btn.foreground = Color.BLACK
+            btn.background = Color.LIGHT_GRAY
+            btn.foreground = Color.BLACK
+//            btn.isBorderPainted = false
+//            btn.isOpaque = true
+//            btn.isContentAreaFilled = true
             btn.isFocusPainted = false
             btn.border = BevelBorder(BevelBorder.RAISED)
             btn.font = Font(Font.SANS_SERIF, Font.BOLD, 30)
@@ -114,7 +117,9 @@ class MainScreen : JFrame(), ActionListener {
         }
 
         deleteButton.preferredSize = Dimension(200, 70)
+        deleteButton.background = Color.decode("#d60f34")
         enterButton.preferredSize = Dimension(200, 70)
+        enterButton.background = Color.decode("#289946")
 
         inventoryDisplay = JTextArea(
             "N - ${Inventory.getItemStock('N')} \t" +
@@ -193,10 +198,6 @@ class MainScreen : JFrame(), ActionListener {
     }
 
     override fun actionPerformed(e: ActionEvent?) {
-        // clear any errors
-        if (inputDisplay.text == "NO INPUT")
-            inputDisplay.text = ""
-
         when (e?.source) {
             alphaButton -> inputDisplay.text = inputDisplay.text + "ɑ"
             betaButton -> inputDisplay.text = inputDisplay.text + "β"
