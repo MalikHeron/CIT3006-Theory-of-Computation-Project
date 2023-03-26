@@ -9,6 +9,7 @@ object Main {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        Inventory.initializeFiles()
         MainScreen()
     }
 }
