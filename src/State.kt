@@ -140,8 +140,8 @@ class State {
 
             5 -> {
                 if (itemTape[itemHead] == machine.blankSymbol) {
-                    //No inputs on the tape, reject
-                    getNextState(rejectState)
+                    //Transition to state 11
+                    getNextState(11)
                 } else {
                     //Move to the left of the tape
                     while (inputHead != 0) {
