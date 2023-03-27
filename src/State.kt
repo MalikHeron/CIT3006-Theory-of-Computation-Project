@@ -203,7 +203,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.RunInstructions(arrayOf("DEC 3", "INC 1", "INC 8", "DEC 6"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 1", "INC 6", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -519,7 +519,7 @@ class State {
                             }
                         } else if ((register.getRegisterValue(3) ?: 0) >= 1) {
                             if (inStock(read)) {
-                                register.RunInstructions(arrayOf("DEC 3", "INC 1", "INC 8", "DEC 6"))
+                                register.RunInstructions(arrayOf("DEC 3", "INC 1", "INC 6", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = read
@@ -996,7 +996,7 @@ class State {
                 if (read == machine.blankSymbol) {
                     println("q$currentState: $read -> $write, $right")
                     //Get total sales
-                    println("Funds: $${Inventory.getFunds()}")
+                    println("\nFunds: $${Inventory.getFunds()}")
                     SalesDialog().showDialog()
                     //Transition to accept state
                     getNextState(acceptState)

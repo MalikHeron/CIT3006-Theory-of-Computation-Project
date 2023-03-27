@@ -1,0 +1,7 @@
+Total Sales: 70.0 
+Fork Stock: 19
+Knife Stock: 19
+Napkin Stock: 19
+Spoon Stock: 19
+26-03-2023 	19:45:50
+
