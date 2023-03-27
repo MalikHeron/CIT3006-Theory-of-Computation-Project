@@ -168,10 +168,16 @@ class Inventory {
             val date = now.format(dateFormatter)
             val time = now.format(timeFormatter)
             val sales = getFunds()
+            val forkStock = getItemStock('F')
+            val knifeStock = getItemStock('K')
+            val napkinStock = getItemStock('N')
+            val spoonStock = getItemStock('S')
             var outFileStream: FileWriter? = null
             try {
                 outFileStream = FileWriter(File("data//sales.txt"), true)
-                val newTransaction: String = (sales.toString() + "\t" + date + "\t" + time + "\n")
+                val newTransaction: String =
+                    ("Total Sales: $sales \nFork Stock: $forkStock\nKnife Stock: $knifeStock\n" +
+                            "Napkin Stock: $napkinStock\nSpoon Stock: $spoonStock\n$date \t$time\n\n")
                 outFileStream.write(newTransaction)
             } catch (e: Exception) {
                 println("\nAn unexpected error occurred while saving the transaction.")
