@@ -26,4 +26,5 @@ Our project uses a 3-tape turing machine to operate a vending machine.
 ├── test/
     └─ TuringTest.kt                # test the turing machine
 └── README.md
+└── Project Outline.pdf
 ```
