@@ -3,9 +3,10 @@
 Our project uses a 3-tape turing machine to operate a vending machine.
 
 ## Project Specifications
+
 - Kotlin programming language
 - Maven package repository
-- InteliJ Idea -  JDK v1.8
+- IntelliJ Idea - JDK v1.8
 
 ## Project Structure
 

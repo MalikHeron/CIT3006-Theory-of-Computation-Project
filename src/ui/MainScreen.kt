@@ -107,9 +107,9 @@ class MainScreen : JFrame(), ActionListener {
             btn.preferredSize = Dimension(130, 70)
             btn.background = Color.LIGHT_GRAY
             btn.foreground = Color.BLACK
-//            btn.isBorderPainted = false
-//            btn.isOpaque = true
-//            btn.isContentAreaFilled = true
+            //btn.isBorderPainted = false
+            //btn.isOpaque = true
+            //btn.isContentAreaFilled = true
             btn.isFocusPainted = false
             btn.border = BevelBorder(BevelBorder.RAISED)
             btn.font = Font(Font.SANS_SERIF, Font.BOLD, 30)
@@ -184,7 +184,6 @@ class MainScreen : JFrame(), ActionListener {
         })
     }
 
-
     // {type} is "prices" or "items"
     private fun setActiveInputType(type: String) {
         // separate the types of buttons to enable or disable them
@@ -233,7 +232,7 @@ class MainScreen : JFrame(), ActionListener {
         transactionDialog.updateFields()
         //Show the dialog
         transactionDialog.showDialog()
-        // update stock amounts
+        //Update stock amounts
         inventoryDisplay.text =
             "N - ${Inventory.getItemStock('N')} \t" +
                     "K - ${Inventory.getItemStock('K')} \t" +

@@ -24,11 +24,7 @@ class Turing(input: String) {
 
     fun run(): String {
         //Start turing machine
-        val output = State().doTransitions(inputTape)
-        var result = ""
-        output.forEach {
-            result += it
-        }
+        val result = State().doTransitions(inputTape).joinToString("")
         println("Result: $result")
         //Store output
         transactionDialog.setOutput(result)

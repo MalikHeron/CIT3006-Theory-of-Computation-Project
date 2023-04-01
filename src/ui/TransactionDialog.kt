@@ -11,7 +11,7 @@ class TransactionDialog : ActionListener {
     //JTextFields
     private var inputField = JTextField()
     private var outputField = JTextField()
-    private var refundField =JTextField()
+    private var refundField = JTextField()
     private var forkField = JTextField()
     private var knifeField = JTextField()
     private var spoonField = JTextField()

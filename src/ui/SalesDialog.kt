@@ -4,7 +4,10 @@ import Inventory
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JDialog
+import javax.swing.JLabel
+import javax.swing.JTextField
 
 class SalesDialog : ActionListener {
 
@@ -116,7 +119,7 @@ class SalesDialog : ActionListener {
     }
 
     private fun updateFields() {
-        salesField.text =  Inventory.getFunds().toString()
+        salesField.text = Inventory.getFunds().toString()
         forkField.text = Inventory.getItemStock('F').toString()
         knifeField.text = Inventory.getItemStock('K').toString()
         napkinField.text = Inventory.getItemStock('N').toString()

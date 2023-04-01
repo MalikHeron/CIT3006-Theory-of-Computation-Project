@@ -100,6 +100,13 @@ class TuringTest {
     @Test
     @Order(14)
     fun lettersOnly() {
+        val result = Turing("ɑɑɑ").run()
+        assertEquals("xxx⊔ɑɑɑ⊔", result)
+    }
+
+    @Test
+    @Order(14)
+    fun currencyOnly() {
         val result = Turing("KFS").run()
         assertEquals("xxx⊔", result)
     }
