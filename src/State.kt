@@ -132,8 +132,8 @@ class State {
                     }
                     inputHead++
                 }
-                println("Input tape: $inputTape")
-                println("Item tape: $itemTape\n")
+                println("Input tape: ${inputTape.joinToString("")}")
+                println("Item tape: ${itemTape.joinToString("")}\n")
                 //Transition to state 5
                 getNextState(5)
             }
@@ -444,8 +444,8 @@ class State {
                     itemHead++
                     inputHead++
                 }
-                println("Input tape: $inputTape")
-                println("Item tape: $itemTape")
+                println("Input tape: ${inputTape.joinToString("")}")
+                println("Item tape: ${itemTape.joinToString("")}")
                 //Transition to state 7
                 getNextState(7)
             }
@@ -759,8 +759,8 @@ class State {
                     itemHead++
                     inputHead++
                 }
-                println("Input tape: $inputTape")
-                println("Item tape: $itemTape")
+                println("Input tape: ${inputTape.joinToString("")}")
+                println("Item tape: ${itemTape.joinToString("")}")
                 //Transition to state 9
                 getNextState(9)
             }
@@ -768,7 +768,7 @@ class State {
             9 -> {
                 //Add the blank symbol at the end of the tape
                 stockTape.add(machine.blankSymbol)
-                println("Stock tape: $stockTape\n")
+                println("Stock tape: ${stockTape.joinToString("")}\n")
 
                 //Move to the left of the item tape
                 while (itemHead != 0) {
@@ -1003,7 +1003,7 @@ class State {
                 if (read == machine.blankSymbol) {
                     println("q$currentState: $read -> $write, $right")
                     //Get total sales
-                    println("\nFunds: $${Inventory.getFunds()}")
+                    println("\nTotal funds: $${Inventory.getFunds()}")
                     SalesDialog().showDialog()
                     //Transition to accept state
                     getNextState(acceptState)

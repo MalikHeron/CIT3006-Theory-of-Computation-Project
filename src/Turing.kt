@@ -19,13 +19,13 @@ class Turing(input: String) {
             inputTape.add(it)
         }
         inputTape.add(machine.blankSymbol)
-        println("Tape: $inputTape\n")
+        println("Tape: ${inputTape.joinToString("")}\n")
     }
 
     fun run(): String {
         //Start turing machine
         val result = State().doTransitions(inputTape).joinToString("")
-        println("Result: $result")
+        println("Result: $result\n")
         //Store output
         transactionDialog.setOutput(result)
         return result
