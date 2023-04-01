@@ -173,8 +173,11 @@ class State {
                 while (itemHead != (itemTape.lastIndex + 1)) {
                     read = itemTape[itemHead]
                     if (read == 'F') {
+                        //Check if there are 3 or more $5
                         if ((register.getRegisterValue(1) ?: 0) >= 3) {
+                            //Check if item is in stock
                             if (inStock(read)) {
+                                //Decrease the amount of $5 inserted and increment the $5 in the till
                                 repeat(3) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write
@@ -221,11 +224,15 @@ class State {
                         }
                     }
                     if (read == 'K') {
+                        //Check if there are 3 or more $5 and 1 or more $10
                         if ((register.getRegisterValue(1) ?: 0) >= 3 &&
                             (register.getRegisterValue(2) ?: 0) >= 1
                         ) {
+                            //Check if item is in stock
                             if (inStock(read)) {
+                                //Decrease the amount of $5 inserted and increase the $5 in the till
                                 repeat(3) { register.RunInstructions(arrayOf("DEC 1", "INC 6")) }
+                                //Decrease the amount of $10 inserted and increase the $10 in the till
                                 register.RunInstructions(arrayOf("DEC 2", "INC 7"))
                                 write = machine.crossSymbol
                                 itemTape[itemHead] = write

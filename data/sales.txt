@@ -12,3 +12,17 @@ Napkin Stock: 14
 Spoon Stock: 15
 27-03-2023 	06:51:01
 
+Total Sales: 390.0 
+Fork Stock: 12
+Knife Stock: 16
+Napkin Stock: 15
+Spoon Stock: 14
+29-03-2023 	14:15:12
+
+Total Sales: 10.0 
+Fork Stock: 20
+Knife Stock: 20
+Napkin Stock: 19
+Spoon Stock: 20
+01-04-2023 	12:38:55
+
