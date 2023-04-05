@@ -507,7 +507,6 @@ class State {
                                 itemTape[itemHead] = write
                                 inputTape[inputHead] = write
                                 println("q$currentState: $read -> $write, $right")
-
                             }
                         } else if ((register.getRegisterValue(1) ?: 0) >= 1 &&
                             (register.getRegisterValue(2) ?: 0) >= 1
