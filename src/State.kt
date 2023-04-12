@@ -467,7 +467,7 @@ class State {
                     inputHead--
                     itemHead--
                 }
-                //Check if register 4 has is greater than zero
+                //Check if register 4 value is greater than zero
                 if ((register.getRegisterValue(4) ?: 0) > 0) {
                     //Get the value on register 4
                     val count = (register.getRegisterValue(4)) ?: 0
@@ -483,7 +483,7 @@ class State {
 
             8 -> {
                 /*
-                * Does the same thing is as state 6, only for doubling checking if we can get any more items
+                * Does the same thing as state 6, only for doubling checking if we can get any more items
                 * Read symbols and move to the right of the item tape
                 * For each symbol read, check the register if there is enough money to dispense that item
                 * If there is enough money, decrement the register and increment the till for the currency

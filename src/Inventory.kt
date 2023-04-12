@@ -124,15 +124,15 @@ class Inventory {
             // Seek to the quantity field of the file
             getFile().seek(76)
 
-            val quantity = getFile().readInt()
+            val tillBalance = getFile().readInt()
             // Move back to the quantity field from the EOF
             getFile().seek(getFile().filePointer - 4)
 
             registerMachine.resetAllRegisters()
-            registerMachine.CalculateSales(arrayOf("LOAD $quantity 1", "LOAD ${funds.toInt()} 2"))
+            registerMachine.CalculateSales(arrayOf("LOAD $tillBalance 1", "LOAD ${funds.toInt()} 2"))
 
-            val newQuantity = registerMachine.getRegisterValue(0) ?: 0
-            getFile().writeInt(newQuantity)
+            val tillTotal = registerMachine.getRegisterValue(0) ?: 0
+            getFile().writeInt(tillTotal)
 
             return
         }
