@@ -150,6 +150,27 @@ class Inventory {
                 //If file is empty add the items
                 addItems()
             }
+            if (!File("data//till.txt").exists()) {
+                var outFileStream: FileWriter? = null
+                try {
+                    outFileStream = FileWriter(File("data//till.txt"), true)
+                    val tillValues: String =
+                        ("ɑ=5\n" +
+                                "β=5\n" +
+                                "γ=5")
+                    outFileStream.write(tillValues)
+                } catch (e: Exception) {
+                    println("\nAn unexpected error occurred while saving the till values.")
+                } finally {
+                    if (outFileStream != null) {
+                        try {
+                            outFileStream.close()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            }
         }
 
         fun closeFile() {

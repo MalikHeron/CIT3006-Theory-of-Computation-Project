@@ -1,3 +1,6 @@
+import java.io.File
+import java.util.*
+
 class Register {
     private val registers = mutableMapOf(
         0 to 0,
@@ -6,9 +9,9 @@ class Register {
         3 to 0,
         4 to 0,
         5 to 0,
-        6 to 0,
-        7 to 0,
-        8 to 0
+        6 to getTillValue(6),
+        7 to getTillValue(7),
+        8 to getTillValue(8)
     )
 
     inner class RunInstructions(private var instructions: Array<String>) {
@@ -238,6 +241,42 @@ class Register {
         //Decrement register if the value is greater than zero
         if (!checkIfZero(register)) {
             registers[register] = registers[register]!! - 1
+        }
+    }
+
+    private fun getTillValue(register: Int): Int {
+        val file = File("data//till.txt")
+        val scan = Scanner(file)
+        val data = mutableMapOf(
+            'ɑ' to 0,
+            'β' to 0,
+            'γ' to 0
+        )
+        return if (file.exists()) {
+            scan.forEach {
+                val parts = it.split("=")
+                data[parts[0].single()] = parts[1].toInt()
+            }
+            when (register) {
+                6 -> {
+                    data.getValue('ɑ')
+                }
+
+                7 -> {
+                    data.getValue('β')
+                }
+
+                8 -> {
+                    data.getValue('γ')
+                }
+
+                else -> {
+                    0
+                }
+            }
+        } else {
+            println("$file doesn't exit")
+            0
         }
     }
 }
