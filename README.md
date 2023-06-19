@@ -1,6 +1,6 @@
 # CIT3006 Theory of Computation Group Project
 
-Our project uses a 3-tape turing machine to operate a vending machine.
+Our project uses a multi-tape turing machine to operate a vending machine.
 
 ## Project Specifications
 
